@@ -1,0 +1,133 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>CFH Toolbox</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-14"><meta name="DC.source" content="Main.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>CFH Toolbox</h1><!--introduction--><p>This toolbox implements the approach of Duffie/Pan/Singleton (2000), who show that we can compute the characteristic function (and hence recover option prices, pdfs, bond prices), for a very wide class of affine jump-diffusion models. We combine this approach with the FFT option pricing methods of Carr/Madan (1999) and Chourdakis (2005).</p><p>Author: <a href="mailto:matthias.held@web.de">matthias.held@web.de</a></p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Available functions</a></li><li><a href="#2">Theory</a></li></ul></div><h2>Available functions<a name="1"></a></h2><div><ul><li><a href="cf2bond.html"><tt>cf2bond</tt></a> Compute bond prices from AJD dynamics</li><li><a href="cf2bondEx.html"><tt>cf2bondEx</tt></a> Compute extended bond pricing transforms from AJD process</li><li><a href="cf2call.html"><tt>cf2call</tt></a> Estimate call option prices from characteristic function</li><li><a href="cf2gaby.html"><tt>cf2gaby</tt></a> Compute conditional expectations from characteristic function</li><li><a href="cf2pdf.html"><tt>cf2pdf</tt></a> Transform characteristic function into the corresponding probability density function</li><li><a href="cfaffine.html"><tt>cfaffine</tt></a> Yields a characteristic function for a given set of Affine-Jump-Diffusion (AJD) dynamics</li><li><a href="cfjump.html"><tt>cfjump</tt></a> A library of commonly encountered jump transforms</li><li><a href="cflib.html"><tt>cflib</tt></a> A library of commonly encountered characteristic functions</li><li><a href="cfneutralize.html"><tt>cfneutralize</tt></a> Returns the risk-neutralized drift components from given AJD dynamics coefficients.</li></ul></div><h2>Theory<a name="2"></a></h2><p>Let <img src="Main_eq03598.png" alt="$X$"> be an affine jump-diffusion process</p><p><img src="Main_eq16929.png" alt="$dX=\mu(X)dt + \sigma(X)dW + JdZ$"></p><p>where all parameters are affine in the state</p><div><ul><li><img src="Main_eq93816.png" alt="$\mu(X) = K_0 + K_1X$">, the drift</li><li><img src="Main_eq75175.png" alt="$\sigma(X)\sigma(X)^T = H_0 + H_1X$">, the variance</li><li><img src="Main_eq32732.png" alt="$R(X) = R_0 + R_1X$">, the interest rate process</li><li><img src="Main_eq72112.png" alt="$\lambda(X) = L_0 + L_1X$">, the jump intensity of <img src="Main_eq81664.png" alt="$dZ$"></li><li><img src="Main_eq85257.png" alt="$\theta(c)= \int_{R^n} exp(cy)dF(y)$">, the moment generating function of the jump distribution of <img src="Main_eq03323.png" alt="$J$">.</li></ul></div><p>For this class of processes, the risk neutral expectation</p><p><img src="Main_eq32878.png" alt="$\phi(u)=E(\exp(u^TX_T)\exp(-\int_0^TR(X_t)dt))$"></p><p>can be computed as</p><p><img src="Main_eq97939.png" alt="$\phi(u)=\exp(\alpha(u,\tau) + \beta(u,\tau)^TX_0)$">,</p><p>where <img src="Main_eq85064.png" alt="$\alpha(u,\tau)$"> and <img src="Main_eq90647.png" alt="$\beta(u,\tau)$"> solve the Ricatti equations:</p><p><img src="Main_eq00884.png" alt="$\frac{\partial \beta}{\partial \tau}=K_1\beta+\frac{1}{2}\beta^TH_1\beta+L_1(\theta(\beta)-1)-R1$"> <img src="Main_eq93302.png" alt="$\frac{\partial \alpha}{\partial \tau}=K_0\beta+\frac{1}{2}\beta^TH_0\beta+L_0(\theta(\beta)-1)-R0$"></p><p>subject to the condition <img src="Main_eq18435.png" alt="$\alpha(u,0)=0$"> and <img src="Main_eq27910.png" alt="$\beta(u,0)=u$">.</p><p>The extended transform theorem furthermore recovers the expectation</p><p><img src="Main_eq63902.png" alt="$E((A+BX_T)\exp(u^TX_T)\exp(-\int_0^TR(X_t)dt))=(A(0)+B(0)X_0)*\phi(u)$"></p><p>The function <a href="cfaffine.html"><tt>cfaffine</tt></a> recovers the risk neutral expectation for arbitrary <img src="Main_eq35435.png" alt="$u$"> and <img src="Main_eq09111.png" alt="$A=B=0$">, whereas the function <a href="cf2bond.html"><tt>cf2bond</tt></a> directly evaluates the resulting characteristic function at <img src="Main_eq45348.png" alt="$u=0$">, thereby recovering bond prices.</p><p><a href="cf2bondex.html"><tt>cf2bondex</tt></a> directly evaluates the extended transform at <img src="Main_eq45348.png" alt="$u=0$">, thus directly recovering risk neutral expectations of linear combinations of process variables.</p><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% CFH Toolbox 
+% This toolbox implements the approach of Duffie/Pan/Singleton (2000), who
+% show that we can compute the characteristic function (and hence recover 
+% option prices, pdfs, bond prices), for a very wide class of affine 
+% jump-diffusion models. We combine this approach with the FFT option 
+% pricing methods of Carr/Madan (1999) and Chourdakis (2005).
+%
+% Author: matthias.held@web.de
+%
+%% Available functions
+% 
+% * <cf2bond.html |cf2bond|> Compute bond prices from AJD dynamics
+% * <cf2bondEx.html |cf2bondEx|> Compute extended bond pricing transforms
+% from AJD process
+% * <cf2call.html |cf2call|> Estimate call option prices from characteristic 
+% function
+% * <cf2gaby.html |cf2gaby|> Compute conditional expectations from
+% characteristic function
+% * <cf2pdf.html |cf2pdf|> Transform characteristic function into the
+% corresponding probability density function
+% * <cfaffine.html |cfaffine|> Yields a characteristic function for a given set
+% of Affine-Jump-Diffusion (AJD) dynamics
+% * <cfjump.html |cfjump|> A library of commonly encountered jump
+% transforms
+% * <cflib.html |cflib|> A library of commonly encountered characteristic
+% functions
+% * <cfneutralize.html |cfneutralize|> Returns the risk-neutralized drift
+% components from given AJD dynamics coefficients.
+%
+%% Theory
+%
+% Let $X$ be an affine jump-diffusion process
+%
+% $dX=\mu(X)dt + \sigma(X)dW + JdZ$
+%
+% where all parameters are affine in the state
+%
+% * $\mu(X) = K_0 + K_1X$, the drift
+% * $\sigma(X)\sigma(X)^T = H_0 + H_1X$, the variance
+% * $R(X) = R_0 + R_1X$, the interest rate process
+% * $\lambda(X) = L_0 + L_1X$, the jump intensity of $dZ$
+% * $\theta(c)= \int_{R^n} exp(cy)dF(y)$, the moment generating function of
+% the jump distribution of $J$.
+%
+% For this class of processes, the risk neutral expectation 
+%
+% $\phi(u)=E(\exp(u^TX_T)\exp(-\int_0^TR(X_t)dt))$ 
+%
+% can be computed as
+%
+% $\phi(u)=\exp(\alpha(u,\tau) + \beta(u,\tau)^TX_0)$, 
+%
+% where $\alpha(u,\tau)$ and $\beta(u,\tau)$ solve the Ricatti equations:
+% 
+% $\frac{\partial \beta}{\partial \tau}=K_1\beta+\frac{1}{2}\beta^TH_1\beta+L_1(\theta(\beta)-1)-R1$
+% $\frac{\partial \alpha}{\partial \tau}=K_0\beta+\frac{1}{2}\beta^TH_0\beta+L_0(\theta(\beta)-1)-R0$
+%
+% subject to the condition $\alpha(u,0)=0$ and $\beta(u,0)=u$.
+%
+% The extended transform theorem furthermore recovers the expectation
+% 
+% $E((A+BX_T)\exp(u^TX_T)\exp(-\int_0^TR(X_t)dt))=(A(0)+B(0)X_0)*\phi(u)$ 
+%
+% The function <cfaffine.html |cfaffine|> recovers the risk neutral expectation 
+% for arbitrary $u$ and $A=B=0$, whereas the function <cf2bond.html |cf2bond|> 
+% directly evaluates the resulting characteristic function at $u=0$, thereby
+% recovering bond prices. 
+%
+% <cf2bondex.html |cf2bondex|> directly evaluates the extended transform at 
+% $u=0$, thus directly recovering risk neutral expectations of linear 
+% combinations of process variables. 
+##### SOURCE END #####
+--></body></html>

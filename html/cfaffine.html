@@ -1,0 +1,449 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>cfaffine</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-14"><meta name="DC.source" content="cfaffineHelp.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>cfaffine</h1><p>Returns the characteristic function evaluation of a parameterized Affine Jump-Diffusion (AJD) process. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">W = CFAFFINE(U,X0,TAU,K0,K1,H0,H1,R0,R1)
+W = CFAFFINE(U,X0,TAU,K0,K1,H0,H1,R0,R1,L0,L1,jump)
+W = CFAFFINE(U,X0,TAU,K0,K1,H0,H1,R0,R1,L0,L1,jump,ND)
+</pre><p>See <a href="Main.html#theory">theory</a> for a description of the coefficient matrices <tt>K0,K1,H0,H1,R0,R1,L0,L1</tt>. You may leave any unused coefficient empty <tt>[]</tt>, e.g. <tt>CFAFFINE(U,X0,TAU,K0,[],H0,[],R0)</tt> describes a system with constant interest rate, drift and variance, whereas <tt>CFAFFINE(U,X0,TAU,K0,K1,[],H1,[],R1,[],L1,jump)</tt> describes a system with state dependent drift, variance, interest rate and jump intensity.</p><p>For real argument <tt>U</tt>, <tt>cfaffine</tt> returns the characteristic function of the stochastic process. For complex arugment <tt>U=-v*i</tt>, <tt>cfaffine</tt> returns the moment generating function of the stochastic process.</p><pre class="language-matlab">[W alpha beta] = CFAFFINE(U,X0,TAU,K0,K1,H0,H1,R0,R1,L0,L1,jump,ND)
+</pre><p>Returns the <img src="cfaffineHelp_eq87919.png" alt="$\alpha$"> and <img src="cfaffineHelp_eq42727.png" alt="$\beta$"> values, see <a href="Main.html">Theory</a> for details.</p><p><b>Input Arguments</b></p><p><tt>U</tt> can either be a <tt>(K)x(1)</tt> or <tt>(1)x(K)</tt> array of characteristic function arguments, or if <tt>U</tt> is a <tt>(NX)x(K)</tt> array, set <tt>ND=1</tt> and if <tt>U</tt> is a <tt>(K)x(NX)</tt> array, set <tt>ND=2</tt>.</p><p><b>Example 1: Black Scholes Model</b></p><p>In the Black Scholes model, the dynamics of the logarithmic spot process are:</p><p><img src="cfaffineHelp_eq34838.png" alt="$dy=(r_f - \frac{1}{2}\sigma^2)dt + \sigma dW$"></p><p>resulting in the characteristic function</p><p><img src="cfaffineHelp_eq25620.png" alt="$\phi(u)=E(e^{uiX_T})=\exp(-r_f\tau +iux_t+ iu\tau(r_f-\frac{1}{2}\sigma^2)-\frac{1}{2}\tau u \sigma^2)$"></p><p>where <img src="cfaffineHelp_eq42994.png" alt="$\tau=T-t$">.</p><p>The characteristic function of the Black Scholes model is also included in <a href="cflib.html"><tt>cflib</tt></a>, using the argument <tt>type='BS'</tt>, which we will use as a yardstick.</p><pre class="codeinput">rf          = 0.05;
+tau         = 1;
+sigma       = 0.25;
+S0          = 100;
+x0          = log(S0);
+</pre><p>Translating these parameters into arbitrage free coefficients required by <tt>cfaffine</tt></p><pre class="codeinput">K0          = rf-1/2*sigma^2;
+H0          = sigma^2;
+R0          = rf;
+</pre><p>we obtain the characteristic function</p><pre class="codeinput">cfNumerical = @(u) cfaffine(u,x0,tau,K0,[],H0,[],R0);
+</pre><p>We will compare the numerically obtained characteristic function to its analytical counterpart:</p><pre class="codeinput">par.rf      = rf;
+par.sigma   = sigma;
+par.x0      = x0;
+cfTheory    = @(u) cflib(u,tau,par,<span class="string">'BS'</span>);
+</pre><p>Comparing the difference between the numerically obtained and the 'true' characteristic function along its real and imaginary components, we find that <tt>cfaffine</tt> did quite a good job</p><pre class="codeinput">u           = [0:0.01:10]';
+error       = cfNumerical(u)-cfTheory(u);
+plot(u,real(error),<span class="string">'k'</span>,u,imag(error),<span class="string">'r'</span>)
+legend(<span class="string">'real part'</span>,<span class="string">'imaginary part'</span>)
+title(<span class="string">'Errors from discrete approximation'</span>);
+xlabel(<span class="string">'argument u'</span>);
+ylabel(<span class="string">'error'</span>);
+</pre><img vspace="5" hspace="5" src="cfaffineHelp_01.png" alt=""> <p><b>Example 2: Chooser option (from DPS2000)</b></p><p>Assume that we want to price an option whose payoff is the maximum of two assets <img src="cfaffineHelp_eq77038.png" alt="$X_T$"> and <img src="cfaffineHelp_eq89373.png" alt="$Y_T$">, <img src="cfaffineHelp_eq84989.png" alt="$C_T=max(X_T,Y_T)$">. The log assets have the dynamics:</p><p><img src="cfaffineHelp_eq78019.png" alt="$dx = (r_f - \frac{1}{2}\sigma_x^2)dt + \sigma_x(\rho_xdW_1 + \sqrt{1-\rho_x^2}dW_2)$"></p><p><img src="cfaffineHelp_eq47865.png" alt="$dy = (r_f - \frac{1}{2}\sigma_y^2)dt + \sigma_y(\rho_ydW_1 + \sqrt{1-\rho_y^2}dW_2)$"></p><p>Assuming some parameters, we obtain the coefficients:</p><pre class="codeinput">tau         = 1;
+X0          = 100;
+Y0          = 110;
+rf          = 0.05;
+sX          = 0.20;
+sY          = 0.25;
+rhoX        = 0.70;
+rhoY        = 0.30;
+COV         = sX*sY*(rhoX*rhoY + sqrt(1-rhoX^2)*sqrt(1-rhoY^2));
+K0          = rf - 1/2*[sX^2 ; sY^2];
+H0          = [sX^2 COV ; COV sY^2];
+R0          = rf;
+x0          = log([X0 ; Y0]);
+</pre><p>Foreknowing that we will apply the function &lt;cf2gaby.html <tt>cf2gaby</tt> shortly, we have to make sure that the characteristic function should take an <tt>(NX)x(K)</tt> input and return an output <tt>W</tt> of dimension <tt>(1)x(K)</tt>:</p><pre class="codeinput">cf          = @(u) cfaffine(u,x0,tau,K0,[],H0,[],R0,[],[],[],[],1);
+</pre><p>We can test this by asking for the discount factor and the risk-neutral expected asset levels:</p><pre class="codeinput">u0          = [0 1 0 ;
+               0 0 1];
+cf(-i*u0)
+</pre><pre class="codeoutput">
+ans =
+
+    0.9512  100.0000  110.0000
+
+</pre><p>We will now write the payoff in a more comprehensible form and price its components. Let <img src="cfaffineHelp_eq63904.png" alt="$x=\log(X),y=log(Y)$">:</p><p><img src="cfaffineHelp_eq07369.png" alt="$P_0 = E(e^{-r_f\tau}\max(X_T,Y_T))$"></p><p><img src="cfaffineHelp_eq52102.png" alt="$=E(e^{-r_f\tau}X_T) + E(e^{-r_f\tau}\max(Y_T-X_T,0))$"></p><p><img src="cfaffineHelp_eq08712.png" alt="$=E(e^{-r_f\tau}X_T) + E(e^{-r_f\tau}Y_T1_{Y_T\geq X_T}) - E(e^{-r_f\tau}X_T1_{Y_T\geq X_T})$"></p><p>We can compute each component using the function <a href="cf2gaby.html"><tt>cf2gaby</tt></a> which takes the discounted characteristic function as an input and computes expectations of the type</p><p><img src="cfaffineHelp_eq17314.png" alt="$G(a,b,y)=E(\exp(-\int_{0}^{T}R(X_t)dt)\exp(a^Tx_T)1_{bx_T\leq y})$"></p><p>where the vector <img src="cfaffineHelp_eq54336.png" alt="$x_T$"> denotes the state variables. We find that the first summand is just the risk-neutral expectation of <img src="cfaffineHelp_eq77038.png" alt="$X_T$">. If there are no dividends present, this is <img src="cfaffineHelp_eq05032.png" alt="$X_0$">, else we would have to compute <tt>cf(-i*[1;0])</tt>. The second summand is <img src="cfaffineHelp_eq97142.png" alt="$G([0,1]^T,[1,-1]^T,0)$">. The last part is <img src="cfaffineHelp_eq63254.png" alt="$-G([1,0]^T,[1,-1]^T,0)$">.</p><p>Combining these, we obtain</p><pre class="codeinput">cf(-i*[1;0]) + cf2gaby(cf,[0;1],[1;-1],0) - cf2gaby(cf,[1;0],[1;-1],0)
+</pre><pre class="codeoutput">
+ans =
+
+  111.3957
+
+</pre><p>As a check, we perform the exact same analysis, starting at asset <img src="cfaffineHelp_eq89373.png" alt="$Y_T$">:</p><pre class="codeinput">cf(-i*[0;1]) + cf2gaby(cf,[1;0],[-1;1],0) - cf2gaby(cf,[0;1],[-1;1],0)
+</pre><pre class="codeoutput">
+ans =
+
+  111.3957
+
+</pre><p>which yields the same result.</p><p><b>Example 3: Multiple jumps</b></p><p><tt>cfaffine</tt> can also handle a process with multiple jumps. Let slightly change the last example and introduce two jump processes. For easy of exposition, we assume that the first asset <img src="cfaffineHelp_eq85018.png" alt="$X_t$"> is solely influenced by jumps in <img src="cfaffineHelp_eq33559.png" alt="$dZ_1$"> and <img src="cfaffineHelp_eq27410.png" alt="$Y_t$"> is driven by both jump components:</p><p><img src="cfaffineHelp_eq01690.png" alt="$dx = (r_f - \frac{1}{2}\sigma_x^2 - \Lambda_1m_{1,x})dt + \sigma_xdW_1 + J_{1,x}dZ_1$"></p><p><img src="cfaffineHelp_eq14641.png" alt="$dy = (r_f - \frac{1}{2}\sigma_y^2 -\Lambda_1m_{1,y}-\Lambda_2m_{2,y})dt + \sigma_ydW_2 + J_{1,y}dZ_1 + J_{2,y}dZ_2$"></p><p>where <img src="cfaffineHelp_eq79840.png" alt="$-\Lambda_im_{i,j}$"> denotes the risk neutral jump compensation of asset <img src="cfaffineHelp_eq31413.png" alt="$j$"> with respect to jump process <img src="cfaffineHelp_eq28128.png" alt="$i$">. We will assume no constant intensity offsets, i.e. <img src="cfaffineHelp_eq83677.png" alt="$\Lambda_i(X_t) = \lambda_{i,t}$"> with</p><p><img src="cfaffineHelp_eq59265.png" alt="$d\lambda_1 = \kappa_1(\theta_1 - \lambda_1)dt + \sigma_{11}\sqrt{\lambda_1}dW_3$"></p><p><img src="cfaffineHelp_eq77587.png" alt="$d\lambda_2 = \kappa_2(\theta_2 - \lambda_2)dt + \sigma_{21}\sqrt{\lambda_1}dW_3 + \sigma_{22}\sqrt{\lambda_2}dW_4$"></p><p>(Technically, we would have to make sure that the second intensity cannot drop below zero.)</p><p>Further, we let the first jump distribution be bivariate normally distributed and the second is assumed to be a non-negative exponential jump</p><p><img src="cfaffineHelp_eq93420.png" alt="$J_1 \sim N(\mu_1,\Sigma_1)$"></p><p><img src="cfaffineHelp_eq28566.png" alt="$J_{2,} \sim Exp(\mu_2)$"></p><p>Translate this model into the coefficients of <tt>cfaffine</tt>:</p><p>Raw specification</p><pre class="codeinput">rf          = 0.05;
+tau         = 1;
+X0          = 100;
+sigmaX      = 0.25;
+Y0          = 110;
+sigmaY      = 0.20;
+lambda10    = 0.11;
+kappa1      = 0.85;
+theta1      = 0.10;
+sigma11     = 0.15;
+lambda20    = 0.06;
+kappa2      = 1.00;
+theta2      = 0.075;
+sigma21     = 0.05;
+sigma22     = 0.20;
+</pre><p>Initial state vector</p><pre class="codeinput">x0          = [log(X0) log(Y0) lambda10 lambda20]';
+</pre><p>Variance coefficients:</p><pre class="codeinput">H0          = [sigmaX^2 0 0 0 ; 0 sigmaY^2 0 0 ; zeros(2,4)];
+H1          = zeros(4,4,4);
+H1(3:4,3:4,3)= [sigma11^2 sigma11*sigma21 ; sigma11*sigma21 sigma21^2];
+H1(4,4,4)   = sigma22^2;
+</pre><p>Jump components:</p><pre class="codeinput">L0          = [0 0];
+L1          = [0 0 1 0 ; 0 0 0.75 0.25]';
+par.MuJ(:,1)= [-0.25 -0.10 0 0]';
+par.MuJ(:,2)= [0.0 0.2 0 0]';
+par.SigmaJ  = [0.2^2 0.2*0.5*0.3 0 0 ; 0.2*0.5*0.3 0.3 0 0 ; zeros(2,4)];
+jump1       = @(c) cfjump(c,par,<span class="string">'Merton'</span>);
+jump2       = @(c) cfjump(c,struct(<span class="string">'MuJ'</span>,par.MuJ(:,2)),<span class="string">'Exponential'</span>);
+jump        = @(c) [jump1(c) ; jump2(c)];
+</pre><p>Drift adjusmtents: <tt>m</tt> is the jump expectation from each jump distribution minus one.</p><pre class="codeinput">m           = zeros(4,2);
+m(1,1)      = jump1([1 0 0 0]')-1;
+m(1,2)      = jump2([1 0 0 0]')-1;
+m(2,1)      = jump1([0 1 0 0]')-1;
+m(2,2)      = jump2([0 1 0 0]')-1;
+</pre><p>Drift coefficients:</p><pre class="codeinput">K0(1,:)     = rf-1/2*sigmaX^2-m(1,:)*L0';
+K0(2,:)     = rf-1/2*sigmaY^2-m(2,:)*L0';
+K0(3,:)     = kappa1*theta1;
+K0(4,:)     = kappa2*theta2;
+K1          = -m*L1';
+K1(3,3)     = -kappa1;
+K1(4,4)     = -kappa2;
+</pre><p>At this point, we might want to check whether the resulting drift is indeed arbitrage-free using <a href="cfneutralize.html"><tt>cfneutralize</tt></a>. We check whether our drift our coefficients are in line with those recovered from a risk neutralization. The resulting <tt>maxErr</tt> should be zero:</p><pre class="codeinput">[K0q K1q]   =  cfneutralize(K0,K1,H0,H1,rf,[],[0 0],[],L0,L1,jump);
+maxErr      = max(max(abs([K0-K0q K1-K1q])))
+</pre><pre class="codeoutput">
+maxErr =
+
+     0
+
+</pre><p>We may now combine everything into a characteristic function:</p><pre class="codeinput">cf          = @(u) cfaffine(u,x0,tau,K0,K1,H0,H1,rf,[],L0,L1,jump,1);
+</pre><p>First, let us check wether the resulting <tt>cf</tt> recovers the discount factor and the initial asset prices:</p><pre class="codeinput">u0          = -i*[0 1 0 ; 0 0 1 ; 0 0 0; 0 0 0];
+cf(u0)./[exp(-rf*tau) X0 Y0]
+</pre><pre class="codeoutput">
+ans =
+
+    1.0000    1.0000    1.0000
+
+</pre><p>As above, we will use the function <a href="cf2gaby.html"><tt>cf2gaby</tt></a> to price the maximum option:</p><pre class="codeinput">cf(-i*[1;0;0;0]) + cf2gaby(cf,[0;1;0;0],[1;-1;0;0],0) - cf2gaby(cf,[1;0;0;0],[1;-1;0;0],0)
+</pre><pre class="codeoutput">
+ans =
+
+  120.6305
+
+</pre><p>As a check, we perform the exact same analysis, starting at asset <img src="cfaffineHelp_eq89373.png" alt="$Y_T$">:</p><pre class="codeinput">cf(-i*[0;1;0;0]) + cf2gaby(cf,[1;0;0;0],[-1;1;0;0],0) - cf2gaby(cf,[0;1;0;0],[-1;1;0;0],0)
+</pre><pre class="codeoutput">
+ans =
+
+  120.6305
+
+</pre><p>which yields the same result.</p><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% cfaffine
+% Returns the characteristic function evaluation of a parameterized Affine 
+% Jump-Diffusion (AJD) process. Part of the <Main.html CFH Toolbox>.
+%
+% *Syntax*
+%
+%   W = CFAFFINE(U,X0,TAU,K0,K1,H0,H1,R0,R1)
+%   W = CFAFFINE(U,X0,TAU,K0,K1,H0,H1,R0,R1,L0,L1,jump)
+%   W = CFAFFINE(U,X0,TAU,K0,K1,H0,H1,R0,R1,L0,L1,jump,ND)
+%
+% See <Main.html#theory theory> for a description of the coefficient
+% matrices |K0,K1,H0,H1,R0,R1,L0,L1|. You may leave any unused coefficient
+% empty |[]|, e.g. |CFAFFINE(U,X0,TAU,K0,[],H0,[],R0)| describes a system
+% with constant interest rate, drift and variance, whereas 
+% |CFAFFINE(U,X0,TAU,K0,K1,[],H1,[],R1,[],L1,jump)| describes a system
+% with state dependent drift, variance, interest rate and jump intensity.
+%
+% For real argument |U|, |cfaffine| returns the characteristic function 
+% of the stochastic process. For complex arugment |U=-v*i|, |cfaffine|
+% returns the moment generating function of the stochastic process.
+%
+%   [W alpha beta] = CFAFFINE(U,X0,TAU,K0,K1,H0,H1,R0,R1,L0,L1,jump,ND)
+% 
+% Returns the $\alpha$ and $\beta$ values, see <Main.html Theory> for
+% details. 
+%
+% *Input Arguments*
+%
+% |U| can either be a |(K)x(1)| or |(1)x(K)| array of characteristic
+% function arguments, or if |U| is a |(NX)x(K)| array, set |ND=1| and if 
+% |U| is a |(K)x(NX)| array, set |ND=2|.
+%
+% *Example 1: Black Scholes Model*
+%
+% In the Black Scholes model, the dynamics of the logarithmic spot process are:
+%
+% $dy=(r_f - \frac{1}{2}\sigma^2)dt + \sigma dW$ 
+%
+% resulting in the characteristic function
+%
+% $\phi(u)=E(e^{uiX_T})=\exp(-r_f\tau +iux_t+ iu\tau(r_f-\frac{1}{2}\sigma^2)-\frac{1}{2}\tau u \sigma^2)$
+%
+% where $\tau=T-t$. 
+%
+% The characteristic function of the Black Scholes model is also included in 
+% <cflib.html |cflib|>, using the argument |type='BS'|, which we will use
+% as a yardstick.
+%
+rf          = 0.05;
+tau         = 1;
+sigma       = 0.25;
+S0          = 100;
+x0          = log(S0);
+
+%%
+% Translating these parameters into arbitrage free coefficients required 
+% by |cfaffine|
+K0          = rf-1/2*sigma^2;
+H0          = sigma^2;
+R0          = rf;
+%%
+% we obtain the characteristic function
+cfNumerical = @(u) cfaffine(u,x0,tau,K0,[],H0,[],R0);
+%%
+% We will compare the numerically obtained characteristic function to its
+% analytical counterpart:
+par.rf      = rf;
+par.sigma   = sigma;
+par.x0      = x0;
+cfTheory    = @(u) cflib(u,tau,par,'BS');
+%%
+% Comparing the difference between the numerically obtained and the 'true'
+% characteristic function along its real and imaginary components, we find
+% that |cfaffine| did quite a good job
+u           = [0:0.01:10]';
+error       = cfNumerical(u)-cfTheory(u);
+plot(u,real(error),'k',u,imag(error),'r')
+legend('real part','imaginary part')
+title('Errors from discrete approximation');
+xlabel('argument u');
+ylabel('error');
+%%
+% *Example 2: Chooser option (from DPS2000)*
+%
+% Assume that we want to price an option whose payoff is the maximum of two assets 
+% $X_T$ and $Y_T$, $C_T=max(X_T,Y_T)$. The log assets have the dynamics:
+%
+% $dx = (r_f - \frac{1}{2}\sigma_x^2)dt + \sigma_x(\rho_xdW_1 + \sqrt{1-\rho_x^2}dW_2)$
+% 
+% $dy = (r_f - \frac{1}{2}\sigma_y^2)dt + \sigma_y(\rho_ydW_1 + \sqrt{1-\rho_y^2}dW_2)$
+%
+%%
+% Assuming some parameters, we obtain the coefficients:
+tau         = 1;
+X0          = 100;
+Y0          = 110;
+rf          = 0.05;
+sX          = 0.20;
+sY          = 0.25;
+rhoX        = 0.70;
+rhoY        = 0.30;
+COV         = sX*sY*(rhoX*rhoY + sqrt(1-rhoX^2)*sqrt(1-rhoY^2));
+K0          = rf - 1/2*[sX^2 ; sY^2];
+H0          = [sX^2 COV ; COV sY^2];
+R0          = rf;
+x0          = log([X0 ; Y0]);
+%%
+% Foreknowing that we will apply the function <cf2gaby.html |cf2gaby| 
+% shortly, we have to make sure that the characteristic function should 
+% take an |(NX)x(K)| input and return an output |W| of dimension |(1)x(K)|:
+%
+cf          = @(u) cfaffine(u,x0,tau,K0,[],H0,[],R0,[],[],[],[],1);
+%%
+% We can test this by asking for the discount factor and the risk-neutral
+% expected asset levels:
+u0          = [0 1 0 ;
+               0 0 1];
+cf(-i*u0)
+%%
+% We will now write the payoff in a more comprehensible form and price its
+% components. Let $x=\log(X),y=log(Y)$:
+% 
+% $P_0 = E(e^{-r_f\tau}\max(X_T,Y_T))$
+%
+% $=E(e^{-r_f\tau}X_T) + E(e^{-r_f\tau}\max(Y_T-X_T,0))$
+% 
+% $=E(e^{-r_f\tau}X_T) + E(e^{-r_f\tau}Y_T1_{Y_T\geq X_T}) - E(e^{-r_f\tau}X_T1_{Y_T\geq X_T})$
+%
+% We can compute each component using the function <cf2gaby.html |cf2gaby|> 
+% which takes the discounted characteristic function as an input and computes
+% expectations of the type
+%
+% $G(a,b,y)=E(\exp(-\int_{0}^{T}R(X_t)dt)\exp(a^Tx_T)1_{bx_T\leq y})$
+%
+% where the vector $x_T$ denotes the state variables. We find that the first 
+% summand is just the risk-neutral expectation of $X_T$. If there are no 
+% dividends present, this is $X_0$, else we would have to compute 
+% |cf(-i*[1;0])|. The second summand is $G([0,1]^T,[1,-1]^T,0)$. The last 
+% part is $-G([1,0]^T,[1,-1]^T,0)$.
+% 
+% Combining these, we obtain
+cf(-i*[1;0]) + cf2gaby(cf,[0;1],[1;-1],0) - cf2gaby(cf,[1;0],[1;-1],0)
+%%
+% As a check, we perform the exact same analysis, starting at asset $Y_T$:
+cf(-i*[0;1]) + cf2gaby(cf,[1;0],[-1;1],0) - cf2gaby(cf,[0;1],[-1;1],0)
+%%
+% which yields the same result.
+%%
+% *Example 3: Multiple jumps*
+%
+% |cfaffine| can also handle a process with multiple jumps. Let slightly 
+% change the last example and introduce two jump processes. For easy of
+% exposition, we assume that the first asset $X_t$ is solely influenced by
+% jumps in $dZ_1$ and $Y_t$ is driven by both jump components:
+%
+% $dx = (r_f - \frac{1}{2}\sigma_x^2 - \Lambda_1m_{1,x})dt + \sigma_xdW_1 +
+% J_{1,x}dZ_1$
+%
+% $dy = (r_f - \frac{1}{2}\sigma_y^2 -\Lambda_1m_{1,y}-\Lambda_2m_{2,y})dt + \sigma_ydW_2 +
+% J_{1,y}dZ_1 + J_{2,y}dZ_2$
+% 
+% where $-\Lambda_im_{i,j}$ denotes the risk neutral jump compensation of 
+% asset $j$ with respect to jump process $i$. We will assume no constant
+% intensity offsets, i.e. $\Lambda_i(X_t) = \lambda_{i,t}$ with
+%
+% $d\lambda_1 = \kappa_1(\theta_1 - \lambda_1)dt +
+% \sigma_{11}\sqrt{\lambda_1}dW_3$
+%
+% $d\lambda_2 = \kappa_2(\theta_2 - \lambda_2)dt +
+% \sigma_{21}\sqrt{\lambda_1}dW_3 + \sigma_{22}\sqrt{\lambda_2}dW_4$
+%
+% (Technically, we would have to make sure that the second intensity cannot
+% drop below zero.)
+%
+% Further, we let the first jump distribution be bivariate normally 
+% distributed and the second is assumed to be a non-negative exponential
+% jump
+%
+% $J_1 \sim N(\mu_1,\Sigma_1)$
+%
+% $J_{2,} \sim Exp(\mu_2)$
+%
+% Translate this model into the coefficients of |cfaffine|:
+%
+% Raw specification
+rf          = 0.05;
+tau         = 1;
+X0          = 100;
+sigmaX      = 0.25;
+Y0          = 110;
+sigmaY      = 0.20;
+lambda10    = 0.11;
+kappa1      = 0.85;
+theta1      = 0.10;
+sigma11     = 0.15;
+lambda20    = 0.06;
+kappa2      = 1.00;
+theta2      = 0.075;
+sigma21     = 0.05;
+sigma22     = 0.20;
+%%
+% Initial state vector
+x0          = [log(X0) log(Y0) lambda10 lambda20]';
+%%
+% Variance coefficients:
+H0          = [sigmaX^2 0 0 0 ; 0 sigmaY^2 0 0 ; zeros(2,4)];
+H1          = zeros(4,4,4);
+H1(3:4,3:4,3)= [sigma11^2 sigma11*sigma21 ; sigma11*sigma21 sigma21^2];
+H1(4,4,4)   = sigma22^2;
+%%
+% Jump components:
+L0          = [0 0];
+L1          = [0 0 1 0 ; 0 0 0.75 0.25]';
+par.MuJ(:,1)= [-0.25 -0.10 0 0]';
+par.MuJ(:,2)= [0.0 0.2 0 0]';
+par.SigmaJ  = [0.2^2 0.2*0.5*0.3 0 0 ; 0.2*0.5*0.3 0.3 0 0 ; zeros(2,4)];
+jump1       = @(c) cfjump(c,par,'Merton');
+jump2       = @(c) cfjump(c,struct('MuJ',par.MuJ(:,2)),'Exponential');
+jump        = @(c) [jump1(c) ; jump2(c)];
+%%
+% Drift adjusmtents: |m| is the jump expectation from each jump
+% distribution minus one. 
+m           = zeros(4,2);
+m(1,1)      = jump1([1 0 0 0]')-1;
+m(1,2)      = jump2([1 0 0 0]')-1;
+m(2,1)      = jump1([0 1 0 0]')-1;
+m(2,2)      = jump2([0 1 0 0]')-1;
+%%
+% Drift coefficients: 
+K0(1,:)     = rf-1/2*sigmaX^2-m(1,:)*L0';
+K0(2,:)     = rf-1/2*sigmaY^2-m(2,:)*L0';
+K0(3,:)     = kappa1*theta1;
+K0(4,:)     = kappa2*theta2;
+K1          = -m*L1';
+K1(3,3)     = -kappa1;
+K1(4,4)     = -kappa2;
+%%
+% At this point, we might want to check whether the resulting drift is
+% indeed arbitrage-free using <cfneutralize.html |cfneutralize|>. We check
+% whether our drift our coefficients are in line with those recovered from
+% a risk neutralization. The resulting |maxErr| should be zero:
+[K0q K1q]   =  cfneutralize(K0,K1,H0,H1,rf,[],[0 0],[],L0,L1,jump);
+maxErr      = max(max(abs([K0-K0q K1-K1q])))
+%%
+% We may now combine everything into a characteristic function:
+cf          = @(u) cfaffine(u,x0,tau,K0,K1,H0,H1,rf,[],L0,L1,jump,1);
+%%
+% First, let us check wether the resulting |cf| recovers the discount
+% factor and the initial asset prices:
+u0          = -i*[0 1 0 ; 0 0 1 ; 0 0 0; 0 0 0];
+cf(u0)./[exp(-rf*tau) X0 Y0]
+%%
+% As above, we will use the function <cf2gaby.html |cf2gaby|> to price the
+% maximum option:
+% 
+
+cf(-i*[1;0;0;0]) + cf2gaby(cf,[0;1;0;0],[1;-1;0;0],0) - cf2gaby(cf,[1;0;0;0],[1;-1;0;0],0)
+%%
+% As a check, we perform the exact same analysis, starting at asset $Y_T$:
+cf(-i*[0;1;0;0]) + cf2gaby(cf,[1;0;0;0],[-1;1;0;0],0) - cf2gaby(cf,[0;1;0;0],[-1;1;0;0],0)
+%%
+% which yields the same result.
+##### SOURCE END #####
+--></body></html>

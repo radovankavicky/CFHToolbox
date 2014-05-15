@@ -1,0 +1,190 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>cfjump</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-14"><meta name="DC.source" content="cfjumpHelp.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>cfjump</h1><p>Library of transforms (moment generating functions) of commonly ecountered jump distributions in finance. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">T = cfjump(C,PAR,TYPE)
+</pre><p>Returns evaluations of the moment generating function of a certain jump distribution.</p><p><b>Input Arguments</b></p><p><tt>C</tt> is a <tt>(NX)x(K)</tt> array of evaluation points. The parameter structure <tt>PAR</tt> should correspond to the dimension <tt>(NX)|of the state vector. The argument |TYPE</tt> specifies the jump distribution:</p><div><ul><li><tt>TYPE='Merton'</tt> returns normally distributed jumps. The corresponding parameters are <tt>PAR.MuJ</tt>, a <tt>(NX)</tt> vector of expected jump sizes and <tt>PAR.SigmaJ</tt>, the jump size covariance matrix. Set all elements that do not jump to zero. The number of jump components <tt>NJ</tt> is driven by the third dimension of <tt>PAR.SigmaJ</tt>. If <tt>NJ&gt;1</tt>, <tt>PAR.MuJ</tt> is a <tt>(NX)x(NJ)</tt> matrix where each column <tt>k</tt> corresponds to the covariance matrix <tt>PAR.SigmaJ(:,:,k)</tt>.</li></ul></div><div><ul><li><tt>TYPE='Exponential'</tt> returns exponentially distributed jumps. The corresponding parameter structure is <tt>PAR.MuJ</tt>, which is a <tt>(NX)x(1)</tt> vector of expected jump sizes. Set all elements that do not correspond to a jump to zero.</li></ul></div><p><b>Example 1: Merton Jumps</b></p><p>Assume that we are interested in the ratio of two asset prices which follow a bivariate process with correlated jumps of constant intensity:</p><pre class="codeinput">tau         = 1;
+X0          = 110;
+Y0          = 100;
+rf          = 0.05;
+sX          = 0.20;
+sY          = 0.25;
+rhoX        = 0.70;
+rhoY        = 0.30;
+COV         = sX*sY*(rhoX*rhoY + sqrt(1-rhoX^2)*sqrt(1-rhoY^2));
+H0          = [sX^2 COV ; COV sY^2];
+K0          = rf - 1/2*[sX^2 ; sY^2];
+R0          = rf;
+x0          = log([X0 ; Y0]);
+</pre><p>We assume jumps in <img src="cfjumpHelp_eq27410.png" alt="$Y_t$">:</p><pre class="codeinput">lambda      = 0.15;
+par.MuJ     = [0.00 ; -0.25];
+par.SigmaJ  = [0 0 ; 0 0.20^2];
+jump        = @(c) cfjump(c,par,<span class="string">'Merton'</span>);
+</pre><p>The drift adjustment and additional coefficients are</p><pre class="codeinput">K0          = K0 - lambda*[jump([1;0])-1 ; jump([0;1])-1];
+L0          = lambda;
+</pre><p>The resulting characteristic function is</p><pre class="codeinput">cf          = @(u) cfaffine([1;-1]*u,x0,tau,K0,[],H0,[],R0,[],L0,[],jump,1)
+[f x]       = cf2pdf(cf);
+plot(x,f)
+</pre><pre class="codeoutput">
+cf = 
+
+    @(u)cfaffine([1;-1]*u,x0,tau,K0,[],H0,[],R0,[],L0,[],jump,1)
+
+</pre><img vspace="5" hspace="5" src="cfjumpHelp_01.png" alt=""> <p><b>Example 2: Multiple jumps</b></p><p>If you want to introduce multiple jumps, potentially of different types, you can use <tt>cfjump</tt> multiple times. Let's assume you want to employ multivariate normally distributed jumps in variables 1 and 2 and add an additional jump component, itself controlling jumps in process 3. You could write:</p><pre class="codeinput">par.MuJ     = [];
+par.SigmaJ  = [];
+par.MuJ(:,1)= [-0.25 -0.10 0]';
+par.MuJ(:,2)= [0 0 0.15]';
+par.SigmaJ  = [0.2*0.2 0.2*0.5*0.3 0 ; 0.2*0.5*0.3 0.3*0.3 0 ; 0 0 0];
+jump1       = @(c) cfjump(c,par,<span class="string">'Merton'</span>);
+jump2       = @(c) cfjump(c,struct(<span class="string">'MuJ'</span>,par.MuJ(:,2)),<span class="string">'Exponential'</span>);
+jump        = @(c) [jump1(c) ; jump2(c)];
+</pre><p>The resulting transform expects an input <tt>(NX)x(K)</tt> and returns the output of size <tt>(NJ)x(K)</tt>. Let us find the expected jump size induced from each process:</p><pre class="codeinput">jump(eye)-1
+</pre><pre class="codeoutput">
+ans =
+
+   -0.2055   -0.0535         0
+         0         0    0.1765
+
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% cfjump
+% Library of transforms (moment generating functions) of commonly 
+% ecountered jump distributions in finance. Part of the <Main.html CFH Toolbox>.
+%
+% *Syntax*
+%
+%   T = cfjump(C,PAR,TYPE)
+% 
+% Returns evaluations of the moment generating function of a certain jump
+% distribution.
+%
+% *Input Arguments*
+%
+% |C| is a |(NX)x(K)| array of evaluation points. The parameter structure 
+% |PAR| should correspond to the dimension |(NX)|of the state vector. The 
+% argument |TYPE| specifies the jump distribution:
+%
+% * |TYPE='Merton'| returns normally distributed jumps. The corresponding
+% parameters are |PAR.MuJ|, a |(NX)| vector of expected jump sizes and 
+% |PAR.SigmaJ|, the jump size covariance matrix. Set all elements that do
+% not jump to zero. The number of jump components |NJ| is driven by the 
+% third dimension of |PAR.SigmaJ|. If |NJ>1|, |PAR.MuJ| is a |(NX)x(NJ)|
+% matrix where each column |k| corresponds to the covariance matrix 
+% |PAR.SigmaJ(:,:,k)|.
+% 
+%
+% * |TYPE='Exponential'| returns exponentially distributed jumps. The
+% corresponding parameter structure is |PAR.MuJ|, which is a |(NX)x(1)|
+% vector of expected jump sizes. Set all elements that do not correspond to
+% a jump to zero.
+%
+% *Example 1: Merton Jumps*
+%
+% Assume that we are interested in the ratio of two asset prices which 
+% follow a bivariate process with correlated jumps of constant intensity:
+%
+tau         = 1;
+X0          = 110;
+Y0          = 100;
+rf          = 0.05;
+sX          = 0.20;
+sY          = 0.25;
+rhoX        = 0.70;
+rhoY        = 0.30;
+COV         = sX*sY*(rhoX*rhoY + sqrt(1-rhoX^2)*sqrt(1-rhoY^2));
+H0          = [sX^2 COV ; COV sY^2];
+K0          = rf - 1/2*[sX^2 ; sY^2];
+R0          = rf;
+x0          = log([X0 ; Y0]);
+%%
+% We assume jumps in $Y_t$:
+lambda      = 0.15;
+par.MuJ     = [0.00 ; -0.25];
+par.SigmaJ  = [0 0 ; 0 0.20^2];
+jump        = @(c) cfjump(c,par,'Merton');
+%%
+% The drift adjustment and additional coefficients are
+K0          = K0 - lambda*[jump([1;0])-1 ; jump([0;1])-1];
+L0          = lambda;
+%%
+% The resulting characteristic function is
+cf          = @(u) cfaffine([1;-1]*u,x0,tau,K0,[],H0,[],R0,[],L0,[],jump,1)
+[f x]       = cf2pdf(cf);
+plot(x,f)
+%%
+% *Example 2: Multiple jumps*
+%
+% If you want to introduce multiple jumps, potentially of different types,
+% you can use |cfjump| multiple times. Let's assume you want to employ
+% multivariate normally distributed jumps in variables 1 and 2 and add an
+% additional jump component, itself controlling jumps in process 3. You
+% could write:
+par.MuJ     = [];
+par.SigmaJ  = [];
+par.MuJ(:,1)= [-0.25 -0.10 0]';
+par.MuJ(:,2)= [0 0 0.15]';
+par.SigmaJ  = [0.2*0.2 0.2*0.5*0.3 0 ; 0.2*0.5*0.3 0.3*0.3 0 ; 0 0 0];
+jump1       = @(c) cfjump(c,par,'Merton');
+jump2       = @(c) cfjump(c,struct('MuJ',par.MuJ(:,2)),'Exponential');
+jump        = @(c) [jump1(c) ; jump2(c)];
+%%
+% The resulting transform expects an input |(NX)x(K)| and returns the
+% output of size |(NJ)x(K)|. Let us find the expected jump size induced
+% from each process:
+jump(eye)-1
+##### SOURCE END #####
+--></body></html>

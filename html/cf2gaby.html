@@ -1,0 +1,433 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>cf2gaby</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-14"><meta name="DC.source" content="cf2gabyHelp.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>cf2gaby</h1><p>Returns conditional expectations given a charcteristic function. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">P = CF2GABY(CF,A,B,Y,[MAX])
+</pre><p>Given a disocunted characteristic function <tt>cf</tt>, this function returns the expectation:</p><p><img src="cf2gabyHelp_eq93882.png" alt="$G(a,b,y)=E(\exp(-\int_0^TR(X_t)dt)\exp(a^TX_T)1_{b^TX_T\leq Y})$"></p><p><b>Input Arguments</b></p><p><tt>CF</tt> is a characteristic function that expects inputs of dimension <tt>(NX)x(K)</tt> and returns <tt>(1)x(K)</tt> outputs. <tt>A</tt>, <tt>B</tt> are <tt>(NX)x(1)</tt> parameters, <tt>Y</tt> is a scalar. <tt>MAX</tt> is an optional argument denoting the range of integration, default is <tt>MAX=250</tt>.</p><p><b>Example 1: Black-Scholes option pricing model</b></p><p>One (inefficient) way to obtain the option price for a given strike level <img src="cf2gabyHelp_eq14888.png" alt="$K$"> is by employing the conditional expectation function.</p><pre class="codeinput">S0      = 100;
+x0      = log(S0);
+rf      = 0.05;
+tau     = 1;
+sigma   = 0.25;
+cf      = @(u) exp(-rf*tau+i.*u.*x0+i.*u.*tau*(rf-1/2*sigma^2)-1/2*u.^2*sigma^2);
+K       = 105;
+</pre><pre class="codeinput">cf2gaby(cf,1,-1,-log(K)) - K*cf2gaby(cf,0,-1,-log(K))
+</pre><pre class="codeoutput">
+ans =
+
+   10.0022
+
+</pre><p>Compare the result using this function with a direct application of the Fast Fourier Transform:</p><pre class="codeinput">cf2call(cf,struct(<span class="string">'x0'</span>,x0,<span class="string">'K'</span>,K))
+</pre><pre class="codeoutput">
+ans =
+
+   10.0022
+
+</pre><p><b>Example 2: Chooser option (from DPS2000)</b></p><p>Assume that we want to price an option whose payoff is the maximum of two assets <img src="cf2gabyHelp_eq77038.png" alt="$X_T$"> and <img src="cf2gabyHelp_eq89373.png" alt="$Y_T$">, <img src="cf2gabyHelp_eq84989.png" alt="$C_T=max(X_T,Y_T)$">. The log assets have the dynamics:</p><p><img src="cf2gabyHelp_eq78019.png" alt="$dx = (r_f - \frac{1}{2}\sigma_x^2)dt + \sigma_x(\rho_xdW_1 + \sqrt{1-\rho_x^2}dW_2)$"></p><p><img src="cf2gabyHelp_eq47865.png" alt="$dy = (r_f - \frac{1}{2}\sigma_y^2)dt + \sigma_y(\rho_ydW_1 + \sqrt{1-\rho_y^2}dW_2)$"></p><p>Assuming some parameters, we obtain the coefficients:</p><pre class="codeinput">tau         = 1;
+X0          = 100;
+Y0          = 110;
+rf          = 0.05;
+sX          = 0.20;
+sY          = 0.25;
+rhoX        = 0.70;
+rhoY        = 0.30;
+COV         = sX*sY*(rhoX*rhoY + sqrt(1-rhoX^2)*sqrt(1-rhoY^2));
+K0          = rf - 1/2*[sX^2 ; sY^2];
+H0          = [sX^2 COV ; COV sY^2];
+R0          = rf;
+x0          = log([X0 ; Y0]);
+</pre><p>Foreknowing that we will apply the function &lt;cf2gaby.html <tt>cf2gaby</tt> shortly, we have to make sure that the characteristic function should take an <tt>(NX)x(K)</tt> input and return an output <tt>W</tt> of dimension <tt>(1)x(K)</tt>:</p><pre class="codeinput">cf          = @(u) cfaffine(u,x0,tau,K0,[],H0,[],R0,[],[],[],[],1);
+</pre><p>We can test this by asking for the discount factor and the risk-neutral expected asset levels:</p><pre class="codeinput">u0          = [0 1 0 ;
+               0 0 1];
+cf(-i*u0)
+</pre><pre class="codeoutput">
+ans =
+
+    0.9512  100.0000  110.0000
+
+</pre><p>We will now write the payoff in a more comprehensible form and price its components. Let <img src="cf2gabyHelp_eq63904.png" alt="$x=\log(X),y=log(Y)$">:</p><p><img src="cf2gabyHelp_eq07369.png" alt="$P_0 = E(e^{-r_f\tau}\max(X_T,Y_T))$"></p><p><img src="cf2gabyHelp_eq52102.png" alt="$=E(e^{-r_f\tau}X_T) + E(e^{-r_f\tau}\max(Y_T-X_T,0))$"></p><p><img src="cf2gabyHelp_eq08712.png" alt="$=E(e^{-r_f\tau}X_T) + E(e^{-r_f\tau}Y_T1_{Y_T\geq X_T}) - E(e^{-r_f\tau}X_T1_{Y_T\geq X_T})$"></p><p>We can compute each component using the function <a href="cf2gaby.html"><tt>cf2gaby</tt></a> which takes the discounted characteristic function as an input and computes expectations of the type</p><p><img src="cf2gabyHelp_eq17314.png" alt="$G(a,b,y)=E(\exp(-\int_{0}^{T}R(X_t)dt)\exp(a^Tx_T)1_{bx_T\leq y})$"></p><p>where the vector <img src="cf2gabyHelp_eq54336.png" alt="$x_T$"> denotes the state variables. We find that the first summand is just the risk-neutral expectation of <img src="cf2gabyHelp_eq77038.png" alt="$X_T$">. If there are no dividends present, this is <img src="cf2gabyHelp_eq05032.png" alt="$X_0$">, else we would have to compute <tt>cf(-i*[1;0])</tt>. The second summand is <img src="cf2gabyHelp_eq97142.png" alt="$G([0,1]^T,[1,-1]^T,0)$">. The last part is <img src="cf2gabyHelp_eq63254.png" alt="$-G([1,0]^T,[1,-1]^T,0)$">.</p><p>Combining these, we obtain</p><pre class="codeinput">cf(-i*[1;0]) + cf2gaby(cf,[0;1],[1;-1],0) - cf2gaby(cf,[1;0],[1;-1],0)
+</pre><pre class="codeoutput">
+ans =
+
+  111.3957
+
+</pre><p>As a check, we perform the exact same analysis, starting at asset <img src="cf2gabyHelp_eq89373.png" alt="$Y_T$">:</p><pre class="codeinput">cf(-i*[0;1]) + cf2gaby(cf,[1;0],[-1;1],0) - cf2gaby(cf,[0;1],[-1;1],0)
+</pre><pre class="codeoutput">
+ans =
+
+  111.3957
+
+</pre><p>which yields the same result.</p><p><b>Example 3: Bond option pricing</b></p><p>In this example, we will follow the approach of (DPS2000) to bond option pricing.</p><p>Assume a call option with maturity <img src="cf2gabyHelp_eq59989.png" alt="$\tau_1=S-t$"> written on a zero coupon bond with maturity at time <img src="cf2gabyHelp_eq57769.png" alt="$T&gt;S$">. Thus, at point in time <img src="cf2gabyHelp_eq57315.png" alt="$T$">, the bond has remaining life <img src="cf2gabyHelp_eq96892.png" alt="$\tau_2=T-S$">.</p><p>At this point in time, depending upon the value(s) of the state variable(s), the bond will have the risk-neutral price</p><p><img src="cf2gabyHelp_eq75778.png" alt="$\Lambda(S,T) = \exp(\alpha(S,T) + \beta(S,T)X_S)$"></p><p>(See <a href="cf2bond.html"><tt>cf2bond</tt></a> for more examples on bond pricing)</p><p>A call option with strike <img src="cf2gabyHelp_eq14888.png" alt="$K$"> written on the zero bond pays</p><p><img src="cf2gabyHelp_eq86183.png" alt="$\max(\Lambda(S,T)-K,0)$"></p><p><img src="cf2gabyHelp_eq09691.png" alt="$=\max(\exp(\alpha(S,T) + \beta(S,T)X_S)-K,0)$"></p><p><img src="cf2gabyHelp_eq24296.png" alt="$=\exp(\alpha(S,T))\max(\exp(\beta(S,T)X_S)-\exp(-\alpha(S,T))K,0)$"></p><p>We can thus apply the function <img src="cf2gabyHelp_eq38700.png" alt="$G(a,b,y)$"> to bond option pricing:</p><p><img src="cf2gabyHelp_eq15399.png" alt="$P=E\left(\exp(-\int_0^SR(X_t)dt)\exp(\alpha(S,T))\max(\exp(\beta(S,T)X_S)-\exp(-\alpha(S,T))K,0)\right)$"></p><p><img src="cf2gabyHelp_eq31011.png" alt="$P=\exp(\alpha(S,T))\left(E\left(df(X)\exp(\beta(S,T)X_S)1_{B<k}\right)-kE\left(df(X)1_{B<k}\right)\right)$"></p><p>where we have have abbreviated the state dependent discount factor integral as <img src="cf2gabyHelp_eq65885.png" alt="$df(X)$">, and where <img src="cf2gabyHelp_eq64407.png" alt="$B=\exp(\beta(S,T)X_S)$"> and <img src="cf2gabyHelp_eq91133.png" alt="$k=K\exp(-\alpha(S,T))$">. We can thus rewrite the expression once more and obtain:</p><p><img src="cf2gabyHelp_eq64946.png" alt="$P=\exp(\alpha(S,T))E\left(df(X)\exp(\beta(S,T)X_S)1_{B<k}\right)-KE\left(df(X)1_{B<k}\right)$"></p><p>Using the function $G(a,b,y), these expressions can be evaluated as:</p><p><img src="cf2gabyHelp_eq80625.png" alt="$P=\exp(\alpha(S,T))G(\beta(S,T),-\beta(S,T),-log(k))-KG(0,-\beta(S,T),-log(k))$"></p><p>Let us apply this framework to price bond options written on two different underlying processes, the Vasicek short rate model and the Cox-Ingersoll-Ross short rate model.</p><div><ul><li>Vasicek <img src="cf2gabyHelp_eq56440.png" alt="$dr=\kappa(\theta-r_t)dt + \sigma dW$"></li><li>Cox-Ingersoll-Ross <img src="cf2gabyHelp_eq39436.png" alt="$dr=\kappa(\theta-r_t)dt + \sigma\sqrt{r_t}dW$"></li></ul></div><p>We will set the model variances such that their long run variances equal.</p><pre class="codeinput">r0          = 0.01;
+kR          = 0.45;
+tR          = 0.05;
+</pre><p>Let us assume <img src="cf2gabyHelp_eq87247.png" alt="$\sigma=0.04$"> in the Vasicek model:</p><pre class="codeinput">sV          = 0.04;
+</pre><p>...resulting in a long run variance level of</p><pre class="codeinput">lvV         = sV^2/(2*kR)
+</pre><pre class="codeoutput">
+lvV =
+
+    0.0018
+
+</pre><p>we match the CIR variance so that it meets Vasicek's long run variance:</p><pre class="codeinput">sC          = sqrt(lvV*2*kR/tR);
+lvC         = tR*sC^2/(2*kR);
+</pre><p>quickly check the equality:</p><pre class="codeinput">[lvV lvC]
+</pre><pre class="codeoutput">
+ans =
+
+    0.0018    0.0018
+
+</pre><p>Just to make sure, we test the Feller condition on the CIR process (implying <img src="cf2gabyHelp_eq44491.png" alt="$r&gt;0$">)</p><pre class="codeinput">[2*kR*tR sC^2]
+</pre><pre class="codeoutput">
+ans =
+
+    0.0450    0.0320
+
+</pre><p>We assume that the call option matures in <img src="cf2gabyHelp_eq36543.png" alt="$S-t=2$"> years, whereas the bond matures in <img src="cf2gabyHelp_eq09112.png" alt="$T-t$">=5 years. Thus, the remaining life at maturity is <img src="cf2gabyHelp_eq56280.png" alt="$\tau2=T-S=3$"> years.</p><pre class="codeinput">tau1            = 2;
+tau2            = 3;
+</pre><p>The relevant factos <img src="cf2gabyHelp_eq33940.png" alt="$\alpha(S,T)$"> and <img src="cf2gabyHelp_eq09589.png" alt="$\beta(S,T)$"> can be recovered from the characteristic function function <a href="cfaffine.html"><tt>cfaffine</tt></a>, which we will employ throughout this example. Note that the only 'difference' between the model specifications is that the CIR model has a state dependent variance:</p><pre class="codeinput">cfVas           = @(u,tau) cfaffine(u,r0,tau,kR*tR,-kR,sV^2,[],[],1);
+cfCIR           = @(u,tau) cfaffine(u,r0,tau,kR*tR,-kR,[],sC^2,[],1);
+</pre><p>For both models, we compute the values of <img src="cf2gabyHelp_eq33940.png" alt="$\alpha(S,T)$"> and <img src="cf2gabyHelp_eq09589.png" alt="$\beta(S,T)$"> to</p><pre class="codeinput">[~,aV,bV]       = cfVas(0,tau2)
+[~,aC,bC]       = cfCIR(0,tau2)
+</pre><pre class="codeoutput">
+aV =
+
+   -0.0648
+
+
+bV =
+
+   -1.6461
+
+
+aC =
+
+   -0.0668
+
+
+bC =
+
+   -1.6066
+
+</pre><p>Let us quickly compare hypothetical 3-year zero bond prices that start starting 2 years from now for several levels of possible future shor trates:</p><pre class="codeinput">rr          = [0:0.01:0.15];
+bondV       = exp(aV+bV*rr);
+bondC       = exp(aC+bC*rr);
+plot(rr,bondV,<span class="string">'k'</span>,rr,bondC,<span class="string">'r'</span>)
+title(<span class="string">'hypothetical prices induced by Vasicek and CIR model given r_T'</span>);
+xlabel(<span class="string">'future spot rate r_T'</span>);
+ylabel(<span class="string">'future zero bond price'</span>);
+legend(<span class="string">'Vasicek'</span>,<span class="string">'CIR'</span>);
+</pre><img vspace="5" hspace="5" src="cf2gabyHelp_01.png" alt=""> <p>We can now compute and compare bond option prices across different strikes for both models. Let us consider the strike space:</p><pre class="codeinput">X           = [0.75:0.01:1.10];
+</pre><p>The Vasicek bond option prices are:</p><pre class="codeinput">kV          = exp(aV);
+<span class="keyword">for</span> k = 1:length(X)
+    xV          = X(k)./kV;
+    CV(k,:)     = kV*cf2gaby(@(u) cfVas(u,tau1),bV,-bV,-log(xV)) <span class="keyword">...</span>
+                    - X(k)*cf2gaby(@(u) cfVas(u,tau1),0,-bV,-log(xV));
+<span class="keyword">end</span>
+</pre><p>When computing CIR bond option prices, note that the CIR characteristic function converges only slowly, thus we have to consider a larger range of integration <tt>MAX</tt> in <tt>cf2gaby</tt>:</p><pre class="codeinput">kC          = exp(aC);
+<span class="keyword">for</span> k = 1:length(X)
+    xC          = X(k)./kC;
+    CC(k,:)     = kC*cf2gaby(@(u) cfCIR(u,tau1),bC,-bC,-log(xC),1500) <span class="keyword">...</span>
+                    - X(k)*cf2gaby(@(u) cfCIR(u,tau1),0,-bC,-log(xC),1500);
+<span class="keyword">end</span>
+plot(X,CV,<span class="string">'b'</span>,X,CC,<span class="string">'r'</span>,X([1 end]),[0 0],<span class="string">'k'</span>);
+title(<span class="string">'Bond option prices from Vasicek and CIR model'</span>);
+legend(<span class="string">'Vasicek'</span>,<span class="string">'CIR'</span>);
+xlabel(<span class="string">'Strike level'</span>);
+ylabel(<span class="string">'Bond option price'</span>);
+ylim([0 max(CV)]);
+</pre><img vspace="5" hspace="5" src="cf2gabyHelp_02.png" alt=""> <p>From this plot, we can clearly see that the CIR model yields zero call option prices for strikes above 1, as it does not allow for negative interest rates, unlike the Vasicek model.</p><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% cf2gaby
+% Returns conditional expectations given a charcteristic function. Part of 
+% the <Main.html CFH Toolbox>.
+%
+% *Syntax*
+%
+%   P = CF2GABY(CF,A,B,Y,[MAX])
+%
+% Given a disocunted characteristic function |cf|, this function returns 
+% the expectation:
+%
+% $G(a,b,y)=E(\exp(-\int_0^TR(X_t)dt)\exp(a^TX_T)1_{b^TX_T\leq Y})$
+%
+% *Input Arguments*
+%
+% |CF| is a characteristic function that expects inputs of dimension
+% |(NX)x(K)| and returns |(1)x(K)| outputs. |A|, |B| are |(NX)x(1)|
+% parameters, |Y| is a scalar. |MAX| is an optional argument denoting the 
+% range of integration, default is |MAX=250|.
+%
+% *Example 1: Black-Scholes option pricing model*
+%
+% One (inefficient) way to obtain the option price for a given strike level 
+% $K$ is by employing the conditional expectation function.
+S0      = 100;
+x0      = log(S0);
+rf      = 0.05;
+tau     = 1;
+sigma   = 0.25;
+cf      = @(u) exp(-rf*tau+i.*u.*x0+i.*u.*tau*(rf-1/2*sigma^2)-1/2*u.^2*sigma^2);
+K       = 105;
+%%
+%
+cf2gaby(cf,1,-1,-log(K)) - K*cf2gaby(cf,0,-1,-log(K))
+%%
+% Compare the result using this function with a direct application of the
+% Fast Fourier Transform:
+cf2call(cf,struct('x0',x0,'K',K))
+%%
+% *Example 2: Chooser option (from DPS2000)*
+%
+% Assume that we want to price an option whose payoff is the maximum of two assets 
+% $X_T$ and $Y_T$, $C_T=max(X_T,Y_T)$. The log assets have the dynamics:
+%
+% $dx = (r_f - \frac{1}{2}\sigma_x^2)dt + \sigma_x(\rho_xdW_1 + \sqrt{1-\rho_x^2}dW_2)$
+% 
+% $dy = (r_f - \frac{1}{2}\sigma_y^2)dt + \sigma_y(\rho_ydW_1 + \sqrt{1-\rho_y^2}dW_2)$
+%
+%%
+% Assuming some parameters, we obtain the coefficients:
+tau         = 1;
+X0          = 100;
+Y0          = 110;
+rf          = 0.05;
+sX          = 0.20;
+sY          = 0.25;
+rhoX        = 0.70;
+rhoY        = 0.30;
+COV         = sX*sY*(rhoX*rhoY + sqrt(1-rhoX^2)*sqrt(1-rhoY^2));
+K0          = rf - 1/2*[sX^2 ; sY^2];
+H0          = [sX^2 COV ; COV sY^2];
+R0          = rf;
+x0          = log([X0 ; Y0]);
+%%
+% Foreknowing that we will apply the function <cf2gaby.html |cf2gaby| 
+% shortly, we have to make sure that the characteristic function should 
+% take an |(NX)x(K)| input and return an output |W| of dimension |(1)x(K)|:
+%
+cf          = @(u) cfaffine(u,x0,tau,K0,[],H0,[],R0,[],[],[],[],1);
+%%
+% We can test this by asking for the discount factor and the risk-neutral
+% expected asset levels:
+u0          = [0 1 0 ;
+               0 0 1];
+cf(-i*u0)
+%%
+% We will now write the payoff in a more comprehensible form and price its
+% components. Let $x=\log(X),y=log(Y)$:
+% 
+% $P_0 = E(e^{-r_f\tau}\max(X_T,Y_T))$
+%
+% $=E(e^{-r_f\tau}X_T) + E(e^{-r_f\tau}\max(Y_T-X_T,0))$
+% 
+% $=E(e^{-r_f\tau}X_T) + E(e^{-r_f\tau}Y_T1_{Y_T\geq X_T}) - E(e^{-r_f\tau}X_T1_{Y_T\geq X_T})$
+%
+% We can compute each component using the function <cf2gaby.html |cf2gaby|> 
+% which takes the discounted characteristic function as an input and computes
+% expectations of the type
+%
+% $G(a,b,y)=E(\exp(-\int_{0}^{T}R(X_t)dt)\exp(a^Tx_T)1_{bx_T\leq y})$
+%
+% where the vector $x_T$ denotes the state variables. We find that the first 
+% summand is just the risk-neutral expectation of $X_T$. If there are no 
+% dividends present, this is $X_0$, else we would have to compute 
+% |cf(-i*[1;0])|. The second summand is $G([0,1]^T,[1,-1]^T,0)$. The last 
+% part is $-G([1,0]^T,[1,-1]^T,0)$.
+% 
+% Combining these, we obtain
+cf(-i*[1;0]) + cf2gaby(cf,[0;1],[1;-1],0) - cf2gaby(cf,[1;0],[1;-1],0)
+%%
+% As a check, we perform the exact same analysis, starting at asset $Y_T$:
+cf(-i*[0;1]) + cf2gaby(cf,[1;0],[-1;1],0) - cf2gaby(cf,[0;1],[-1;1],0)
+%%
+% which yields the same result.
+%%
+% *Example 3: Bond option pricing*
+% 
+% In this example, we will follow the approach of (DPS2000) to bond option
+% pricing. 
+%
+% Assume a call option with maturity $\tau_1=S-t$ written on a zero coupon 
+% bond with maturity at time $T>S$. Thus, at point in time $T$, the
+% bond has remaining life $\tau_2=T-S$.
+%
+% At this point in time, depending upon the value(s) of the state
+% variable(s), the bond will have the risk-neutral price
+%
+% $\Lambda(S,T) = \exp(\alpha(S,T) + \beta(S,T)X_S)$ 
+%
+% (See <cf2bond.html |cf2bond|> for more examples on bond pricing)
+%
+% A call option with strike $K$ written on the zero bond pays
+%
+% $\max(\Lambda(S,T)-K,0)$
+%
+% $=\max(\exp(\alpha(S,T) + \beta(S,T)X_S)-K,0)$
+%
+% $=\exp(\alpha(S,T))\max(\exp(\beta(S,T)X_S)-\exp(-\alpha(S,T))K,0)$
+%
+% We can thus apply the function $G(a,b,y)$ to bond option pricing:
+%
+% $P=E\left(\exp(-\int_0^SR(X_t)dt)\exp(\alpha(S,T))\max(\exp(\beta(S,T)X_S)-\exp(-\alpha(S,T))K,0)\right)$
+%
+% $P=\exp(\alpha(S,T))\left(E\left(df(X)\exp(\beta(S,T)X_S)1_{B<k}\right)-kE\left(df(X)1_{B<k}\right)\right)$
+%
+% where we have have abbreviated the state dependent discount factor
+% integral as $df(X)$, and where $B=\exp(\beta(S,T)X_S)$ and
+% $k=K\exp(-\alpha(S,T))$. We can thus rewrite the expression once more and
+% obtain:
+%
+% $P=\exp(\alpha(S,T))E\left(df(X)\exp(\beta(S,T)X_S)1_{B<k}\right)-KE\left(df(X)1_{B<k}\right)$
+%
+% Using the function $G(a,b,y), these expressions can be evaluated as:
+%
+% $P=\exp(\alpha(S,T))G(\beta(S,T),-\beta(S,T),-log(k))-KG(0,-\beta(S,T),-log(k))$
+%
+% Let us apply this framework to price bond options written on two
+% different underlying processes, the Vasicek short rate model and the
+% Cox-Ingersoll-Ross short rate model. 
+%
+% * Vasicek $dr=\kappa(\theta-r_t)dt + \sigma dW$
+% * Cox-Ingersoll-Ross $dr=\kappa(\theta-r_t)dt + \sigma\sqrt{r_t}dW$
+%
+% We will set the model variances such that their long run variances equal. 
+%
+r0          = 0.01;
+kR          = 0.45;
+tR          = 0.05;
+%%
+% Let us assume $\sigma=0.04$ in the Vasicek model:
+sV          = 0.04;
+%%
+% ...resulting in a long run variance level of
+lvV         = sV^2/(2*kR)
+%%
+% we match the CIR variance so that it meets Vasicek's long run variance:
+sC          = sqrt(lvV*2*kR/tR);
+lvC         = tR*sC^2/(2*kR);
+%%
+% quickly check the equality:
+[lvV lvC]
+%%
+% Just to make sure, we test the Feller condition on the CIR process 
+% (implying $r>0$)
+[2*kR*tR sC^2]
+%%
+% We assume that the call option matures in $S-t=2$ years, whereas the bond
+% matures in $T-t$=5 years. Thus, the remaining life at maturity is
+% $\tau2=T-S=3$ years.
+%
+tau1            = 2;
+tau2            = 3;
+%%
+% The relevant factos $\alpha(S,T)$ and $\beta(S,T)$ can be recovered from
+% the characteristic function function <cfaffine.html |cfaffine|>, which we
+% will employ throughout this example. Note that the only 'difference'
+% between the model specifications is that the CIR model has a state
+% dependent variance:
+cfVas           = @(u,tau) cfaffine(u,r0,tau,kR*tR,-kR,sV^2,[],[],1);
+cfCIR           = @(u,tau) cfaffine(u,r0,tau,kR*tR,-kR,[],sC^2,[],1);
+%%
+% For both models, we compute the values of $\alpha(S,T)$ and $\beta(S,T)$ 
+% to
+[~,aV,bV]       = cfVas(0,tau2)
+[~,aC,bC]       = cfCIR(0,tau2)
+%%
+% Let us quickly compare hypothetical 3-year zero bond prices that start 
+% starting 2 years from now for several levels of possible future shor
+% trates:
+rr          = [0:0.01:0.15];
+bondV       = exp(aV+bV*rr);
+bondC       = exp(aC+bC*rr);
+plot(rr,bondV,'k',rr,bondC,'r')
+title('hypothetical prices induced by Vasicek and CIR model given r_T');
+xlabel('future spot rate r_T');
+ylabel('future zero bond price');
+legend('Vasicek','CIR');
+%%
+% We can now compute and compare bond option prices across different 
+% strikes for both models. Let us consider the strike space:
+X           = [0.75:0.01:1.10];
+%%
+% The Vasicek bond option prices are:
+kV          = exp(aV);
+for k = 1:length(X)
+    xV          = X(k)./kV;
+    CV(k,:)     = kV*cf2gaby(@(u) cfVas(u,tau1),bV,-bV,-log(xV)) ...
+                    - X(k)*cf2gaby(@(u) cfVas(u,tau1),0,-bV,-log(xV));
+end
+%%
+% When computing CIR bond option prices, note that the CIR characteristic
+% function converges only slowly, thus we have to consider a larger range
+% of integration |MAX| in |cf2gaby|:
+kC          = exp(aC);
+for k = 1:length(X)
+    xC          = X(k)./kC;
+    CC(k,:)     = kC*cf2gaby(@(u) cfCIR(u,tau1),bC,-bC,-log(xC),1500) ...
+                    - X(k)*cf2gaby(@(u) cfCIR(u,tau1),0,-bC,-log(xC),1500);
+end
+plot(X,CV,'b',X,CC,'r',X([1 end]),[0 0],'k');
+title('Bond option prices from Vasicek and CIR model');
+legend('Vasicek','CIR');
+xlabel('Strike level');
+ylabel('Bond option price');
+ylim([0 max(CV)]);
+%%
+% From this plot, we can clearly see that the CIR model yields zero call
+% option prices for strikes above 1, as it does not allow for negative
+% interest rates, unlike the Vasicek model. 
+
+##### SOURCE END #####
+--></body></html>

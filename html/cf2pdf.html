@@ -1,0 +1,284 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>cf2pdf</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-14"><meta name="DC.source" content="cf2pdfHelp.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>cf2pdf</h1><p>Compute normalized probability density function from characteristic function. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">[F X] = CF2PDF(CF)
+[F X] = CF2PDF(CF,AUX)
+[F X] = CF2PDF(CF,AUX,PAR)
+[F X] = CF2PDf(CF,[],PAR)
+</pre><p>Given a characteristic function <tt>CF</tt>, returns normalized probability density function <tt>F</tt> and corresponding sampling points <tt>X</tt>.</p><p><b>Input Arguments</b></p><p>The characteristic function <tt>CF</tt> should expect the real argument <tt>u</tt> and return the corresponding characteristic function.</p><p><tt>AUX</tt> is a structure containing optional parameters for the Fourier transform:</p><div><ul><li><tt>aux.N</tt> is the number of points for FRFT evaluation, default 8192</li><li><tt>aux.uMax</tt> denotes the range of integration of the characteristic function, default 100</li><li><tt>aux.dx</tt> describes discretization of the log strike range, default value 3/N</li><li><tt>aux.x0</tt> is the log of spot underlying, default zero</li><li><tt>aux.x</tt> is a vector of pdf sampling points. If this field is used, the values in <tt>dx</tt>, <tt>x0</tt> and <tt>N</tt> are replaced with corresponding values obtained from <tt>x</tt>.</li></ul></div><p><tt>PAR</tt> is an additional structure that passes parameters to the characteristic function if required.</p><p><b>Example 1: Black Scholes</b></p><p>In the Black Scholes model, the dynamics of the logarithmic spot process are:</p><p><img src="cf2pdfHelp_eq34838.png" alt="$dy=(r_f - \frac{1}{2}\sigma^2)dt + \sigma dW$"></p><p>resulting in the characteristic function</p><p><img src="cf2pdfHelp_eq25620.png" alt="$\phi(u)=E(e^{uiX_T})=\exp(-r_f\tau +iux_t+ iu\tau(r_f-\frac{1}{2}\sigma^2)-\frac{1}{2}\tau u \sigma^2)$"></p><p>where <img src="cf2pdfHelp_eq42994.png" alt="$\tau=T-t$">.</p><p>The characteristic function of the Black Scholes model is also included in <a href="cflib.html"><tt>cflib</tt></a>, using the argument <tt>type='BS'</tt>.</p><pre class="codeinput">rf          = 0.05;
+tau         = 1;
+sigma       = 0.25;
+S0          = 1;
+x0          = log(S0);
+cfB= @(u) exp(-rf*tau + u*i*x0 + i*u*(rf-1/2*sigma^2)*tau - 1/2*u.^2*sigma^2*tau);
+[fB xB] = cf2pdf(cfB);
+plot(xB,fB)
+</pre><img vspace="5" hspace="5" src="cf2pdfHelp_01.png" alt=""> <p><b>Example 2: Heston's Stochastic volatility model with Merton style jumps</b></p><p>In this framework, the process dynamics are:</p><p><img src="cf2pdfHelp_eq29589.png" alt="$dy = (r_f - \frac{1}{2}v_t-\lambda m)dt + \sqrt{v_t}dW_1 + JdZ$"></p><p><img src="cf2pdfHelp_eq40386.png" alt="$dv = \kappa(\theta-v_t)dt + \sigma\sqrt{v_t}dW_2$"></p><p><img src="cf2pdfHelp_eq42180.png" alt="$E(dW1dW2)=\rho dt$"></p><p>and <img src="cf2pdfHelp_eq81664.png" alt="$dZ$"> is a Poisson jump process with constant intensity <img src="cf2pdfHelp_eq23351.png" alt="$\lambda$">.</p><p>The drift adjustment is <img src="cf2pdfHelp_eq17709.png" alt="$m = E(e^J-1)$">, where the jump distribution is normal <img src="cf2pdfHelp_eq75241.png" alt="$N(\mu_J,\sigma_J)$"></p><p>The corresponding characteristic function is part of the <a href="cflib.html"><tt>cflib</tt></a> toolbox:</p><pre class="codeinput">par.rf      = 0.05;
+par.kappa   = 0.85;
+par.theta   = 0.25^2;
+par.sigma   = 0.10;
+par.rho     = -0.8;
+par.lambda  = 0.1;
+par.muJ     = -0.20;
+par.sigmaJ  = 0.10;
+par.x0      = 0;
+par.v0      = 0.25^2;
+tau         = 1;
+cfH         = @(u) cflib(u,tau,par,<span class="string">'HestonJump'</span>);
+[fH xH]     = cf2pdf(cfH);
+plot(xH,fH,xB,fB);
+legend(<span class="string">'Heston'</span>,<span class="string">'Black Scholes'</span>);
+</pre><img vspace="5" hspace="5" src="cf2pdfHelp_02.png" alt=""> <p><b>Example 3: Probability density of relative asset price</b></p><p>In this example, we will discuss the probability density function of the relative performance of asset <img src="cf2pdfHelp_eq77038.png" alt="$X_T$"> over asset <img src="cf2pdfHelp_eq89373.png" alt="$Y_T$">, whose log dynamics are assumed to be:</p><p><img src="cf2pdfHelp_eq27908.png" alt="$dx = (r_f -\frac{1}{2}\sigma_x^2 -\lambda m_x)dt + \sigma_x dW_1 + J_x dZ$"></p><p><img src="cf2pdfHelp_eq14438.png" alt="$dy = (r_f -\frac{1}{2}\sigma_y^2 \lambda m_y)dt + \sigma_y dW_2 + J_y dZ$"></p><p>and constant jump intensity <img src="cf2pdfHelp_eq23351.png" alt="$\lambda$">, whereas jumps in <img src="cf2pdfHelp_eq43551.png" alt="$x$"> and <img src="cf2pdfHelp_eq44020.png" alt="$y$"> are bivariate normal:</p><p><img src="cf2pdfHelp_eq97771.png" alt="$[J_x , J_y]^T~\sim N(\mu,\Sigma)$"></p><p>The jump transform is</p><p><img src="cf2pdfHelp_eq76673.png" alt="$\theta(c)=\int_{R^n}exp(cJ)df(J)=\exp(c^T\mu_J + \frac{1}{2}c^T\Sigma_Jc)$"></p><p>resulting in the drift adjustments</p><p><img src="cf2pdfHelp_eq91716.png" alt="$m_x = \theta([1,0]^T)-1, m_y=\theta([0,1]^T)-1$"></p><p>We are interested in the pdf, and hence the characteristic function, of of <img src="cf2pdfHelp_eq45914.png" alt="$Z_T=X_T/Y_T$">. Noting that <img src="cf2pdfHelp_eq12150.png" alt="$Z_T=\exp(z_T)=\exp(x_T-y_T)$">, we can rewrite the characteristic function of <img src="cf2pdfHelp_eq68661.png" alt="$Z_T$"> as:</p><p><img src="cf2pdfHelp_eq64281.png" alt="$\phi(u) = E(\exp(iuz_T))=E(\exp(iu(x_T-y_T)))$"></p><p>This feat can be easily implemented via <a href="cfaffine.html"><tt>cfaffine</tt></a>. Let us assume correlated jumps of opposing sizes:</p><pre class="codeinput">X0          = 100;
+Y0          = 110;
+rf          = 0.05;
+sigmaX      = 0.20;
+sigmaY      = 0.25;
+muJ         = [-0.25 ; 0.15];
+SigmaJ      = [0.2*0.2 0.2*0.1*0.7 ; 0.2*0.1*0.7 0.1*0.1];
+lambda      = 0.15;
+jump        = @(c) exp(muJ'*c + 1/2*diag(SigmaJ)'*c.^2 + SigmaJ(1,2)*c(1,:).*c(2,:));
+</pre><p>Translating these into the AJD coefficients:</p><pre class="codeinput">x0          = log([X0 ; Y0]);
+z0          = x0(1)-x0(2);
+m(1,:)      = jump([1;0])-1;
+m(2,:)      = jump([0;1])-1;
+K0          = rf-1/2*[sigmaX^2;sigmaY^2]-lambda*(m);
+H0          = [sigmaX^2 0 ; 0 sigmaY^2];
+L0          = lambda;
+R0          = rf;
+</pre><p>We will now define the characteristic function via <a href="cfaffine.html"><tt>cfaffine</tt></a>, which allows for an array of <tt>u</tt> values. Foreknowing that the function <tt>cf2pdf</tt> will evaluate the supplied characteristic functions at the column vector <tt>u=[0;...;uMax]</tt>, we tell <a href="cfaffine.html"><tt>cfaffine</tt></a> that the input will be a <tt>NU x NX</tt> matrix by setting the <tt>ND</tt> argument to <tt>2</tt>:</p><pre class="codeinput">cf          = @(u) cfaffine(u*[1 -1],x0,tau,K0,[],H0,[],R0,[],L0,[],jump,2);
+</pre><p>We will also compare the result to the case where no jumps are present:</p><pre class="codeinput">K0Diffusive = rf-1/2*[sigmaX^2;sigmaY^2];
+cfDiffuse   = @(u) cfaffine(u*[1 -1],x0,tau,K0Diffusive,[],H0,[],R0,[],[],[],[],2);
+</pre><p>The initial value for <tt>cf2pdf</tt> is <tt>log(Z0)</tt>, thus</p><pre class="codeinput">aux.x0      = z0;
+[f x]       = cf2pdf(cf,aux);
+[fD xD]     = cf2pdf(cfDiffuse,aux);
+plot(x,f,xD,fD);
+title(<span class="string">'Probability distribution of relative asset price, with and without jumps'</span>);
+legend(<span class="string">'pdf with jumps'</span>,<span class="string">'pdf without jumps'</span>);
+xlabel(<span class="string">'log price ratio'</span>);
+ylabel(<span class="string">'normalized pdf'</span>);
+xlim(1.5*[-1 1]);
+</pre><img vspace="5" hspace="5" src="cf2pdfHelp_03.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% cf2pdf
+% Compute normalized probability density function from characteristic function. 
+% Part of the <Main.html CFH Toolbox>.
+%
+% *Syntax*
+%
+%   [F X] = CF2PDF(CF) 
+%   [F X] = CF2PDF(CF,AUX) 
+%   [F X] = CF2PDF(CF,AUX,PAR)
+%   [F X] = CF2PDf(CF,[],PAR)
+%
+% Given a characteristic function |CF|, returns normalized probability 
+% density function |F| and corresponding sampling points |X|.
+%
+% *Input Arguments*
+%
+% The characteristic function |CF| should expect the real argument |u| and
+% return the corresponding characteristic function. 
+%
+% |AUX| is a structure containing optional parameters for the Fourier
+% transform:
+% 
+% * |aux.N| is the number of points for FRFT evaluation, default 8192
+% * |aux.uMax| denotes the range of integration of the characteristic function, default
+% 100
+% * |aux.dx| describes discretization of the log strike range, default value 3/N
+% * |aux.x0| is the log of spot underlying, default zero
+% * |aux.x| is a vector of pdf sampling points. If this field is used, the
+% values in |dx|, |x0| and |N| are replaced with corresponding values
+% obtained from |x|.
+%
+% |PAR| is an additional structure that passes parameters to the
+% characteristic function if required.
+%
+% *Example 1: Black Scholes*
+%
+% In the Black Scholes model, the dynamics of the logarithmic spot process are:
+%
+% $dy=(r_f - \frac{1}{2}\sigma^2)dt + \sigma dW$ 
+%
+% resulting in the characteristic function
+%
+% $\phi(u)=E(e^{uiX_T})=\exp(-r_f\tau +iux_t+ iu\tau(r_f-\frac{1}{2}\sigma^2)-\frac{1}{2}\tau u \sigma^2)$
+%
+% where $\tau=T-t$. 
+%
+% The characteristic function of the Black Scholes model is also included in 
+% <cflib.html |cflib|>, using the argument |type='BS'|.
+%
+rf          = 0.05;
+tau         = 1;
+sigma       = 0.25;
+S0          = 1;
+x0          = log(S0);
+cfB= @(u) exp(-rf*tau + u*i*x0 + i*u*(rf-1/2*sigma^2)*tau - 1/2*u.^2*sigma^2*tau);
+[fB xB] = cf2pdf(cfB);
+plot(xB,fB)
+
+%%
+% *Example 2: Heston's Stochastic volatility model with Merton style jumps*
+%
+% In this framework, the process dynamics are:
+%
+% $dy = (r_f - \frac{1}{2}v_t-\lambda m)dt + \sqrt{v_t}dW_1 + JdZ$
+%
+% $dv = \kappa(\theta-v_t)dt + \sigma\sqrt{v_t}dW_2$
+%
+% $E(dW1dW2)=\rho dt$
+%
+% and $dZ$ is a Poisson jump process with constant intensity $\lambda$.
+%
+% The drift adjustment is $m = E(e^J-1)$, where the jump distribution is 
+% normal $N(\mu_J,\sigma_J)$
+%
+% The corresponding characteristic function is part of the <cflib.html
+% |cflib|> toolbox:
+par.rf      = 0.05;
+par.kappa   = 0.85;
+par.theta   = 0.25^2;
+par.sigma   = 0.10;
+par.rho     = -0.8;
+par.lambda  = 0.1;
+par.muJ     = -0.20;
+par.sigmaJ  = 0.10;
+par.x0      = 0;
+par.v0      = 0.25^2;
+tau         = 1;
+cfH         = @(u) cflib(u,tau,par,'HestonJump');
+[fH xH]     = cf2pdf(cfH);
+plot(xH,fH,xB,fB);
+legend('Heston','Black Scholes');
+%%
+% *Example 3: Probability density of relative asset price*
+%
+% In this example, we will discuss the probability density function of the
+% relative performance of asset $X_T$ over asset $Y_T$, whose log dynamics
+% are assumed to be:
+%
+% $dx = (r_f -\frac{1}{2}\sigma_x^2 -\lambda m_x)dt + \sigma_x dW_1 + J_x dZ$
+%
+% $dy = (r_f -\frac{1}{2}\sigma_y^2 \lambda m_y)dt + \sigma_y dW_2 + J_y dZ$
+% 
+% and constant jump intensity $\lambda$, whereas jumps in $x$ and $y$ are 
+% bivariate normal:
+%
+% $[J_x , J_y]^T~\sim N(\mu,\Sigma)$
+% 
+% 
+% The jump transform is
+%
+% $\theta(c)=\int_{R^n}exp(cJ)df(J)=\exp(c^T\mu_J + \frac{1}{2}c^T\Sigma_Jc)$
+%
+% resulting in the drift adjustments
+%
+% $m_x = \theta([1,0]^T)-1, m_y=\theta([0,1]^T)-1$
+%
+% We are interested in the pdf, and hence the characteristic function, of
+% of $Z_T=X_T/Y_T$. Noting that $Z_T=\exp(z_T)=\exp(x_T-y_T)$, we
+% can rewrite the characteristic function of $Z_T$ as:
+%
+% $\phi(u) = E(\exp(iuz_T))=E(\exp(iu(x_T-y_T)))$
+%
+% This feat can be easily implemented via <cfaffine.html |cfaffine|>. Let us assume correlated jumps of opposing sizes:
+X0          = 100;
+Y0          = 110;
+rf          = 0.05;
+sigmaX      = 0.20;
+sigmaY      = 0.25;
+muJ         = [-0.25 ; 0.15];
+SigmaJ      = [0.2*0.2 0.2*0.1*0.7 ; 0.2*0.1*0.7 0.1*0.1];
+lambda      = 0.15;
+jump        = @(c) exp(muJ'*c + 1/2*diag(SigmaJ)'*c.^2 + SigmaJ(1,2)*c(1,:).*c(2,:));
+%%
+% Translating these into the AJD coefficients:
+x0          = log([X0 ; Y0]);
+z0          = x0(1)-x0(2);
+m(1,:)      = jump([1;0])-1;
+m(2,:)      = jump([0;1])-1;
+K0          = rf-1/2*[sigmaX^2;sigmaY^2]-lambda*(m);
+H0          = [sigmaX^2 0 ; 0 sigmaY^2];
+L0          = lambda;
+R0          = rf;
+%%
+% We will now define the characteristic function via <cfaffine.html
+% |cfaffine|>, which allows for an array of |u| values. Foreknowing that
+% the function |cf2pdf| will evaluate the supplied characteristic functions
+% at the column vector |u=[0;...;uMax]|, we tell <cfaffine.html |cfaffine|>
+% that the input will be a |NU x NX| matrix by setting the |ND| argument to
+% |2|:
+% 
+cf          = @(u) cfaffine(u*[1 -1],x0,tau,K0,[],H0,[],R0,[],L0,[],jump,2);
+%%
+% We will also compare the result to the case where no jumps are present:
+K0Diffusive = rf-1/2*[sigmaX^2;sigmaY^2];
+cfDiffuse   = @(u) cfaffine(u*[1 -1],x0,tau,K0Diffusive,[],H0,[],R0,[],[],[],[],2);
+%%
+% The initial value for |cf2pdf| is |log(Z0)|, thus
+aux.x0      = z0;
+[f x]       = cf2pdf(cf,aux);
+[fD xD]     = cf2pdf(cfDiffuse,aux);
+plot(x,f,xD,fD);
+title('Probability distribution of relative asset price, with and without jumps');
+legend('pdf with jumps','pdf without jumps');
+xlabel('log price ratio');
+ylabel('normalized pdf');
+xlim(1.5*[-1 1]);
+##### SOURCE END #####
+--></body></html>

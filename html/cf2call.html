@@ -1,0 +1,410 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>cf2call</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-14"><meta name="DC.source" content="cf2callHelp.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>cf2call</h1><!--introduction--><p>Compute call option prices from characteristic function. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">[C K] = CF2CALL(CF)
+[C K] = CF2CALL(CF,AUX)
+[C K] = CF2CALL(CF,AUX,PAR)
+[C K] = CF2CALL(CF,[],PAR)
+</pre><p>Given a characteristic function <tt>CF</tt>, returns call option prices <tt>C</tt> and corresponding strikes <tt>K</tt>.</p><p><b>Input Arguments</b></p><p>The characteristic function <tt>CF</tt> should expect the real argument <tt>u</tt> and return the corresponding characteristic function <img src="cf2callHelp_eq44075.png" alt="$\phi(u) = E(\exp(iuX_T))$"></p><p><tt>AUX</tt> is a structure containing optional parameters for the Fourier transform.</p><div><ul><li><tt>aux.N</tt> denotes the number of points for FRFT evaluation, default 8192</li><li><tt>aux.uMax</tt> is the range of integration of the characteristic function, default 100</li><li><tt>aux.damp</tt> is the damping parameter required by the Carr/Madan approach, default 1.5</li><li><tt>aux.dx</tt> is the discretization of the log strike range, default value 2/N</li><li><tt>aux.x0</tt> contains the log of spot underlying, default zero</li><li><tt>aux.K</tt> is a vector of strike evaluation points</li></ul></div><p><tt>PAR</tt> is an additional structure that passes parameters to the characteristic function if required.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1"><b>Example 1: Black Scholes</b></a></li><li><a href="#4"><b>Example 2: Heston's stochastic volatility model</b></a></li><li><a href="#6"><b>Example 3: Bates' model with stochastic intensity</b></a></li><li><a href="#8"><b>Example 4 Option Greeks</b></a></li><li><a href="#13"><b>Example 5: Greeks of Bates Model with stochastic intensity</b></a></li></ul></div><h2><b>Example 1: Black Scholes</b><a name="1"></a></h2><p>In the Black Scholes model, the risk neutral dynamics of the logarithmic spot process are:</p><p><img src="cf2callHelp_eq34838.png" alt="$dy=(r_f - \frac{1}{2}\sigma^2)dt + \sigma dW$"></p><p>resulting in the characteristic function</p><p><img src="cf2callHelp_eq25620.png" alt="$\phi(u)=E(e^{uiX_T})=\exp(-r_f\tau +iux_t+ iu\tau(r_f-\frac{1}{2}\sigma^2)-\frac{1}{2}\tau u \sigma^2)$"></p><p>where <img src="cf2callHelp_eq42994.png" alt="$\tau=T-t$">.</p><p>The FFT option pricing approach of Carr/Madan rapipdly evaluates the option price as an Fourier transform of the underlying characteristic function, where <img src="cf2callHelp_eq98624.png" alt="$k=\log(K)$"> the logarithm of the strike price:</p><p><img src="cf2callHelp_eq05018.png" alt="$C = \frac{\exp(-\alpha k)}{\pi}\int_0^{\infty}\exp(-ivk) \frac{\phi(v-(\alpha+1)i)}{\alpha^2+\alpha-v^2+i(2\alpha+1)v}dv$"></p><p>The characteristic function of the Black Scholes model is also included in <a href="cflib.html"><tt>cflib</tt></a>, using the argument <tt>type='BS'</tt>.</p><pre class="codeinput">rf          = 0.05;
+tau         = 1;
+sigma       = 0.25;
+S0          = 100;
+x0          = log(S0);
+cfBS        = @(u) exp(-rf*tau + i*u*x0 + i*u*(rf-1/2*sigma^2)*tau - 1/2*u.^2*sigma^2*tau);
+</pre><p>Within the discretely spaced strike range <tt>K=[40:160]</tt>, we obtain</p><pre class="codeinput">K           = [40:160]';
+aux.K       = K;
+aux.x0      = x0;
+CBS         = cf2call(cfBS,aux);
+</pre><p>As a check, we test whether the option price obeys the no-arbitrage bound <img src="cf2callHelp_eq82641.png" alt="$C\geq \max(S_0-Ke^{-r_f\tau},0)$"></p><pre class="codeinput">bounds  = max(S0-K*exp(-rf*tau),0);
+plot(K,[bounds CBS]);
+title(<span class="string">'Black Scholes option prices'</span>);
+legend(<span class="string">'Arbitrage bounds'</span>,<span class="string">'Black Scholes prices'</span>);
+xlim([80 120]);
+xlabel(<span class="string">'Strike'</span>);
+ylabel(<span class="string">'Option Price'</span>);
+</pre><img vspace="5" hspace="5" src="cf2callHelp_01.png" alt=""> <h2><b>Example 2: Heston's stochastic volatility model</b><a name="4"></a></h2><p>In Heston's stochastic volatility model, the risk neutral dynamics of the logarithmic spot process and the variance process are</p><p><img src="cf2callHelp_eq89126.png" alt="$dy = (r_f - \frac{1}{2}v_t)dt + \sqrt{v_t}dW_1$"></p><p><img src="cf2callHelp_eq40386.png" alt="$dv = \kappa(\theta-v_t)dt + \sigma\sqrt{v_t}dW_2$"></p><p>where <img src="cf2callHelp_eq68749.png" alt="$E(dW_1dW_2)=\rho dt$"></p><p>The corresponding characteristic function is included in <a href="cflib.html"><tt>cflib</tt></a> using argument <tt>type='Heston'</tt>.</p><p>Let us assume in addition to example 1</p><p><img src="cf2callHelp_eq60165.png" alt="$v_0=0.25^2, \kappa_v=0.85,\theta_v=0.30^2,\sigma_v=0.1,\rho=-0.7$"></p><pre class="codeinput">v0          = 0.25^2;
+kappaV      = 0.85;
+thetaV      = 0.30^2;
+sigmaV      = 0.1;
+rho         = -0.7;
+</pre><p>Translating this into the fields of the <tt>par</tt> structure required by <a href="cflib.html"><tt>cflib</tt></a>, we obtain</p><pre class="codeinput">par.x0      = x0;
+par.v0      = v0;
+par.rf      = rf;
+par.kappa   = kappaV;
+par.theta   = thetaV;
+par.sigma   = sigmaV;
+par.rho     = rho;
+aux.x0      = x0;
+cfHes       = @(u) cflib(u,tau,par,<span class="string">'Heston'</span>);
+CHes        = cf2call(cfHes,aux);
+bounds      = max(S0-aux.K*exp(-par.rf*tau),0);
+plot(K,[bounds CBS CHes]);
+title(<span class="string">'Comparison of Heston and Black Scholes option prices'</span>);
+legend(<span class="string">'Arbitrage bounds'</span>,<span class="string">'Black Scholes'</span>,<span class="string">'Heston'</span>);
+xlim([80 120]);
+xlabel(<span class="string">'Strike'</span>);
+ylabel(<span class="string">'Option Price'</span>);
+</pre><img vspace="5" hspace="5" src="cf2callHelp_02.png" alt=""> <h2><b>Example 3: Bates' model with stochastic intensity</b><a name="6"></a></h2><p>Here, we assume the spot asset volatility to be of the Heston type and that the spot asset jumps log-exponentially with stocahstic intensity.</p><p><img src="cf2callHelp_eq13089.png" alt="$dy = (r_f - \frac{1}{2}v_t - \lambda_t m)dt + \sqrt{v_t}dW_1 + JdZ$"></p><p><img src="cf2callHelp_eq76196.png" alt="$dv = \kappa_v(\theta_v-v_t)dt + \sigma_v\sqrt{v_t}dW_2$"></p><p><img src="cf2callHelp_eq95398.png" alt="$d\lambda = \kappa_{\lambda}(\theta_{\lambda}-\lambda_t)dt + \sigma_{\lambda_t}\sqrt{\lambda_t}dW_3$"></p><p>where</p><p><img src="cf2callHelp_eq83476.png" alt="$E(dW_1dW_2)=\rho, E(dW_1dW_3)=E(dW_2dW_3)=0$">, <img src="cf2callHelp_eq66063.png" alt="$m=E(e^{J}-1)$"></p><p><img src="cf2callHelp_eq06953.png" alt="$J\sim N(\mu_J,\sigma_J)\to \theta(c)=\exp(\mu_Jc+\frac{1}{2}c^2\sigma_J^2)$"> and <img src="cf2callHelp_eq89024.png" alt="$m=\theta(1)-1$"></p><p>The corresponding characteristic function can be recovered using <a href="cfaffine.html"><tt>cfaffine</tt></a>. Let us assume in addition to examples 1 and 2</p><p><img src="cf2callHelp_eq15848.png" alt="$\lambda_0=0.05, \kappa_{\lambda}=0.45,\theta_{\lambda}=0.10,\sigma_{\lambda}=0.1$"></p><p><img src="cf2callHelp_eq83979.png" alt="$\mu_J=-0.1, \sigma_J=0.05$"></p><pre class="codeinput">lambda0     = 0.10;
+kappaL      = 0.45;
+thetaL      = 0.15;
+sigmaL      = 0.1;
+muJ         = -0.25;
+sigmaJ      = 0.30;
+jump        = @(c) exp(c(1,:)*muJ + 1/2*c(1,:).^2*sigmaJ^2);
+m           = jump(1)-1;
+</pre><p>Transforming these parameters into the AJD coefficients required by <a href="cfaffine.html"><tt>cfaffine</tt></a>, we obtain</p><pre class="codeinput">X0          = [log(S0) ; v0 ; lambda0];
+K0          = [rf ; kappaV*thetaV ; kappaL*thetaL];
+K1          = [0 -1/2 -m ; 0 -kappaV 0 ; 0 0 -kappaL];
+H1          = zeros(3,3,3);
+H1(:,:,2)   = [1 rho*sigmaV 0 ; rho*sigmaV sigmaV^2 0 ; 0 0 0];
+H1(3,3,3)   = sigmaL^2;
+R0          = rf;
+L1          = [0 0 1]';
+cfBates     = @(u) cfaffine(u,X0,tau,K0,K1,[],H1,R0,[],[],L1,jump);
+[CBates]    = cf2call(cfBates,aux);
+plot(K,[bounds CBS CHes CBates]);
+title(<span class="string">'Comparison of SV/SJ, Heston and Black Scholes option prices'</span>);
+legend(<span class="string">'Arbitrage bounds'</span>,<span class="string">'Black Scholes'</span>,<span class="string">'Heston'</span>,<span class="string">'SV/SJ'</span>);
+xlim([80 120]);
+xlabel(<span class="string">'Strike'</span>);
+ylabel(<span class="string">'Option Price'</span>);
+</pre><img vspace="5" hspace="5" src="cf2callHelp_03.png" alt=""> <h2><b>Example 4 Option Greeks</b><a name="8"></a></h2><p>In this example, we will compute the <i>greeks</i> of options, i.e. change in the option price for a small change in an underlying variable. Let us begin with the <img src="cf2callHelp_eq07716.png" alt="$\Delta$"> of an option, which is given by</p><p><img src="cf2callHelp_eq97925.png" alt="$\Delta = \frac{\partial C}{\partial S}$"></p><p>A close look at the Carr/Madan option pricing formula from example 1 reveals that the derivative of the option price with respect to the underlying is</p><p><img src="cf2callHelp_eq97925.png" alt="$\Delta = \frac{\partial C}{\partial S}$"></p><p>$ = \frac{\exp(-\alpha k)}{S\pi}\int_0^{\infty}\exp(-ivk) \frac{i*(v-(\alpha+1)i)*\phi(v-(\alpha+1)i)}{\alpha^2+\alpha-v^2+i(2\alpha+1)v}dv$</p><p>thus we can employ the call option pricing function <tt>cf2call</tt> to evaluate the option delta by simply handing a different characteristic function</p><p><img src="cf2callHelp_eq58370.png" alt="$\phi_{\Delta}(u)=i*u*\phi(u)$">:</p><pre class="codeinput">cfDelta     = @(u) exp(-x0)*i*u.*cfBS(u)
+</pre><pre class="codeoutput">
+cfDelta = 
+
+    @(u)exp(-x0)*i*u.*cfBS(u)
+
+</pre><p>Within the discretely spaced strike range <tt>K=[40:160]</tt>, we obtain</p><pre class="codeinput">Delta       = cf2call(cfDelta,aux);
+</pre><p>Just to make sure, compare the result with the theoretical <img src="cf2callHelp_eq07716.png" alt="$\Delta$"></p><pre class="codeinput">plot(K,Delta,<span class="string">'ro'</span>,K,blsdelta(S0,K,rf,tau,sigma,0),<span class="string">'b'</span>)
+</pre><img vspace="5" hspace="5" src="cf2callHelp_04.png" alt=""> <p>In the same way, we can compute the option's <img src="cf2callHelp_eq08278.png" alt="$\Gamma$">, which is</p><p><img src="cf2callHelp_eq92990.png" alt="$\Gamma=\frac{\partial^2C}{\partial S^2}$"></p><p>using the corresponding characteristic function:</p><p><img src="cf2callHelp_eq34890.png" alt="$\phi_{\Gamma}= -\frac{1}{S^2}(iu+u^2)\phi(u)$"></p><pre class="codeinput">cfGamma     = @(u) -exp(-2*x0)*(i*u+u.^2).*cfBS(u);
+Gamma       = cf2call(cfGamma,aux);
+</pre><p>Just to make sure, compare the result with the theoretical <img src="cf2callHelp_eq08278.png" alt="$\Gamma$"></p><pre class="codeinput">plot(K,Gamma,<span class="string">'ro'</span>,K,blsgamma(S0,K,rf,tau,sigma,0),<span class="string">'b'</span>)
+</pre><img vspace="5" hspace="5" src="cf2callHelp_05.png" alt=""> <h2><b>Example 5: Greeks of Bates Model with stochastic intensity</b><a name="13"></a></h2><p>Let us come back to example 3 above, where we assumed stochastic volatility and normally distributed return jumps with stochastic jump intensity. We are interested in the derivative of the option price with respect to</p><div><ul><li>the spot price <img src="cf2callHelp_eq68961.png" alt="$S$"></li><li>the spot variance level <img src="cf2callHelp_eq77996.png" alt="$v$"></li><li>the spot intensity <img src="cf2callHelp_eq23351.png" alt="$\lambda$"></li></ul></div><p>In the spirit of example 4, we note that all we have to do is to pre-multiply the characteristic function <img src="cf2callHelp_eq73866.png" alt="$\phi(u)$"> with that component <img src="cf2callHelp_eq57784.png" alt="$\beta(u)$"> that corresponds to our variable of interest. If we are interested in <img src="cf2callHelp_eq07716.png" alt="$\Delta$">, we have to divide by <img src="cf2callHelp_eq68961.png" alt="$S$"> to obtain the final greek.</p><p>Here we require a simple function that returns the first derivatives of our characteristic function with respect to the spot levels:</p><pre class="language-matlab"><span class="keyword">function</span> out = cfTemp(cf,u,k)
+[out1, ~, out2]  = cf(u);
+out = out1.*out2(k,:);
+<span class="keyword">end</span>
+</pre><p><tt>cfTemp</tt> <i>knows</i> that <tt>cf</tt> returns three outputs: the characterstic function <tt>cf(u)</tt> and the corresponding exponential constant  <img src="cf2callHelp_eq32073.png" alt="$\alpha(u)$"> the vector <img src="cf2callHelp_eq57784.png" alt="$\beta(u)$">. See <a href="Main.html">Theory</a> for details.</p><p>Let us now evaluate the resulting greeks:</p><pre class="codeinput">DeltaSBates     = cf2call(@(u) cfTemp(cfBates,u,1),aux)/S0;
+DeltaVBates     = cf2call(@(u) cfTemp(cfBates,u,2),aux);
+DeltaLBates     = cf2call(@(u) cfTemp(cfBates,u,3),aux);
+subplot(3,1,1)
+plot(K,DeltaSBates)
+title(<span class="string">'Bates Model \Delta'</span>)
+subplot(3,1,2)
+plot(K,DeltaVBates)
+title(<span class="string">'Bates Model Derivative with respect to the spot variance level'</span>)
+subplot(3,1,3)
+plot(K,DeltaLBates)
+title(<span class="string">'Bates Model Derivative with respect to the spot intensity level'</span>)
+</pre><img vspace="5" hspace="5" src="cf2callHelp_06.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% cf2call
+% Compute call option prices from characteristic function. Part of the 
+% <Main.html CFH Toolbox>.
+%
+% *Syntax*
+%
+%   [C K] = CF2CALL(CF) 
+%   [C K] = CF2CALL(CF,AUX) 
+%   [C K] = CF2CALL(CF,AUX,PAR)
+%   [C K] = CF2CALL(CF,[],PAR)
+%
+% Given a characteristic function |CF|, returns call option prices |C|
+% and corresponding strikes |K|.
+%
+% *Input Arguments*
+%
+% The characteristic function |CF| should expect the real argument
+% |u| and return the corresponding characteristic function $\phi(u) = E(\exp(iuX_T))$
+%
+% |AUX| is a structure containing optional parameters for the Fourier transform.
+% 
+% * |aux.N| denotes the number of points for FRFT evaluation, default 8192
+% * |aux.uMax| is the range of integration of the characteristic function, default
+% 100
+% * |aux.damp| is the damping parameter required by the Carr/Madan approach, default 1.5
+% * |aux.dx| is the discretization of the log strike range, default value 2/N
+% * |aux.x0| contains the log of spot underlying, default zero
+% * |aux.K| is a vector of strike evaluation points
+%
+% |PAR| is an additional structure that passes parameters to the
+% characteristic function if required.
+%
+%% *Example 1: Black Scholes*
+%
+% In the Black Scholes model, the risk neutral dynamics of the logarithmic 
+% spot process are:
+%
+% $dy=(r_f - \frac{1}{2}\sigma^2)dt + \sigma dW$ 
+%
+% resulting in the characteristic function
+%
+% $\phi(u)=E(e^{uiX_T})=\exp(-r_f\tau +iux_t+ iu\tau(r_f-\frac{1}{2}\sigma^2)-\frac{1}{2}\tau u \sigma^2)$
+%
+% where $\tau=T-t$. 
+%
+% The FFT option pricing approach of Carr/Madan rapipdly evaluates the
+% option price as an Fourier transform of the underlying characteristic
+% function, where $k=\log(K)$ the logarithm of the strike price:
+%
+% $C = \frac{\exp(-\alpha k)}{\pi}\int_0^{\infty}\exp(-ivk)
+% \frac{\phi(v-(\alpha+1)i)}{\alpha^2+\alpha-v^2+i(2\alpha+1)v}dv$
+% 
+% The characteristic function of the Black Scholes model is also included in 
+% <cflib.html |cflib|>, using the argument |type='BS'|.
+%
+rf          = 0.05;
+tau         = 1;
+sigma       = 0.25;
+S0          = 100;
+x0          = log(S0);
+cfBS        = @(u) exp(-rf*tau + i*u*x0 + i*u*(rf-1/2*sigma^2)*tau - 1/2*u.^2*sigma^2*tau);
+%%
+% Within the discretely spaced strike range |K=[40:160]|, we obtain 
+K           = [40:160]';
+aux.K       = K;
+aux.x0      = x0;
+CBS         = cf2call(cfBS,aux);
+%%
+% As a check, we test whether the option price obeys the no-arbitrage bound
+% $C\geq \max(S_0-Ke^{-r_f\tau},0)$
+bounds  = max(S0-K*exp(-rf*tau),0);
+plot(K,[bounds CBS]);
+title('Black Scholes option prices');
+legend('Arbitrage bounds','Black Scholes prices');
+xlim([80 120]);
+xlabel('Strike');
+ylabel('Option Price');
+%% *Example 2: Heston's stochastic volatility model*
+%
+% In Heston's stochastic volatility model, the risk neutral dynamics of the 
+% logarithmic spot process and the variance process are
+%
+% $dy = (r_f - \frac{1}{2}v_t)dt + \sqrt{v_t}dW_1$
+% 
+% $dv = \kappa(\theta-v_t)dt + \sigma\sqrt{v_t}dW_2$
+%
+% where $E(dW_1dW_2)=\rho dt$
+% 
+% The corresponding characteristic function is included in <cflib.html
+% |cflib|> using argument |type='Heston'|.
+%
+% Let us assume in addition to example 1
+%
+% $v_0=0.25^2, \kappa_v=0.85,\theta_v=0.30^2,\sigma_v=0.1,\rho=-0.7$
+%
+v0          = 0.25^2;
+kappaV      = 0.85;
+thetaV      = 0.30^2;
+sigmaV      = 0.1;
+rho         = -0.7;
+%%
+% Translating this into the fields of the |par| structure required by
+% <cflib.html |cflib|>, we obtain
+par.x0      = x0;
+par.v0      = v0;
+par.rf      = rf;
+par.kappa   = kappaV;
+par.theta   = thetaV;
+par.sigma   = sigmaV;
+par.rho     = rho;
+aux.x0      = x0;
+cfHes       = @(u) cflib(u,tau,par,'Heston');
+CHes        = cf2call(cfHes,aux);
+bounds      = max(S0-aux.K*exp(-par.rf*tau),0);
+plot(K,[bounds CBS CHes]);
+title('Comparison of Heston and Black Scholes option prices');
+legend('Arbitrage bounds','Black Scholes','Heston');
+xlim([80 120]);
+xlabel('Strike');
+ylabel('Option Price');
+%% *Example 3: Bates' model with stochastic intensity* 
+%
+% Here, we assume the spot asset volatility to be of the Heston type and
+% that the spot asset jumps log-exponentially with stocahstic intensity.
+%
+% $dy = (r_f - \frac{1}{2}v_t - \lambda_t m)dt + \sqrt{v_t}dW_1 + JdZ$
+%
+% $dv = \kappa_v(\theta_v-v_t)dt + \sigma_v\sqrt{v_t}dW_2$
+%
+% $d\lambda = \kappa_{\lambda}(\theta_{\lambda}-\lambda_t)dt + \sigma_{\lambda_t}\sqrt{\lambda_t}dW_3$
+%
+% where
+%
+% $E(dW_1dW_2)=\rho, E(dW_1dW_3)=E(dW_2dW_3)=0$, $m=E(e^{J}-1)$
+%
+% $J\sim N(\mu_J,\sigma_J)\to
+% \theta(c)=\exp(\mu_Jc+\frac{1}{2}c^2\sigma_J^2)$ and $m=\theta(1)-1$
+% 
+% The corresponding characteristic function can be recovered using
+% <cfaffine.html |cfaffine|>. Let us assume in addition to examples 1 and 2
+%
+% $\lambda_0=0.05, \kappa_{\lambda}=0.45,\theta_{\lambda}=0.10,\sigma_{\lambda}=0.1$
+%
+% $\mu_J=-0.1, \sigma_J=0.05$
+%
+lambda0     = 0.10;
+kappaL      = 0.45;
+thetaL      = 0.15;
+sigmaL      = 0.1;
+muJ         = -0.25;
+sigmaJ      = 0.30;
+jump        = @(c) exp(c(1,:)*muJ + 1/2*c(1,:).^2*sigmaJ^2);
+m           = jump(1)-1;
+%%
+% Transforming these parameters into the AJD coefficients required by <cfaffine.html |cfaffine|>, we obtain
+X0          = [log(S0) ; v0 ; lambda0];
+K0          = [rf ; kappaV*thetaV ; kappaL*thetaL];
+K1          = [0 -1/2 -m ; 0 -kappaV 0 ; 0 0 -kappaL];
+H1          = zeros(3,3,3);
+H1(:,:,2)   = [1 rho*sigmaV 0 ; rho*sigmaV sigmaV^2 0 ; 0 0 0];
+H1(3,3,3)   = sigmaL^2;
+R0          = rf;
+L1          = [0 0 1]';
+cfBates     = @(u) cfaffine(u,X0,tau,K0,K1,[],H1,R0,[],[],L1,jump);
+[CBates]    = cf2call(cfBates,aux);
+plot(K,[bounds CBS CHes CBates]);
+title('Comparison of SV/SJ, Heston and Black Scholes option prices');
+legend('Arbitrage bounds','Black Scholes','Heston','SV/SJ');
+xlim([80 120]);
+xlabel('Strike');
+ylabel('Option Price');
+%% *Example 4 Option Greeks*
+% 
+% In this example, we will compute the _greeks_ of options, i.e. change
+% in the option price for a small change in an underlying variable. Let us
+% begin with the $\Delta$ of an option, which is given by
+%
+% $\Delta = \frac{\partial C}{\partial S}$
+%
+% A close look at the Carr/Madan option pricing formula from example 1
+% reveals that the derivative of the option price with respect to the
+% underlying is 
+%
+% $\Delta = \frac{\partial C}{\partial S}$
+%
+% $ = \frac{\exp(-\alpha k)}{S\pi}\int_0^{\infty}\exp(-ivk)
+% \frac{i*(v-(\alpha+1)i)*\phi(v-(\alpha+1)i)}{\alpha^2+\alpha-v^2+i(2\alpha+1)v}dv$
+% 
+% thus we can employ the call option pricing function |cf2call| to evaluate
+% the option delta by simply handing a different characteristic function
+%
+% $\phi_{\Delta}(u)=i*u*\phi(u)$:
+cfDelta     = @(u) exp(-x0)*i*u.*cfBS(u)
+%%
+% Within the discretely spaced strike range |K=[40:160]|, we obtain 
+Delta       = cf2call(cfDelta,aux);
+%%
+% Just to make sure, compare the result with the theoretical $\Delta$
+plot(K,Delta,'ro',K,blsdelta(S0,K,rf,tau,sigma,0),'b')
+%%
+% In the same way, we can compute the option's $\Gamma$, which is
+%
+% $\Gamma=\frac{\partial^2C}{\partial S^2}$
+%
+% using the corresponding characteristic function:
+%
+% $\phi_{\Gamma}= -\frac{1}{S^2}(iu+u^2)\phi(u)$
+cfGamma     = @(u) -exp(-2*x0)*(i*u+u.^2).*cfBS(u);
+Gamma       = cf2call(cfGamma,aux);
+%%
+% Just to make sure, compare the result with the theoretical $\Gamma$
+plot(K,Gamma,'ro',K,blsgamma(S0,K,rf,tau,sigma,0),'b')
+%% *Example 5: Greeks of Bates Model with stochastic intensity*
+% 
+% Let us come back to example 3 above, where we assumed stochastic
+% volatility and normally distributed return jumps with stochastic jump
+% intensity. We are interested in the derivative of the option price with
+% respect to 
+%
+% * the spot price $S$
+% * the spot variance level $v$
+% * the spot intensity $\lambda$
+%
+% In the spirit of example 4, we note that all we have to do is to
+% pre-multiply the characteristic function $\phi(u)$ with that component
+% $\beta(u)$ that corresponds to our variable of interest. If we are
+% interested in $\Delta$, we have to divide by $S$ to obtain the final
+% greek. 
+%
+% Here we require a simple function that returns the first derivatives of 
+% our characteristic function with respect to the spot levels:
+%
+%   function out = cfTemp(cf,u,k)
+%   [out1, ~, out2]  = cf(u);
+%   out = out1.*out2(k,:);
+%   end
+%
+% |cfTemp| _knows_ that |cf| returns three outputs: the characterstic
+% function |cf(u)| and the corresponding exponential constant  $\alpha(u)$ 
+% the vector $\beta(u)$. See <Main.html Theory> for details.
+%
+% Let us now evaluate the resulting greeks:
+DeltaSBates     = cf2call(@(u) cfTemp(cfBates,u,1),aux)/S0;
+DeltaVBates     = cf2call(@(u) cfTemp(cfBates,u,2),aux);
+DeltaLBates     = cf2call(@(u) cfTemp(cfBates,u,3),aux);
+subplot(3,1,1)
+plot(K,DeltaSBates)
+title('Bates Model \Delta')
+subplot(3,1,2)
+plot(K,DeltaVBates)
+title('Bates Model Derivative with respect to the spot variance level')
+subplot(3,1,3)
+plot(K,DeltaLBates)
+title('Bates Model Derivative with respect to the spot intensity level')
+##### SOURCE END #####
+--></body></html>

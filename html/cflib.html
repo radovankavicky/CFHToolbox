@@ -1,0 +1,173 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>cflib</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-14"><meta name="DC.source" content="cflibHelp.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>cflib</h1><p>Returns the characteristic function evaluation of commonly encountered models in finance. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">W = CFLIB(U,TAU,PAR,TYPE)
+</pre><p>For model choice <tt>TYPE='BS','BSJump','Heston','HestonJump'</tt>, this function returns the characteristic function at real argument <tt>U</tt> for a maturity <tt>TAU</tt> and a parameter structure <tt>PAR</tt>.</p><p><b>Input Arguments</b> <tt>U</tt> can either be a <tt>(K)x(1)</tt> or <tt>(1)x(K)</tt> array of characteristic function arguments. <tt>TAU</tt> denotes the time to maturity under consideration. <tt>PAR</tt> is a structure that corresponds to the required parameters of the model choice in <tt>TYPE</tt>.</p><p><b>Example 1: Black Scholes Model</b></p><p>In the Black Scholes model, the dynamics of the logarithmic spot process are:</p><p><img src="cflibHelp_eq34838.png" alt="$dy=(r_f - \frac{1}{2}\sigma^2)dt + \sigma dW$"></p><p>resulting in the characteristic function</p><p><img src="cflibHelp_eq25620.png" alt="$\phi(u)=E(e^{uiX_T})=\exp(-r_f\tau +iux_t+ iu\tau(r_f-\frac{1}{2}\sigma^2)-\frac{1}{2}\tau u \sigma^2)$"></p><p>where <img src="cflibHelp_eq42994.png" alt="$\tau=T-t$">.</p><p>The characteristic function of the Black Scholes model is also included in <tt>cflib</tt>, using the argument <tt>type='BS'</tt>.</p><pre class="codeinput">S0          = 1;
+par.rf      = 0.05;
+tau         = 1;
+par.sigma   = 0.25;
+par.x0      = log(S0);
+cf          = @(u) cflib(u,tau,par,<span class="string">'BS'</span>);
+[fB xB]     = cf2pdf(cf);
+plot(xB,fB);
+</pre><img vspace="5" hspace="5" src="cflibHelp_01.png" alt=""> <p><b>Example 2: Heston's stochastic volatility model with Merton type jumps</b></p><p>In Heston's stochastic volatility model with Merton type jumps, the risk neutral dynamics of the logarithmic spot process and the variance process are</p><p><img src="cflibHelp_eq42286.png" alt="$dy = (r_f - \frac{1}{2}v_t - \lambda m)dt + \sqrt{v_t}dW_1 + JdZ$"></p><p><img src="cflibHelp_eq40386.png" alt="$dv = \kappa(\theta-v_t)dt + \sigma\sqrt{v_t}dW_2$"></p><p>where <img src="cflibHelp_eq68749.png" alt="$E(dW_1dW_2)=\rho dt$"></p><p>Here, <img src="cflibHelp_eq23351.png" alt="$\lambda$"> is the constant intensity of the jump process <img src="cflibHelp_eq81664.png" alt="$dZ$"> and % <img src="cflibHelp_eq81831.png" alt="$m$"> is the risk neutral drift adjustment. Let</p><p><img src="cflibHelp_eq35827.png" alt="$\theta(c)=E(\exp(cJ))=\exp(\mu_Jc + \frac{1}{2}c^2\sigma_J^2)$"></p><p>then</p><p><img src="cflibHelp_eq60229.png" alt="$m=E(\exp(J)-1)=\theta(1)-1$"></p><p>The corresponding characteristic function is included in <a href="cflib.html"><tt>cflib</tt></a> using argument <tt>type='Heston'</tt>.</p><p>Let us assume in addition to Example 1 above</p><p><img src="cflibHelp_eq60165.png" alt="$v_0=0.25^2, \kappa_v=0.85,\theta_v=0.30^2,\sigma_v=0.1,\rho=-0.7$"></p><pre class="codeinput">v0          = 0.25^2;
+kappaV      = 0.85;
+thetaV      = 0.30^2;
+sigmaV      = 0.1;
+rho         = -0.7;
+</pre><p>Translating this into the fields of the <tt>par</tt> structure required by <a href="cflib.html"><tt>cflib</tt></a>, we obtain</p><pre class="codeinput">par.v0      = v0;
+par.kappa   = kappaV;
+par.theta   = thetaV;
+par.sigma   = sigmaV;
+par.rho     = rho;
+cf          = @(u) cflib(u,tau,par,<span class="string">'Heston'</span>);
+[fH xH]     = cf2pdf(cf);
+plot(xH,fH,<span class="string">'r'</span>,xB,fB,<span class="string">'k'</span>)
+title(<span class="string">'Comparison of implied densities of HestonJump and Black Scholes model'</span>);
+legend(<span class="string">'Heston Model with Jumps'</span>,<span class="string">'Black Scholes'</span>);
+</pre><img vspace="5" hspace="5" src="cflibHelp_02.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% cflib
+% Returns the characteristic function evaluation of commonly encountered
+% models in finance. Part of the <Main.html CFH Toolbox>.
+%
+% *Syntax*
+%
+%   W = CFLIB(U,TAU,PAR,TYPE)
+%
+% For model choice |TYPE='BS','BSJump','Heston','HestonJump'|, this function
+% returns the characteristic function at real argument |U| for a maturity
+% |TAU| and a parameter structure |PAR|. 
+%
+% *Input Arguments*
+% |U| can either be a |(K)x(1)| or |(1)x(K)| array of characteristic
+% function arguments. |TAU| denotes the time to maturity under
+% consideration. |PAR| is a structure that corresponds to the required
+% parameters of the model choice in |TYPE|.
+%
+% *Example 1: Black Scholes Model*
+%
+% In the Black Scholes model, the dynamics of the logarithmic spot process are:
+%
+% $dy=(r_f - \frac{1}{2}\sigma^2)dt + \sigma dW$ 
+%
+% resulting in the characteristic function
+%
+% $\phi(u)=E(e^{uiX_T})=\exp(-r_f\tau +iux_t+ iu\tau(r_f-\frac{1}{2}\sigma^2)-\frac{1}{2}\tau u \sigma^2)$
+%
+% where $\tau=T-t$. 
+%
+% The characteristic function of the Black Scholes model is also included in 
+% |cflib|, using the argument |type='BS'|.
+S0          = 1;
+par.rf      = 0.05;
+tau         = 1;
+par.sigma   = 0.25;
+par.x0      = log(S0);
+cf          = @(u) cflib(u,tau,par,'BS');
+[fB xB]     = cf2pdf(cf);
+plot(xB,fB);
+%%
+% *Example 2: Heston's stochastic volatility model with Merton type jumps*
+%
+% In Heston's stochastic volatility model with Merton type jumps, the risk
+% neutral dynamics of the logarithmic spot process and the variance process 
+% are
+%
+% $dy = (r_f - \frac{1}{2}v_t - \lambda m)dt + \sqrt{v_t}dW_1 + JdZ$
+% 
+% $dv = \kappa(\theta-v_t)dt + \sigma\sqrt{v_t}dW_2$
+%
+% where $E(dW_1dW_2)=\rho dt$
+%
+% Here, $\lambda$ is the constant intensity of the jump process $dZ$ and
+% % $m$ is the risk neutral drift adjustment. Let
+%
+% $\theta(c)=E(\exp(cJ))=\exp(\mu_Jc + \frac{1}{2}c^2\sigma_J^2)$
+% 
+% then
+%
+% $m=E(\exp(J)-1)=\theta(1)-1$
+%
+% The corresponding characteristic function is included in <cflib.html
+% |cflib|> using argument |type='Heston'|.
+%
+% Let us assume in addition to Example 1 above 
+%
+% $v_0=0.25^2, \kappa_v=0.85,\theta_v=0.30^2,\sigma_v=0.1,\rho=-0.7$
+%
+v0          = 0.25^2;
+kappaV      = 0.85;
+thetaV      = 0.30^2;
+sigmaV      = 0.1;
+rho         = -0.7;
+%%
+% Translating this into the fields of the |par| structure required by
+% <cflib.html |cflib|>, we obtain
+par.v0      = v0;
+par.kappa   = kappaV;
+par.theta   = thetaV;
+par.sigma   = sigmaV;
+par.rho     = rho;
+cf          = @(u) cflib(u,tau,par,'Heston');
+[fH xH]     = cf2pdf(cf);
+plot(xH,fH,'r',xB,fB,'k')
+title('Comparison of implied densities of HestonJump and Black Scholes model');
+legend('Heston Model with Jumps','Black Scholes');
+##### SOURCE END #####
+--></body></html>
