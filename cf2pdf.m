@@ -12,17 +12,13 @@ function [f x] = cf2pdf(cf,varargin)
 %   obtains the pdf using optional FRFT algorithm parameters stored in the 
 %   stucture AUX with fields
 %   aux.N       number of evaluation points     (2^13)
-%   aux.uMax    range of integration            (0:100)
+%   aux.uMax    upper limit of integration      (200)
 %   aux.dx      sample point step size          (3/N)
 %   aux.x0      log of center of evaluation     (0)
 %   aux.x       range of pdf evaluation points. (N points centered at x0)
 %               If used, the values dx,x0,N are 
 %               omitted and set to values that 
 %               correspond to aux.x.
-%
-%   [F X] = CF2PDF(CF,AUX,PAR) 
-%   [F X] = CF2PDF(CF,[],PAR)
-%   Specify a parameter structure PAR to hand over to CF(u,PAR).
 %
 %   Example: pdf corresponding to Heston's SV model, with N = 512
 %   tau         = 0.5
@@ -35,17 +31,13 @@ function [f x] = cf2pdf(cf,varargin)
 %   plot(x,f)
 
 %   Author: matthias.held@web.de
-%   Date:   2014-04-30
+%   Date:   2014-05-27
 
-uMax            = 100;
+uMax            = 200;
 N               = 2^13;
 dx              = 3/N;
 x0              = 0;
 
-if length(varargin)==2 & isstruct(varargin{2})
-    par = varargin{2};
-    cf  = @(u) cf(u,par);
-end
 if length(varargin)>=1 & isstruct(varargin{1})
     varargin=varargin{1};
     if isfield(varargin,'uMax')

@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>cf2pdf</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-14"><meta name="DC.source" content="cf2pdfHelp.m"><style type="text/css">
+      --><title>cf2pdf</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-27"><meta name="DC.source" content="cf2pdfHelp.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -57,9 +57,7 @@ span.syscmd { color:#B28C00 }
 
   </style></head><body><div class="content"><h1>cf2pdf</h1><p>Compute normalized probability density function from characteristic function. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">[F X] = CF2PDF(CF)
 [F X] = CF2PDF(CF,AUX)
-[F X] = CF2PDF(CF,AUX,PAR)
-[F X] = CF2PDf(CF,[],PAR)
-</pre><p>Given a characteristic function <tt>CF</tt>, returns normalized probability density function <tt>F</tt> and corresponding sampling points <tt>X</tt>.</p><p><b>Input Arguments</b></p><p>The characteristic function <tt>CF</tt> should expect the real argument <tt>u</tt> and return the corresponding characteristic function.</p><p><tt>AUX</tt> is a structure containing optional parameters for the Fourier transform:</p><div><ul><li><tt>aux.N</tt> is the number of points for FRFT evaluation, default 8192</li><li><tt>aux.uMax</tt> denotes the range of integration of the characteristic function, default 100</li><li><tt>aux.dx</tt> describes discretization of the log strike range, default value 3/N</li><li><tt>aux.x0</tt> is the log of spot underlying, default zero</li><li><tt>aux.x</tt> is a vector of pdf sampling points. If this field is used, the values in <tt>dx</tt>, <tt>x0</tt> and <tt>N</tt> are replaced with corresponding values obtained from <tt>x</tt>.</li></ul></div><p><tt>PAR</tt> is an additional structure that passes parameters to the characteristic function if required.</p><p><b>Example 1: Black Scholes</b></p><p>In the Black Scholes model, the dynamics of the logarithmic spot process are:</p><p><img src="cf2pdfHelp_eq34838.png" alt="$dy=(r_f - \frac{1}{2}\sigma^2)dt + \sigma dW$"></p><p>resulting in the characteristic function</p><p><img src="cf2pdfHelp_eq25620.png" alt="$\phi(u)=E(e^{uiX_T})=\exp(-r_f\tau +iux_t+ iu\tau(r_f-\frac{1}{2}\sigma^2)-\frac{1}{2}\tau u \sigma^2)$"></p><p>where <img src="cf2pdfHelp_eq42994.png" alt="$\tau=T-t$">.</p><p>The characteristic function of the Black Scholes model is also included in <a href="cflib.html"><tt>cflib</tt></a>, using the argument <tt>type='BS'</tt>.</p><pre class="codeinput">rf          = 0.05;
+</pre><p>Given a discounted characteristic function <tt>CF</tt>, returns normalized probability density function <tt>F</tt> and corresponding sampling points <tt>X</tt>.</p><p><b>Input Arguments</b></p><p>The characteristic function <tt>CF</tt> should expect the real argument <tt>u</tt> and return the corresponding discounted characteristic function.</p><p><tt>AUX</tt> is a structure containing optional parameters for the FFT:</p><div><ul><li><tt>aux.N</tt> is the number of points for FRFT evaluation, default 8192</li><li><tt>aux.uMax</tt> denotes the upper limit of integration of the characteristic function, default 200</li><li><tt>aux.dx</tt> describes discretization of the log strike range, default value 3/N</li><li><tt>aux.x0</tt> is the log of spot underlying, default zero</li><li><tt>aux.x</tt> is a vector of pdf sampling points. If this field is used, the values in <tt>dx</tt>, <tt>x0</tt> and <tt>N</tt> are replaced with corresponding values obtained from <tt>x</tt>.</li></ul></div><p><b>Example 1: Black Scholes</b></p><p>In the Black Scholes model, the dynamics of the logarithmic spot process are:</p><p><img src="cf2pdfHelp_eq34838.png" alt="$dy=(r_f - \frac{1}{2}\sigma^2)dt + \sigma dW$"></p><p>resulting in the characteristic function</p><p><img src="cf2pdfHelp_eq25620.png" alt="$\phi(u)=E(e^{uiX_T})=\exp(-r_f\tau +iux_t+ iu\tau(r_f-\frac{1}{2}\sigma^2)-\frac{1}{2}\tau u \sigma^2)$"></p><p>where <img src="cf2pdfHelp_eq42994.png" alt="$\tau=T-t$">.</p><p>The characteristic function of the Black Scholes model is also included in <a href="cflib.html"><tt>cflib</tt></a>, using the argument <tt>type='BS'</tt>.</p><pre class="codeinput">rf          = 0.05;
 tau         = 1;
 sigma       = 0.25;
 S0          = 1;
@@ -122,31 +120,25 @@ xlim(1.5*[-1 1]);
 %
 %   [F X] = CF2PDF(CF) 
 %   [F X] = CF2PDF(CF,AUX) 
-%   [F X] = CF2PDF(CF,AUX,PAR)
-%   [F X] = CF2PDf(CF,[],PAR)
 %
-% Given a characteristic function |CF|, returns normalized probability 
-% density function |F| and corresponding sampling points |X|.
+% Given a discounted characteristic function |CF|, returns normalized 
+% probability density function |F| and corresponding sampling points |X|.
 %
 % *Input Arguments*
 %
 % The characteristic function |CF| should expect the real argument |u| and
-% return the corresponding characteristic function. 
+% return the corresponding discounted characteristic function. 
 %
-% |AUX| is a structure containing optional parameters for the Fourier
-% transform:
+% |AUX| is a structure containing optional parameters for the FFT:
 % 
 % * |aux.N| is the number of points for FRFT evaluation, default 8192
-% * |aux.uMax| denotes the range of integration of the characteristic function, default
-% 100
+% * |aux.uMax| denotes the upper limit of integration of the characteristic function, default
+% 200
 % * |aux.dx| describes discretization of the log strike range, default value 3/N
 % * |aux.x0| is the log of spot underlying, default zero
 % * |aux.x| is a vector of pdf sampling points. If this field is used, the
 % values in |dx|, |x0| and |N| are replaced with corresponding values
 % obtained from |x|.
-%
-% |PAR| is an additional structure that passes parameters to the
-% characteristic function if required.
 %
 % *Example 1: Black Scholes*
 %

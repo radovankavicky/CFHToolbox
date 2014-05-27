@@ -11,22 +11,18 @@ function [C K] = cf2call(cf,varargin)
 %   obtains option prices for optional FRFT algorithm parameters stored in 
 %   the stucture AUX with fields
 %   aux.N       number of points for FRFT evaluation        (2^13)
-%   aux.uMax    range of integration of the char. function  (0:100)
+%   aux.uMax    range of integration of the char. function  (0:200)
 %   aux.damp    dampening factor in the Carr Madan approach (1.5)
 %   aux.dx      discretization of log strike range          (2/N)
 %   aux.x0      log of spot underlying                      (0)
 %   aux.K       vector of strike evaluation points
-%
-%   [C K] = CF2CALL(CF,AUX,PAR)
-%   [C K] = CF2CALL(CF,[],PAR) 
-%   Specify a parameter structure PAR to hand over to CF(u,PAR).
 %
 %   Example: Black Scholes
 %   par         = struct('x0', log(100), 'rf', 0.05, 'sigma', 0.25)
 %   tau         = 0.5
 %   aux.K       = [50:1:150]'
 %   aux.x0      = par.x0
-%   cf          = @(u) exp(-par.rf*tau)*cflib(u,tau,par,'BS')
+%   cf          = @(u) cflib(u,tau,par,'BS')
 %   C           = cf2call(cf,aux);
 %   arbBound    = max(100-aux.K*exp(-par.rf*tau),0);
 %   plot(aux.K,[C arbBound])
@@ -36,14 +32,10 @@ function [C K] = cf2call(cf,varargin)
 %   Date:       2014-05-01
 
 damp            = 1.5;
-uMax            = 100;
+uMax            = 200;
 N               = 2^13;
 x0              = 0;
 K0              = [];
-if length(varargin)==2 & isstruct(varargin{2})
-    par = varargin{2};
-    cf = @(u) cf(u,par);
-end
 if length(varargin)>=1 & isstruct(varargin{1})
     varargin=varargin{1};
     if isfield(varargin,'damp')
@@ -54,7 +46,6 @@ if length(varargin)>=1 & isstruct(varargin{1})
     end
     if isfield(varargin,'N')
         N               = varargin.N;
-
     end
     if isfield(varargin,'dx')
         dx              = varargin.dx;
@@ -68,7 +59,9 @@ if length(varargin)>=1 & isstruct(varargin{1})
     end
 end
 du              = uMax/(N-1);
+if ~exist('dx')
 dx              = 2/N;
+end
 u               = [0:N-1]'*du;
 xMin            = -N*dx/2+x0;
 alpha           = du*dx/2/pi;
