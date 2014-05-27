@@ -13,7 +13,7 @@ The toolbox contains a fleshed out help file. Simply clone and either run
 the file _install.m_.
 
 ## Version 
-* Version 1.0
+* Version 1.1
 
 ## Contact
 #### Developer/Company
