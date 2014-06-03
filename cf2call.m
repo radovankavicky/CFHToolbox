@@ -18,6 +18,7 @@ function [C K] = cf2call(cf,varargin)
 %   aux.K       vector of strike evaluation points
 %
 %   Example: Black Scholes
+%
 %   par         = struct('x0', log(100), 'rf', 0.05, 'sigma', 0.25)
 %   tau         = 0.5
 %   aux.K       = [50:1:150]'
@@ -26,7 +27,6 @@ function [C K] = cf2call(cf,varargin)
 %   C           = cf2call(cf,aux);
 %   arbBound    = max(100-aux.K*exp(-par.rf*tau),0);
 %   plot(aux.K,[C arbBound])
-%   
 
 %   Author:     matthias.held@web.de
 %   Date:       2014-05-01
@@ -44,7 +44,7 @@ if length(varargin)>=1 & isstruct(varargin{1})
     if isfield(varargin,'uMax')
         uMax            = varargin.uMax;
     end
-    if isfield(varargin,'N')
+    if isfield(varargin,'N')&&(~isempty(varargin.N))
         N               = varargin.N;
     end
     if isfield(varargin,'dx')
@@ -83,22 +83,37 @@ z               = repmat(exp(-damp*x),1,size(z,2)).*z/pi;
 
 K               = exp(x);
 C               = z;
-if ~isempty(K0)
+if ~isempty(K0) 
+if min(size(K0))==1  % scalar or vector of strikes
+    K0              = reshape(K0,1,length(K0));
     [~, idx]        = sort(abs(bsxfun(@minus,K,K0)));
     Cl              = C(idx(1,:),:);
     dC              = C(idx(2,:),:)-C(idx(1,:),:);
     dK              = repmat(K(idx(2,:))-K(idx(1,:)),1,size(C,2));
     C               = Cl + dC./dK.*repmat((K0'-K(idx(1,:))),1,size(C,2));
-    K               = reshape(K0,length(K0),1);
+    K               = K0';
+else % K0 is an array of desired strike/maturity pairs
+    if size(K0,2)~=nt % K0 should be of dim (KxT)
+        K0              = K0';
+    end
+    Co                  = [];
+    for l = 1:nt
+        [~, idx]        = sort(abs(bsxfun(@minus,K,K0(:,l)')));
+        Cl              = C(idx(1,:),l);
+        dC              = C(idx(2,:),l)-C(idx(1,:),l);
+        dK              = K(idx(2,:))-K(idx(1,:));
+        Co            = [Co Cl + dC./dK.*(K0(:,l)-K(idx(1,:)))];
+    end
+    C               = Co;
+    K               = K0;
+end
 end
 end
 function f = frft(x,a)
 % Fractional Fourier Transform (FRFT, Chourdakis (2008))
-% The FRFT allows to seperate the spacing of the frequency domain
-% integration variable u and that of the time domain variable
-% x. (In our case, the x variable is the log asset return.)
+% The FRFT allows to seperate the spacing of the frequency domain 
+% integration variable u and that of the time domain variable x.
 % a = (du * dx) / (2 * pi);
-
 [N nx]      = size(x);
 e1          = repmat(exp(-pi.*i.*a .* ([0:(N-1)]').^2),1,nx);
 e2          = repmat(exp( pi.*i.*a .* ([N:-1:1]').^2),1,nx);
