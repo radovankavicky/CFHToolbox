@@ -7,6 +7,13 @@ recovery.
 
 I will happily discuss or improve any parts of the toolbox.
 
+Next updates (or your contributions) will include:
+- A compendium of characteristic functions (so far included: BS, BS+Merton jumps, Heston, Heston+Merton jumps)
+- A compendium of jump transforms (so far included: Merton and Exponential)
+- Multiple jump types components as described in appendix B of the DPS2000 paper.
+- Time dependent parameters
+
+
 
 ## Usage
 The toolbox contains a fleshed out help file. Simply clone and either run 
