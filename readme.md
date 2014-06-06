@@ -21,21 +21,10 @@ the file _install.m_.
 
 ## Version history
 
-<<<<<<< HEAD
 * 1.3 - added extended transform functions
 * 1.2 - added Kou's model
 * 1.1 - added FFT methods to the conditional expectation function
 * 1.0 - initial release
-=======
-1.3 - added extended transform functions
-
-1.2 - added Kou's model
-
-1.1 - added FFT methods to the conditional expectation function
-
-1.0 - initial release
->>>>>>> 4c94aa89d4f95f575854b62ac44b76e6dada3060
-
 
 ## Contact
 #### Developer/Company
