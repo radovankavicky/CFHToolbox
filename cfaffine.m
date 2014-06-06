@@ -1,5 +1,5 @@
 function [out alpha beta] = cfaffine(u,x0,tau,K0,K1,H0,H1,R0,R1,L0,L1,jump,ND,varargin)
-%CFAFFINE characteristic function (cf) of an affine jump-diffusion process
+%CFAFFINE characteristic function of AJD process
 %
 %   W = CFAFFINE(U,X0,TAU,K0,K1,H0,H1,R0,R1) 
 %   Returns the cf when there are only diffusive risks present.

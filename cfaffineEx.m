@@ -1,5 +1,5 @@
 function [out A B alpha beta] = cfaffineEx(u,v,x0,tau,K0,K1,H0,H1,R0,R1,L0,L1,jump,gradJump,ND,varargin)
-%CFAFFINEEX extended characteristic function (ECF) of AJD process
+%CFAFFINEEX extended characteristic function  of AJD process
 %
 %   W = CFAFFINEEX(U,V,X0,TAU,K0,K1,H0,H1,R0,R1) 
 %   Returns the ecf when there are only diffusive risks present.

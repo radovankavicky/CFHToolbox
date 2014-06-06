@@ -1,5 +1,5 @@
 function [out lOut] = cflib(u,tau,par,type)
-%CFLIB library of commonly used characteristic functions in finance
+%CFLIB library of commonly used characteristic functions
 %
 %   CFLIB(U,TAU,PAR,TYPE) 
 %   yields evaluations of the characteristic function of a model specified

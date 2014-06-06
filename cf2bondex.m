@@ -1,5 +1,5 @@
 function [out A B a b] = cf2bondEx(A,B,tau,x0,K0,K1,H0,H1,R0,R1,L0,L1,jump,gradJump,varargin)
-%CF2BONDEX extended transform 
+%CF2BONDEX extended transform zero bond pricing
 %
 %   [P] = CF2BONDEX(A,B,TAU,X0,K0,K1,H0,H1,R0,R1,L0,L1,JUMP,GRADJUMP) 
 %   Returns the discounted risk neutral expectation of a combination of 

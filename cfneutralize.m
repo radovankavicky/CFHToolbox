@@ -1,5 +1,5 @@
 function [K0 K1] = cfneutralize(K0,K1,H0,H1,R0,R1,Q0,Q1,L0,L1,jump)
-%CFNEUTRALIZE risk neutral drift coefficients K0,K1 for given dynamics
+%CFNEUTRALIZE risk neutral drift coefficients for given dynamics
 %
 %   [K0 K1] = CFNEUTRALIZE(K0,K1,H0,H1,R0,R1,Q0,Q1,L0,L1,jump)
 %   yields the risk neutral drift parameters K0 and K1 that correspond to

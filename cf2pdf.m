@@ -1,5 +1,5 @@
 function [f x] = cf2pdf(cf,varargin)
-%CF2PDF recover probability density function from characteristic function
+%CF2PDF probability density function from characteristic function
 %
 %   [F X] = CF2PDF(CF) 
 %   returns the normalized probability density function F and corresponding 
