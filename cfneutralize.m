@@ -11,6 +11,7 @@ function [K0 K1] = cfneutralize(K0,K1,H0,H1,R0,R1,Q0,Q1,L0,L1,jump)
 %   will be adjusted.
 %
 %   Example: Heston Model with constant dividend yield q
+%
 %   mu          = 0.15;
 %   q           = 0.04;
 %   rf          = 0.05;

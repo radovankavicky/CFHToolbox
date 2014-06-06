@@ -55,7 +55,6 @@ if length(varargin)>=1 & isstruct(varargin{1})
     end    
     if isfield(varargin,'K') & ~isempty(varargin.K)
         K0              = varargin.K;
-        K0              = reshape(K0,1,length(K0));
     end
 end
 du              = uMax/(N-1);
@@ -74,6 +73,7 @@ end
 if ~exist('z')
     error('problem with the char fun, dimension mismatch');
 end
+nt              = size(z,2);
 z               = z./repmat((damp^2+damp-u.^2+i*(2*damp+1)*u),1,size(z,2));
 z               = repmat(exp(-u*i*(xMin)),1,size(z,2)).*z.*du;
 
@@ -109,6 +109,7 @@ else % K0 is an array of desired strike/maturity pairs
 end
 end
 end
+
 function f = frft(x,a)
 % Fractional Fourier Transform (FRFT, Chourdakis (2008))
 % The FRFT allows to seperate the spacing of the frequency domain 

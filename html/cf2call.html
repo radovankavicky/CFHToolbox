@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>cf2call</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-27"><meta name="DC.source" content="cf2callHelp.m"><style type="text/css">
+      --><title>cf2call</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-06"><meta name="DC.source" content="cf2callHelp.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -57,7 +57,7 @@ span.syscmd { color:#B28C00 }
 
   </style></head><body><div class="content"><h1>cf2call</h1><!--introduction--><p>Compute call option prices from characteristic function. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">[C K] = CF2CALL(CF)
 [C K] = CF2CALL(CF,AUX)
-</pre><p>Given a characteristic function <tt>CF</tt>, returns call option prices <tt>C</tt> and corresponding strikes <tt>K</tt>.</p><p><b>Input Arguments</b></p><p>The characteristic function <tt>CF</tt> should expect the real argument <tt>u</tt> and return the corresponding characteristic function <img src="cf2callHelp_eq44075.png" alt="$\phi(u) = E(\exp(iuX_T))$"></p><p><tt>AUX</tt> is a structure containing optional parameters for the Fourier transform.</p><div><ul><li><tt>aux.N</tt> denotes the number of points for FRFT evaluation, default 8192</li><li><tt>aux.uMax</tt> is the range of integration of the characteristic function, default 200</li><li><tt>aux.damp</tt> is the damping parameter required by the Carr/Madan approach, default 1.5</li><li><tt>aux.dx</tt> is the discretization of the log strike range, default value 2/N</li><li><tt>aux.x0</tt> contains the log of spot underlying, default zero</li><li><tt>aux.K</tt> is a vector of strike evaluation points</li></ul></div><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1"><b>Example 1: Black Scholes</b></a></li><li><a href="#4"><b>Example 2: Heston's stochastic volatility model</b></a></li><li><a href="#6"><b>Example 3: Bates' model with stochastic intensity</b></a></li><li><a href="#8"><b>Example 4 Option Greeks</b></a></li><li><a href="#13"><b>Example 5: Greeks of Bates Model with stochastic intensity</b></a></li></ul></div><h2><b>Example 1: Black Scholes</b><a name="1"></a></h2><p>In the Black Scholes model, the risk neutral dynamics of the logarithmic spot process are:</p><p><img src="cf2callHelp_eq34838.png" alt="$dy=(r_f - \frac{1}{2}\sigma^2)dt + \sigma dW$"></p><p>resulting in the characteristic function</p><p><img src="cf2callHelp_eq25620.png" alt="$\phi(u)=E(e^{uiX_T})=\exp(-r_f\tau +iux_t+ iu\tau(r_f-\frac{1}{2}\sigma^2)-\frac{1}{2}\tau u \sigma^2)$"></p><p>where <img src="cf2callHelp_eq42994.png" alt="$\tau=T-t$">.</p><p>The FFT option pricing approach of Carr/Madan rapipdly evaluates the option price as an Fourier transform of the underlying characteristic function, where <img src="cf2callHelp_eq98624.png" alt="$k=\log(K)$"> the logarithm of the strike price:</p><p><img src="cf2callHelp_eq05018.png" alt="$C = \frac{\exp(-\alpha k)}{\pi}\int_0^{\infty}\exp(-ivk) \frac{\phi(v-(\alpha+1)i)}{\alpha^2+\alpha-v^2+i(2\alpha+1)v}dv$"></p><p>The characteristic function of the Black Scholes model is also included in <a href="cflib.html"><tt>cflib</tt></a>, using the argument <tt>type='BS'</tt>.</p><pre class="codeinput">rf          = 0.05;
+</pre><p>Given a characteristic function <tt>CF</tt>, returns call option prices <tt>C</tt> and corresponding strikes <tt>K</tt>.</p><p><b>Input Arguments</b></p><p>The characteristic function <tt>CF</tt> should expect the real argument <tt>u</tt> and return the corresponding characteristic function <img src="cf2callHelp_eq44075.png" alt="$\phi(u) = E(\exp(iuX_T))$"></p><p><tt>AUX</tt> is a structure containing optional parameters for the Fourier transform.</p><div><ul><li><tt>aux.N</tt> denotes the number of points for FRFT evaluation, default 8192</li><li><tt>aux.uMax</tt> is the range of integration of the characteristic function, default 200</li><li><tt>aux.damp</tt> is the damping parameter required by the Carr/Madan approach, default 1.5</li><li><tt>aux.dx</tt> is the discretization of the log strike range, default value 2/N</li><li><tt>aux.x0</tt> contains the log of spot underlying, default zero</li><li><tt>aux.K</tt> is a vector of strike evaluation points</li></ul></div><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1"><b>Example 1: Black Scholes</b></a></li><li><a href="#4"><b>Example 2: Heston's stochastic volatility model</b></a></li><li><a href="#6"><b>Example 3: Bates' model with stochastic intensity</b></a></li><li><a href="#8"><b>Example 4 Option Greeks</b></a></li><li><a href="#13"><b>Example 5: Greeks of Bates Model with stochastic intensity</b></a></li><li><a href="#14"><b>Example 6: Multiple strikes / maturities</b></a></li></ul></div><h2><b>Example 1: Black Scholes</b><a name="1"></a></h2><p>In the Black Scholes model, the risk neutral dynamics of the logarithmic spot process are:</p><p><img src="cf2callHelp_eq34838.png" alt="$dy=(r_f - \frac{1}{2}\sigma^2)dt + \sigma dW$"></p><p>resulting in the characteristic function</p><p><img src="cf2callHelp_eq25620.png" alt="$\phi(u)=E(e^{uiX_T})=\exp(-r_f\tau +iux_t+ iu\tau(r_f-\frac{1}{2}\sigma^2)-\frac{1}{2}\tau u \sigma^2)$"></p><p>where <img src="cf2callHelp_eq42994.png" alt="$\tau=T-t$">.</p><p>The FFT option pricing approach of Carr/Madan rapipdly evaluates the option price as an Fourier transform of the underlying characteristic function, where <img src="cf2callHelp_eq98624.png" alt="$k=\log(K)$"> the logarithm of the strike price:</p><p><img src="cf2callHelp_eq05018.png" alt="$C = \frac{\exp(-\alpha k)}{\pi}\int_0^{\infty}\exp(-ivk) \frac{\phi(v-(\alpha+1)i)}{\alpha^2+\alpha-v^2+i(2\alpha+1)v}dv$"></p><p>The characteristic function of the Black Scholes model is also included in <a href="cflib.html"><tt>cflib</tt></a>, using the argument <tt>type='BS'</tt>.</p><pre class="codeinput">rf          = 0.05;
 tau         = 1;
 sigma       = 0.25;
 S0          = 100;
@@ -147,7 +147,55 @@ title(<span class="string">'Bates Model Derivative with respect to the spot vari
 subplot(3,1,3)
 plot(K,DeltaLBates)
 title(<span class="string">'Bates Model Derivative with respect to the spot intensity level'</span>)
-</pre><img vspace="5" hspace="5" src="cf2callHelp_06.png" alt=""> <p class="footer"><br>
+</pre><img vspace="5" hspace="5" src="cf2callHelp_06.png" alt=""> <h2><b>Example 6: Multiple strikes / maturities</b><a name="14"></a></h2><p>In this example, we show how to compute option prices for different strike-maturity combinations in one go. Assume that the underlying security is valued at 100 USD today, and we are interested in call option prices for the following strike-maturity set:</p><p>
+<table border=1 width=350>
+<tr>
+<td width=100>Strikes\Maturity</td>
+<td width=50>1M</td>
+<td width=50>3M</td>
+<td width=50>6M</td>
+<td width=50>12M</td>
+<td width=50>24M</td>
+</tr>
+<tr>
+<td width=100></td>
+<td width=50>95</td>
+<td width=50>94</td>
+<td width=50>93</td>
+<td width=50>92</td>
+<td width=50>90</td>
+</tr>
+<tr>
+<td width=100></td>
+<td width=50>100</td>
+<td width=50>100</td>
+<td width=50>100</td>
+<td width=50>100</td>
+<td width=50>100</td>
+</tr>
+<tr>
+<td width=100></td>
+<td width=50>105</td>
+<td width=50>108</td>
+<td width=50>110</td>
+<td width=50>110</td>
+<td width=50>105</td>
+</tr>
+</table>
+</p><p>For our underlying process, we assume a Heston model with the parameters from Example 2. For the time to maturity and the strikes we introduce the following arrays:</p><pre class="codeinput">tau         = [1 3 6 12 24]/12;
+K           = [95 94 93 92 90 ;
+               100 100 100 100 100 ;
+               105 108 110 110 105];
+</pre><p>Using the additional argument <tt>K</tt> in the <tt>aux</tt> structure of <tt>cf2call</tt>, we can compute all option prices in one go:</p><pre class="codeinput">C           = cf2call(@(u) cflib(u,tau,par,<span class="string">'Heston'</span>), <span class="keyword">...</span>
+              struct(<span class="string">'x0'</span>,par.x0,<span class="string">'K'</span>,K))
+</pre><pre class="codeoutput">
+C =
+
+    6.3311    9.3630   12.6840   17.5476   25.3953
+    3.1068    5.7038    8.5326   12.9880   20.0154
+    1.1938    2.4975    4.3447    8.5270   17.6624
+
+</pre><p class="footer"><br>
       Published with MATLAB&reg; 7.14<br></p></div><!--
 ##### SOURCE BEGIN #####
 %% cf2call
@@ -400,5 +448,61 @@ title('Bates Model Derivative with respect to the spot variance level')
 subplot(3,1,3)
 plot(K,DeltaLBates)
 title('Bates Model Derivative with respect to the spot intensity level')
+%% *Example 6: Multiple strikes / maturities*
+% 
+% In this example, we show how to compute option prices for different
+% strike-maturity combinations in one go. Assume that the underlying 
+% security is valued at 100 USD today, and we are interested in call option 
+% prices for the following strike-maturity set:
+%
+% <html>
+% <table border=1 width=350>
+% <tr>
+% <td width=100>Strikes\Maturity</td>
+% <td width=50>1M</td>
+% <td width=50>3M</td>
+% <td width=50>6M</td>
+% <td width=50>12M</td>
+% <td width=50>24M</td>
+% </tr>
+% <tr>
+% <td width=100></td>
+% <td width=50>95</td>
+% <td width=50>94</td>
+% <td width=50>93</td>
+% <td width=50>92</td>
+% <td width=50>90</td>
+% </tr>
+% <tr>
+% <td width=100></td>
+% <td width=50>100</td>
+% <td width=50>100</td>
+% <td width=50>100</td>
+% <td width=50>100</td>
+% <td width=50>100</td>
+% </tr>
+% <tr>
+% <td width=100></td>
+% <td width=50>105</td>
+% <td width=50>108</td>
+% <td width=50>110</td>
+% <td width=50>110</td>
+% <td width=50>105</td>
+% </tr>
+% </table>
+% </html>
+% 
+% For our underlying process, we assume a Heston model with the parameters
+% from Example 2. For the time to maturity and the strikes we introduce the 
+% following arrays:
+tau         = [1 3 6 12 24]/12;
+K           = [95 94 93 92 90 ; 
+               100 100 100 100 100 ; 
+               105 108 110 110 105];
+%%
+% Using the additional argument |K| in the |aux| structure of |cf2call|, we
+% can compute all option prices in one go:
+C           = cf2call(@(u) cflib(u,tau,par,'Heston'), ...
+              struct('x0',par.x0,'K',K))
 ##### SOURCE END #####
 --></body></html>

@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>CFH Toolbox</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-27"><meta name="DC.source" content="Main.m"><style type="text/css">
+      --><title>CFH Toolbox</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-06"><meta name="DC.source" content="Main.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -55,54 +55,97 @@ span.syscmd { color:#B28C00 }
 .footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
 .footer p { margin:0px; }
 
-  </style></head><body><div class="content"><h1>CFH Toolbox</h1><!--introduction--><p>This toolbox implements the approach of Duffie/Pan/Singleton (2000), who show that we can compute the characteristic function (and hence recover option prices, pdfs, bond prices), for a very wide class of affine jump-diffusion models. We combine this approach with the FFT option pricing methods of Carr/Madan (1999) and Chourdakis (2005).</p><p>Author: <a href="mailto:matthias.held@web.de">matthias.held@web.de</a></p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Available functions</a></li><li><a href="#2">Theory</a></li></ul></div><h2>Available functions<a name="1"></a></h2><div><ul><li><a href="cf2bond.html"><tt>cf2bond</tt></a> Compute bond prices from AJD dynamics</li><li><a href="cf2bondEx.html"><tt>cf2bondEx</tt></a> Compute extended bond pricing transforms from AJD process</li><li><a href="cf2call.html"><tt>cf2call</tt></a> Estimate call option prices from characteristic function</li><li><a href="cf2gaby.html"><tt>cf2gaby</tt></a> Compute conditional expectations from characteristic function</li><li><a href="cf2pdf.html"><tt>cf2pdf</tt></a> Transform characteristic function into the corresponding probability density function</li><li><a href="cfaffine.html"><tt>cfaffine</tt></a> Yields a characteristic function for a given set of Affine-Jump-Diffusion (AJD) dynamics</li><li><a href="cfjump.html"><tt>cfjump</tt></a> A library of commonly encountered jump transforms</li><li><a href="cflib.html"><tt>cflib</tt></a> A library of commonly encountered characteristic functions</li><li><a href="cfneutralize.html"><tt>cfneutralize</tt></a> Returns the risk-neutralized drift components from given AJD dynamics coefficients.</li></ul></div><h2>Theory<a name="2"></a></h2><p>Let <img src="Main_eq03598.png" alt="$X$"> be an affine jump-diffusion process</p><p><img src="Main_eq16929.png" alt="$dX=\mu(X)dt + \sigma(X)dW + JdZ$"></p><p>where all parameters are affine in the state</p><div><ul><li><img src="Main_eq93816.png" alt="$\mu(X) = K_0 + K_1X$">, the drift</li><li><img src="Main_eq75175.png" alt="$\sigma(X)\sigma(X)^T = H_0 + H_1X$">, the variance</li><li><img src="Main_eq32732.png" alt="$R(X) = R_0 + R_1X$">, the interest rate process</li><li><img src="Main_eq72112.png" alt="$\lambda(X) = L_0 + L_1X$">, the jump intensity of <img src="Main_eq81664.png" alt="$dZ$"></li><li><img src="Main_eq85257.png" alt="$\theta(c)= \int_{R^n} exp(cy)dF(y)$">, the moment generating function of the jump distribution of <img src="Main_eq03323.png" alt="$J$">.</li></ul></div><p>For this class of processes, the risk neutral expectation</p><p><img src="Main_eq32878.png" alt="$\phi(u)=E(\exp(u^TX_T)\exp(-\int_0^TR(X_t)dt))$"></p><p>can be computed as</p><p><img src="Main_eq97939.png" alt="$\phi(u)=\exp(\alpha(u,\tau) + \beta(u,\tau)^TX_0)$">,</p><p>where <img src="Main_eq85064.png" alt="$\alpha(u,\tau)$"> and <img src="Main_eq90647.png" alt="$\beta(u,\tau)$"> solve the Ricatti equations:</p><p><img src="Main_eq00884.png" alt="$\frac{\partial \beta}{\partial \tau}=K_1\beta+\frac{1}{2}\beta^TH_1\beta+L_1(\theta(\beta)-1)-R1$"> <img src="Main_eq93302.png" alt="$\frac{\partial \alpha}{\partial \tau}=K_0\beta+\frac{1}{2}\beta^TH_0\beta+L_0(\theta(\beta)-1)-R0$"></p><p>subject to the condition <img src="Main_eq18435.png" alt="$\alpha(u,0)=0$"> and <img src="Main_eq27910.png" alt="$\beta(u,0)=u$">.</p><p>The extended transform theorem furthermore recovers the expectation</p><p><img src="Main_eq63902.png" alt="$E((A+BX_T)\exp(u^TX_T)\exp(-\int_0^TR(X_t)dt))=(A(0)+B(0)X_0)*\phi(u)$"></p><p>The function <a href="cfaffine.html"><tt>cfaffine</tt></a> recovers the risk neutral expectation for arbitrary <img src="Main_eq35435.png" alt="$u$"> and <img src="Main_eq09111.png" alt="$A=B=0$">, whereas the function <a href="cf2bond.html"><tt>cf2bond</tt></a> directly evaluates the resulting characteristic function at <img src="Main_eq45348.png" alt="$u=0$">, thereby recovering bond prices.</p><p><a href="cf2bondex.html"><tt>cf2bondex</tt></a> directly evaluates the extended transform at <img src="Main_eq45348.png" alt="$u=0$">, thus directly recovering risk neutral expectations of linear combinations of process variables.</p><p class="footer"><br>
+  </style></head><body><div class="content"><h1>CFH Toolbox</h1><!--introduction--><p>This toolbox implements the Fourier transform methods approach to option pricing of Duffie/Pan/Singleton (DPS2000). Using this toolbox, you can recover option prices, bond prices, CDS spreads, probability density functions and much more for the whole class of affine jump-diffusion (AJD) models and for any user supplied characteristic function. This toolbox draws from the FFT methods of Carr/Madan (CM1999) and Chourdakis (C2005).</p><p>Author: <a href="mailto:matthias.held@web.de">matthias.held@web.de</a></p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Available functions</a></li><li><a href="#2">Introduction</a></li><li><a href="#3">AJD processes</a></li><li><a href="#4">The Transform Function: AJD process to characteristic function</a></li><li><a href="#5">The Transform Inversion: Characteristic function to conditional expectations</a></li><li><a href="#6">The Extended Transform Function: AJD process to extended characteristic function</a></li><li><a href="#7">The Extended Transform Inversion: Extended Characteristic function to conditional expectations</a></li></ul></div><h2>Available functions<a name="1"></a></h2><p>Each function of this toolbox comes with an array of examples highlighting its capabilities and possible applications.</p><div><ul><li><a href="cf2bond.html"><tt>cf2bond</tt></a> Compute bond prices from AJD dynamics</li><li><a href="cf2bondEx.html"><tt>cf2bondEx</tt></a> Compute extended bond pricing transforms from AJD process</li><li><a href="cf2call.html"><tt>cf2call</tt></a> Estimate call option prices from characteristic function</li><li><a href="cf2gaby.html"><tt>cf2gaby</tt></a> Compute conditional expectations from characteristic function</li><li><a href="cf2pdf.html"><tt>cf2pdf</tt></a> Compute probability density function from characteristic function</li><li><a href="cfaffine.html"><tt>cfaffine</tt></a> Yields a characteristic function for a given set of Affine-Jump-Diffusion (AJD) dynamics</li><li><a href="cfaffineEx.html"><tt>cfaffineEx</tt></a> Yields the extended characteristic function for a given set of Affine-Jump-Diffusion (AJD) dynamics</li><li><a href="cfjump.html"><tt>cfjump</tt></a> A library of commonly encountered jump transforms and their gradients</li><li><a href="cflib.html"><tt>cflib</tt></a> A library of commonly encountered characteristic functions</li><li><a href="cfneutralize.html"><tt>cfneutralize</tt></a> Returns the risk-neutralized drift components for asset prices from given AJD dynamics coefficients</li></ul></div><h2>Introduction<a name="2"></a></h2><p>This toolbox allows its user to solve a large array of problems commonly encountered in computational finance. Given the knowledge of either the characteristic function of an option pricing problem or the design of an AJD process, you may recover bond and CDS prices, European and Asian option prices, probability density functions and conditional expectations (prices for certain payoff functions). All functions in this toolbox are kept as modular as possible so that you have the least level of fuss.</p><p>This toolbox is work-in-progress. For updates, or if you are interested in collaboration, you may</p><div><ul><li>check the  <a href="http://www.mathworks.de/matlabcentral/fileexchange/46489-cfh-toolbox">toolbox' Mathworks page</a> on a regular basis for updates</li><li>check my  <a href="https://github.com/kermittfrog/CFHToolbox">Github page</a> for collaboration</li><li>send me an <a href="mailto:matthias.held@web.de">e-mail</a> for discussion/feedback</li></ul></div><p>The remainder of this document gives a quick summary of the DPS2000 paper, i.e. the setup of AJD processes, the transform functions and its inverse and the extended transform function and its inverse.</p><h2>AJD processes<a name="3"></a></h2><p>Let <img src="Main_eq03598.png" alt="$X$"> be an <tt>N</tt>-dimensional affine jump-diffusion process</p><p><img src="Main_eq16929.png" alt="$dX=\mu(X)dt + \sigma(X)dW + JdZ$"></p><p><b>Affine</b> means that the process parameters (drift, variance, jump intensity) and the discount factor are affine in the state variables:</p><div><ul><li>drift: <img src="Main_eq93816.png" alt="$\mu(X) = K_0 + K_1X$">, where <img src="Main_eq16303.png" alt="$K_0$"> is an <tt>Nx1</tt> vector and <img src="Main_eq82712.png" alt="$K_1$"> is an <tt>NxN</tt> array</li><li>variance: <img src="Main_eq75175.png" alt="$\sigma(X)\sigma(X)^T = H_0 + H_1X$">, where <img src="Main_eq88735.png" alt="$H_0$"> is an <tt>NxN</tt> array and <img src="Main_eq68501.png" alt="$H_1$"> is an <tt>NxNxN</tt> tensor (an ND-array in Matlab)</li><li>interest rate process: <img src="Main_eq32732.png" alt="$R(X) = R_0 + R_1X$">, where <img src="Main_eq34096.png" alt="$R_0$"> is a scalar and <img src="Main_eq99938.png" alt="$R_1$"> is an <tt>Nx1</tt> array</li><li>jump intensity of <img src="Main_eq81664.png" alt="$dZ$">: <img src="Main_eq72112.png" alt="$\lambda(X) = L_0 + L_1X$">, where <img src="Main_eq37148.png" alt="$L_0$"> is a scalar and <img src="Main_eq91833.png" alt="$L_1$"> is an <tt>Nx1</tt> array</li><li>jump transform: <img src="Main_eq85257.png" alt="$\theta(c)= \int_{R^n} exp(cy)dF(y)$">, maps from the <tt>N</tt> dimensional input <img src="Main_eq27869.png" alt="$c$"> to a scalar output. <img src="Main_eq99329.png" alt="$\theta(c)$"> is the moment generating function of the jump distribution of <img src="Main_eq03323.png" alt="$J$"></li></ul></div><p>The function <a href="cfjump.html"><tt>cfjump</tt></a> offers a library of commonly encountered jump transforms, whereas <a href="cfneutralize.html"><tt>cfneutralize</tt></a> allows you to risk neutralize the asset processes in your model so that the asset price components of <img src="Main_eq35867.png" alt="$dX$"> are martingales.</p><h2>The Transform Function: AJD process to characteristic function<a name="4"></a></h2><p>For the class of AJD processes, the discounted risk neutral expectation</p><p><img src="Main_eq32878.png" alt="$\phi(u)=E(\exp(u^TX_T)\exp(-\int_0^TR(X_t)dt))$"></p><p>can be computed as</p><p><img src="Main_eq97939.png" alt="$\phi(u)=\exp(\alpha(u,\tau) + \beta(u,\tau)^TX_0)$">,</p><p>where <img src="Main_eq85064.png" alt="$\alpha(u,\tau)$"> and <img src="Main_eq90647.png" alt="$\beta(u,\tau)$"> solve the Ricatti equations:</p><p><img src="Main_eq73119.png" alt="$\frac{\partial \beta}{\partial \tau}=K_1^T\beta+\frac{1}{2}\beta^TH_1\beta+L_1(\theta(\beta)-1)-R1$"></p><p><img src="Main_eq43341.png" alt="$\frac{\partial \alpha}{\partial \tau}=K_0^T\beta+\frac{1}{2}\beta^TH_0\beta+L_0(\theta(\beta)-1)-R0$"></p><p>subject to the condition <img src="Main_eq18435.png" alt="$\alpha(u,0)=0$"> and <img src="Main_eq27910.png" alt="$\beta(u,0)=u$">.</p><p>Given knowledge of <img src="Main_eq73866.png" alt="$\phi(u)$">, we can obtain option prices,bond prices, and cumulative or probability density functions, amongst others.</p><p>For any feasible AJD process, the function <a href="cfaffine.html"><tt>cfaffine</tt></a> recovers this transform function for <img src="Main_eq35435.png" alt="$u$"> replaced by <img src="Main_eq11706.png" alt="$ui$">, i.e. it computes the characteristic function. The function <a href="cf2bond.html"><tt>cf2bond</tt></a> directly evaluates the transform function at <img src="Main_eq45348.png" alt="$u=0$">, thereby efficiently recovering bond prices and yields for different maturities. The function <a href="cflib.html"><tt>cflib</tt></a> offers a library of commonly encountered characteristic functions in finance. The function <a href="cf2pdf.html"><tt>cf2pdf</tt></a> recovers the probability density that corresponds to any characteristic function.</p><h2>The Transform Inversion: Characteristic function to conditional expectations<a name="5"></a></h2><p>DPs further introduce the discounted conditional expectation</p><p><img src="Main_eq93882.png" alt="$G(a,b,y)=E(\exp(-\int_0^TR(X_t)dt)\exp(a^TX_T)1_{b^TX_T\leq Y})$"></p><p>and show that its Fourier transform (as a function of <img src="Main_eq44020.png" alt="$y$">) is</p><p><img src="Main_eq35525.png" alt="$F(G(y))(u)=\phi(a+iub)$"></p><p>Consequently, the discounted conditional expectation can be recovered by invoking Gil-Pelaez:</p><p><img src="Main_eq84823.png" alt="$G(a,b,y) = \frac{\phi(a)}{2}-\frac{1}{\pi}\int_0^{\infty}\frac{\Im(\phi(a+iub)\exp(-iuy))}{u}du$"></p><p>The function <a href="cf2gaby.html"><tt>cf2gaby</tt></a> recovers this expectation for any characteristic function. For standard (call) option pricing applications, <a href="cf2call.html"><tt>cf2call</tt></a> directly evaluates the characteristic function and obtains the corresponding call option price in one go.</p><h2>The Extended Transform Function: AJD process to extended characteristic function<a name="6"></a></h2><p>Further, from DPS we are able to recover the extended transform function</p><p><img src="Main_eq39537.png" alt="$\psi(v,u)=E((v^TX_T)\exp(u^TX_T)\exp(-\int_0^TR(X_t)dt))$"></p><p>as</p><p><img src="Main_eq86143.png" alt="$\psi(v,u)=(A(\tau,v,u)+B(\tau,v,u)^TX_0)\phi(u)$"></p><p>where <img src="Main_eq73866.png" alt="$\phi(u)$"> is the solution to the transform function above, and where <img src="Main_eq31461.png" alt="$A$"> and <img src="Main_eq73617.png" alt="$B$"> solve the linear ODEs:</p><p><img src="Main_eq60880.png" alt="$\frac{\partial B}{\partial \tau}=K_1^TB(\tau)+\beta(\tau)^TH_1B(\tau)+L_1\nabla(\theta(\beta(\tau)))B(\tau)$"></p><p><img src="Main_eq87833.png" alt="$\frac{\partial A}{\partial \tau}=K_0^TB(\tau)+\beta(\tau)^TH_0B(\tau)+L_0\nabla(\theta(\beta(\tau)))B(\tau)$"></p><p>subject to the condition <img src="Main_eq52353.png" alt="$A(0)=0$"> and <img src="Main_eq77049.png" alt="$B(0)=v$">.</p><p>For any feasible AJD process, the function <a href="cfaffineEx.html"><tt>cfaffineEx</tt></a> recovers this transform function for arbitrary <img src="Main_eq00320.png" alt="$A,B$"> and <img src="Main_eq35435.png" alt="$u$"> replaced by <img src="Main_eq11706.png" alt="$ui$">, i.e. it yields the extended characteristic function of <img src="Main_eq77038.png" alt="$X_T$">.% <a href="cf2bondEx.html"><tt>cf2bondEx</tt></a> evaluates the extended transform at <img src="Main_eq45348.png" alt="$u=0$"> and arbitrary <img src="Main_eq00320.png" alt="$A,B$">, thus directly recovering risk neutral expectations of linear combinations of process variables. The function <a href="cfjump.html"><tt>cfjump</tt></a> offers a library of commonly encountered jump transforms and corresponding gradient functions <img src="Main_eq29295.png" alt="$\nabla(\theta(c))$"> required by the extended transform.</p><h2>The Extended Transform Inversion: Extended Characteristic function to conditional expectations<a name="7"></a></h2><p>From DPS2000, we can further recover the extended conditional expectation via Fourier inversion. Let</p><p><img src="Main_eq44653.png" alt="$\tilde{G}(a,b,d,y)=E(\exp(-\int_0^TR(X_t)dt)(d^TX_T)\exp(a^TX_T)1_{b^TX_T\leq Y})$"></p><p>The corresponding extended transform is</p><p><img src="Main_eq36746.png" alt="$F(\tilde{G}(y))(u)=\psi(d, a+iub)$"></p><p>Consequently, the discounted conditional expectation can be recovered by invoking Gil-Pelaez:</p><p><img src="Main_eq08291.png" alt="$\tilde{G}(a,b,d,y) = \frac{\psi(d,a)}{2}-\frac{1}{\pi}\int_0^{\infty}\frac{\Im(\psi(d,a+iub)\exp(-iuy))}{u}du$"></p><p>The function <a href="cf2gaby.html"><tt>cf2gaby</tt></a> recovers this expectation for any extended characteristic function.</p><p class="footer"><br>
       Published with MATLAB&reg; 7.14<br></p></div><!--
 ##### SOURCE BEGIN #####
 %% CFH Toolbox 
-% This toolbox implements the approach of Duffie/Pan/Singleton (2000), who
-% show that we can compute the characteristic function (and hence recover 
-% option prices, pdfs, bond prices), for a very wide class of affine 
-% jump-diffusion models. We combine this approach with the FFT option 
-% pricing methods of Carr/Madan (1999) and Chourdakis (2005).
+% This toolbox implements the Fourier transform methods approach to option 
+% pricing of Duffie/Pan/Singleton (DPS2000). Using this toolbox, you can
+% recover option prices, bond prices, CDS spreads, probability density 
+% functions and much more for the whole class of affine jump-diffusion 
+% (AJD) models and for any user supplied characteristic function. This 
+% toolbox draws from the FFT methods of Carr/Madan (CM1999) and Chourdakis
+% (C2005).
 %
 % Author: matthias.held@web.de
 %
 %% Available functions
 % 
+% Each function of this toolbox comes with an array of examples
+% highlighting its capabilities and possible applications. 
+%
 % * <cf2bond.html |cf2bond|> Compute bond prices from AJD dynamics
 % * <cf2bondEx.html |cf2bondEx|> Compute extended bond pricing transforms
 % from AJD process
-% * <cf2call.html |cf2call|> Estimate call option prices from characteristic 
-% function
+% * <cf2call.html |cf2call|> Estimate call option prices from 
+% characteristic function
 % * <cf2gaby.html |cf2gaby|> Compute conditional expectations from
 % characteristic function
-% * <cf2pdf.html |cf2pdf|> Transform characteristic function into the
-% corresponding probability density function
-% * <cfaffine.html |cfaffine|> Yields a characteristic function for a given set
-% of Affine-Jump-Diffusion (AJD) dynamics
+% * <cf2pdf.html |cf2pdf|> Compute probability density function from 
+% characteristic function
+% * <cfaffine.html |cfaffine|> Yields a characteristic function for a given 
+% set of Affine-Jump-Diffusion (AJD) dynamics
+% * <cfaffineEx.html |cfaffineEx|> Yields the extended characteristic 
+% function for a given set of Affine-Jump-Diffusion (AJD) dynamics
 % * <cfjump.html |cfjump|> A library of commonly encountered jump
-% transforms
+% transforms and their gradients
 % * <cflib.html |cflib|> A library of commonly encountered characteristic
 % functions
 % * <cfneutralize.html |cfneutralize|> Returns the risk-neutralized drift
-% components from given AJD dynamics coefficients.
+% components for asset prices from given AJD dynamics coefficients
 %
-%% Theory
+%% Introduction
+% This toolbox allows its user to solve a large array of problems commonly
+% encountered in computational finance. Given the knowledge of either the
+% characteristic function of an option pricing problem or the design of an
+% AJD process, you may recover bond and CDS prices, European and Asian
+% option prices, probability density functions and conditional
+% expectations (prices for certain payoff functions). All functions in this
+% toolbox are kept as modular as possible so that you have the least level
+% of fuss.
 %
-% Let $X$ be an affine jump-diffusion process
+% This toolbox is work-in-progress. For updates, or if you are interested 
+% in collaboration, you may 
+% 
+% * check the  <http://www.mathworks.de/matlabcentral/fileexchange/46489-cfh-toolbox 
+% toolbox' Mathworks page> on a regular basis for updates
+% * check my  <https://github.com/kermittfrog/CFHToolbox Github page> for 
+% collaboration
+% * send me an <mailto:matthias.held@web.de e-mail> for discussion/feedback
+%
+% The remainder of this document gives a quick summary of the DPS2000
+% paper, i.e. the setup of AJD processes, the transform functions and its
+% inverse and the extended transform function and its inverse.
+%
+%% AJD processes
+%
+% Let $X$ be an |N|-dimensional affine jump-diffusion process
 %
 % $dX=\mu(X)dt + \sigma(X)dW + JdZ$
 %
-% where all parameters are affine in the state
+% *Affine* means that the process parameters (drift, variance, 
+% jump intensity) and the discount factor are affine in the state 
+% variables:
 %
-% * $\mu(X) = K_0 + K_1X$, the drift
-% * $\sigma(X)\sigma(X)^T = H_0 + H_1X$, the variance
-% * $R(X) = R_0 + R_1X$, the interest rate process
-% * $\lambda(X) = L_0 + L_1X$, the jump intensity of $dZ$
-% * $\theta(c)= \int_{R^n} exp(cy)dF(y)$, the moment generating function of
-% the jump distribution of $J$.
+% * drift: $\mu(X) = K_0 + K_1X$, where $K_0$ is an |Nx1| vector and $K_1$ is an |NxN|
+% array
+% * variance: $\sigma(X)\sigma(X)^T = H_0 + H_1X$, where $H_0$ is an |NxN| array 
+% and $H_1$ is an |NxNxN| tensor (an ND-array in Matlab)
+% * interest rate process: $R(X) = R_0 + R_1X$, where $R_0$ is a scalar and
+% $R_1$ is an |Nx1| array
+% * jump intensity of $dZ$: $\lambda(X) = L_0 + L_1X$, where $L_0$ is a scalar and
+% $L_1$ is an |Nx1| array
+% * jump transform: $\theta(c)= \int_{R^n} exp(cy)dF(y)$, maps from the |N| dimensional input $c$ to a scalar output. $\theta(c)$ is the moment generating function of
+% the jump distribution of $J$
 %
-% For this class of processes, the risk neutral expectation 
+% The function <cfjump.html |cfjump|> offers a library of commonly 
+% encountered jump transforms, whereas <cfneutralize.html |cfneutralize|>
+% allows you to risk neutralize the asset processes in your model so that
+% the asset price components of $dX$ are martingales.
+%
+%% The Transform Function: AJD process to characteristic function
+% 
+% For the class of AJD processes, the discounted risk neutral expectation 
 %
 % $\phi(u)=E(\exp(u^TX_T)\exp(-\int_0^TR(X_t)dt))$ 
 %
@@ -112,22 +155,88 @@ span.syscmd { color:#B28C00 }
 %
 % where $\alpha(u,\tau)$ and $\beta(u,\tau)$ solve the Ricatti equations:
 % 
-% $\frac{\partial \beta}{\partial \tau}=K_1\beta+\frac{1}{2}\beta^TH_1\beta+L_1(\theta(\beta)-1)-R1$
-% $\frac{\partial \alpha}{\partial \tau}=K_0\beta+\frac{1}{2}\beta^TH_0\beta+L_0(\theta(\beta)-1)-R0$
+% $\frac{\partial \beta}{\partial \tau}=K_1^T\beta+\frac{1}{2}\beta^TH_1\beta+L_1(\theta(\beta)-1)-R1$
+%
+% $\frac{\partial \alpha}{\partial \tau}=K_0^T\beta+\frac{1}{2}\beta^TH_0\beta+L_0(\theta(\beta)-1)-R0$
 %
 % subject to the condition $\alpha(u,0)=0$ and $\beta(u,0)=u$.
 %
-% The extended transform theorem furthermore recovers the expectation
+% Given knowledge of $\phi(u)$, we can obtain option prices,bond prices,
+% and cumulative or probability density functions, amongst others.
+%
+% For any feasible AJD process, the function <cfaffine.html |cfaffine|> 
+% recovers this transform function for $u$ replaced by $ui$, i.e. it 
+% computes the characteristic function. The function <cf2bond.html 
+% |cf2bond|> directly evaluates the transform function at $u=0$, thereby 
+% efficiently recovering bond prices and yields for different maturities. 
+% The function <cflib.html |cflib|> offers a library of commonly
+% encountered characteristic functions in finance.
+% The function <cf2pdf.html |cf2pdf|> recovers the probability density that
+% corresponds to any characteristic function.
+%% The Transform Inversion: Characteristic function to conditional expectations
+% DPs further introduce the discounted conditional expectation
+%
+% $G(a,b,y)=E(\exp(-\int_0^TR(X_t)dt)\exp(a^TX_T)1_{b^TX_T\leq Y})$
+%
+% and show that its Fourier transform (as a function of $y$) is
+%
+% $F(G(y))(u)=\phi(a+iub)$
+%
+% Consequently, the discounted conditional expectation can be recovered by 
+% invoking Gil-Pelaez:
+%
+% $G(a,b,y) = \frac{\phi(a)}{2}-\frac{1}{\pi}\int_0^{\infty}\frac{\Im(\phi(a+iub)\exp(-iuy))}{u}du$
+%
+% The function <cf2gaby.html |cf2gaby|> recovers this expectation for any 
+% characteristic function. For standard (call) option pricing applications,
+% <cf2call.html |cf2call|> directly evaluates the characteristic function 
+% and obtains the corresponding call option price in one go.
+%
+%% The Extended Transform Function: AJD process to extended characteristic function
 % 
-% $E((A+BX_T)\exp(u^TX_T)\exp(-\int_0^TR(X_t)dt))=(A(0)+B(0)X_0)*\phi(u)$ 
+% Further, from DPS we are able to recover the extended transform function 
+% 
+% $\psi(v,u)=E((v^TX_T)\exp(u^TX_T)\exp(-\int_0^TR(X_t)dt))$
 %
-% The function <cfaffine.html |cfaffine|> recovers the risk neutral expectation 
-% for arbitrary $u$ and $A=B=0$, whereas the function <cf2bond.html |cf2bond|> 
-% directly evaluates the resulting characteristic function at $u=0$, thereby
-% recovering bond prices. 
+% as 
+% 
+% $\psi(v,u)=(A(\tau,v,u)+B(\tau,v,u)^TX_0)\phi(u)$ 
 %
-% <cf2bondex.html |cf2bondex|> directly evaluates the extended transform at 
-% $u=0$, thus directly recovering risk neutral expectations of linear 
-% combinations of process variables. 
+% where $\phi(u)$ is the solution to the transform function above, and
+% where $A$ and $B$ solve the linear ODEs:
+%
+% $\frac{\partial B}{\partial \tau}=K_1^TB(\tau)+\beta(\tau)^TH_1B(\tau)+L_1\nabla(\theta(\beta(\tau)))B(\tau)$
+%
+% $\frac{\partial A}{\partial \tau}=K_0^TB(\tau)+\beta(\tau)^TH_0B(\tau)+L_0\nabla(\theta(\beta(\tau)))B(\tau)$
+%
+% subject to the condition $A(0)=0$ and $B(0)=v$.
+%
+% For any feasible AJD process, the function <cfaffineEx.html |cfaffineEx|> 
+% recovers this transform function for arbitrary $A,B$ and $u$ replaced by 
+% $ui$, i.e. it yields the extended characteristic function of $X_T$.%
+% <cf2bondEx.html |cf2bondEx|> evaluates the extended transform at $u=0$ 
+% and arbitrary $A,B$, thus directly recovering risk neutral expectations 
+% of linear combinations of process variables. 
+% The function <cfjump.html |cfjump|> offers a library of commonly 
+% encountered jump transforms and corresponding gradient functions 
+% $\nabla(\theta(c))$ required by the extended transform.
+%% The Extended Transform Inversion: Extended Characteristic function to conditional expectations
+%
+% From DPS2000, we can further recover the extended conditional expectation
+% via Fourier inversion. Let
+%
+% $\tilde{G}(a,b,d,y)=E(\exp(-\int_0^TR(X_t)dt)(d^TX_T)\exp(a^TX_T)1_{b^TX_T\leq Y})$
+%
+% The corresponding extended transform is
+% 
+% $F(\tilde{G}(y))(u)=\psi(d, a+iub)$ 
+%
+% Consequently, the discounted conditional expectation can be recovered by 
+% invoking Gil-Pelaez:
+%
+% $\tilde{G}(a,b,d,y) = \frac{\psi(d,a)}{2}-\frac{1}{\pi}\int_0^{\infty}\frac{\Im(\psi(d,a+iub)\exp(-iuy))}{u}du$
+%
+% The function <cf2gaby.html |cf2gaby|> recovers this expectation for any 
+% extended characteristic function.
 ##### SOURCE END #####
 --></body></html>

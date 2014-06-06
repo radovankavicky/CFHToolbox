@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>cf2bond</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-27"><meta name="DC.source" content="cf2bondHelp.m"><style type="text/css">
+      --><title>cf2bond</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-06"><meta name="DC.source" content="cf2bondHelp.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -55,11 +55,11 @@ span.syscmd { color:#B28C00 }
 .footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
 .footer p { margin:0px; }
 
-  </style></head><body><div class="content"><h1>cf2bond</h1><p>Compute bond prices for an AJD process. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">[P Y] = cf2bond(tau,x0,K0,K1,H0,H1,R0,R1)
+  </style></head><body><div class="content"><h1>cf2bond</h1><!--introduction--><p>Compute bond prices for an AJD process. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">[P Y] = cf2bond(tau,x0,K0,K1,H0,H1,R0,R1)
 [P Y] = cf2bond(tau,x0,K0,K1,H0,H1,R0,R1,L0,L1,jump)
 [P Y] = cf2bond(tau,x0,K0,K1,H0,H1,R0,R1,L0,L1,jump,N)
 </pre><p>Given an affine jump-diffusive process <img src="cf2bondHelp_eq16929.png" alt="$dX=\mu(X)dt + \sigma(X)dW + JdZ$"> (see <a href="Main.html#theory">theory</a> for details), <tt>cf2bond</tt> recovers bond prices <tt>P</tt> and corresponding yields <tt>Y</tt> for all maturities defined in <tt>tau</tt> by computing <tt>CF(0)</tt>. Any AJD process parameters not required can be left empty <tt>[]</tt>.</p><pre class="language-matlab">[P Y alpha beta] = cf2bond(tau,x0,K0,K1,H0,H1,R0,R1,L0,L1,jump)
-</pre><p>Returns the <img src="cf2bondHelp_eq87919.png" alt="$\alpha$"> and <img src="cf2bondHelp_eq42727.png" alt="$\beta$"> values, see <a href="Main.html">Theory</a> for details.</p><p><b>Input Arguments</b></p><p><tt>tau</tt> is a <tt>(1 x T)</tt> vector of desired times to maturity. The other inputs must relate to <tt>x0</tt> or be empty <tt>[]</tt>. <tt>R0,R1</tt> are scalars, <tt>K0</tt>, <tt>R1</tt>, <tt>L1</tt> are of dimension <tt>(N x 1)</tt>, <tt>H0</tt>, <tt>K1</tt> are of dimension <tt>(N x N)</tt>, <tt>H1</tt> is a tensor <tt>(N x N x N)</tt>. The number of jump components <tt>NJ</tt> is defined either by the length of <tt>L0</tt> or the number of columns in <tt>L1</tt>. <tt>JUMP</tt> is the momentgenerating function of the jump distribution(s), expecting <tt>(NX)x(K)</tt> and returning <tt>(1)x(K)</tt>.</p><p><tt>N</tt> is an optional argument that controls the number of time steps per year and thus the accuracy of the result. The default value is <tt>N=200</tt>.</p><p><b>Example 1: Vasicek interest rate</b></p><p>Assume the interest rate follows a univariate Vasicek process:</p><p><img src="cf2bondHelp_eq61258.png" alt="$dr=\kappa(\theta-r)dt + \sigma dW$"></p><p>Let us set <img src="cf2bondHelp_eq10909.png" alt="$\kappa=0.85$">, <img src="cf2bondHelp_eq74958.png" alt="$\theta=0.02$">, <img src="cf2bondHelp_eq24873.png" alt="$\sigma$">=0.02 and the initial rate <img src="cf2bondHelp_eq99481.png" alt="$r_0=0.03$">:</p><pre class="codeinput">kappa   = 0.85;
+</pre><p>Returns the <img src="cf2bondHelp_eq87919.png" alt="$\alpha$"> and <img src="cf2bondHelp_eq42727.png" alt="$\beta$"> values, see <a href="Main.html">Theory</a> for details.</p><p><b>Input Arguments</b></p><p><tt>tau</tt> is a <tt>(1 x T)</tt> vector of desired times to maturity. The other inputs must relate to <tt>x0</tt> or be empty <tt>[]</tt>. <tt>R0,R1</tt> are scalars, <tt>K0</tt>, <tt>R1</tt>, <tt>L1</tt> are of dimension <tt>(N x 1)</tt>, <tt>H0</tt>, <tt>K1</tt> are of dimension <tt>(N x N)</tt>, <tt>H1</tt> is a tensor <tt>(N x N x N)</tt>. The number of jump components <tt>NJ</tt> is defined either by the length of <tt>L0</tt> or the number of columns in <tt>L1</tt>. <tt>JUMP</tt> is the momentgenerating function of the jump distribution(s), expecting <tt>(NX)x(K)</tt> and returning <tt>(1)x(K)</tt>.</p><p><tt>N</tt> is an optional argument that controls the number of time steps per year and thus the accuracy of the result. The default value is <tt>N=200</tt>.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1"><b>Example 1: Vasicek interest rate</b></a></li><li><a href="#4"><b>Example 2: Credit risk with jumps</b></a></li></ul></div><h2><b>Example 1: Vasicek interest rate</b><a name="1"></a></h2><p>Assume the interest rate follows a univariate Vasicek process:</p><p><img src="cf2bondHelp_eq61258.png" alt="$dr=\kappa(\theta-r)dt + \sigma dW$"></p><p>Let us set <img src="cf2bondHelp_eq10909.png" alt="$\kappa=0.85$">, <img src="cf2bondHelp_eq74958.png" alt="$\theta=0.02$">, <img src="cf2bondHelp_eq24873.png" alt="$\sigma$">=0.02 and the initial rate <img src="cf2bondHelp_eq99481.png" alt="$r_0=0.03$">:</p><pre class="codeinput">kappa   = 0.85;
 theta   = 0.02;
 sigma   = 0.02;
 r0      = 0.03;
@@ -72,7 +72,7 @@ plot(tau,Y)
 title(<span class="string">'Vasicek yield curve'</span>);
 xlabel(<span class="string">'time to maturity'</span>);
 ylabel(<span class="string">'annualized yield'</span>);
-</pre><img vspace="5" hspace="5" src="cf2bondHelp_01.png" alt=""> <p><b>Example 2: Credit risk with jumps</b></p><p>Here, we assume that the risk-free interest rate <img src="cf2bondHelp_eq25861.png" alt="$r$"> follows a Vasicek process, whereas the credit risk process <img src="cf2bondHelp_eq23351.png" alt="$\lambda$"> is of the Cox-Ingersoll-Ross (CIR) type. The credit risk process features exponentially distributed jumps with mean <img src="cf2bondHelp_eq68803.png" alt="$\mu$"> and stochastic intensity <img src="cf2bondHelp_eq26686.png" alt="$\Lambda$">, which is again of the CIR type.</p><p><img src="cf2bondHelp_eq71832.png" alt="$dr = \kappa_r(\theta_r-r_t)dt + \sigma_rdW_1$"></p><p><img src="cf2bondHelp_eq13829.png" alt="$d\lambda = \kappa_{\lambda}(\theta_{\lambda}-\lambda_t)dt + \sigma_{\lambda}\sqrt{\lambda_t}dW_2$"></p><p><img src="cf2bondHelp_eq89825.png" alt="$d\Lambda = \kappa_{\Lambda}(\theta_{\Lambda}-\Lambda_t)dt + \sigma_{\Lambda}\sqrt{\Lambda_t}dW_3$"></p><p><img src="cf2bondHelp_eq35383.png" alt="$E(dW_idW_j)=0 \forall i\neq j$"></p><p>The corresponding jump transform is <img src="cf2bondHelp_eq32639.png" alt="$\theta(c)=\frac{1}{1-c\mu}$"></p><p>Let us initialize the dynamics at</p><pre class="codeinput">x0          = [0.03 0.02 0.05]';
+</pre><img vspace="5" hspace="5" src="cf2bondHelp_01.png" alt=""> <h2><b>Example 2: Credit risk with jumps</b><a name="4"></a></h2><p>Here, we assume that the risk-free interest rate <img src="cf2bondHelp_eq25861.png" alt="$r$"> follows a Vasicek process, whereas the credit risk process <img src="cf2bondHelp_eq23351.png" alt="$\lambda$"> is of the Cox-Ingersoll-Ross (CIR) type. The credit risk process features exponentially distributed jumps with mean <img src="cf2bondHelp_eq68803.png" alt="$\mu$"> and stochastic intensity <img src="cf2bondHelp_eq26686.png" alt="$\Lambda$">, which is again of the CIR type.</p><p><img src="cf2bondHelp_eq71832.png" alt="$dr = \kappa_r(\theta_r-r_t)dt + \sigma_rdW_1$"></p><p><img src="cf2bondHelp_eq13829.png" alt="$d\lambda = \kappa_{\lambda}(\theta_{\lambda}-\lambda_t)dt + \sigma_{\lambda}\sqrt{\lambda_t}dW_2$"></p><p><img src="cf2bondHelp_eq89825.png" alt="$d\Lambda = \kappa_{\Lambda}(\theta_{\Lambda}-\Lambda_t)dt + \sigma_{\Lambda}\sqrt{\Lambda_t}dW_3$"></p><p><img src="cf2bondHelp_eq35383.png" alt="$E(dW_idW_j)=0 \forall i\neq j$"></p><p>The corresponding jump transform is <img src="cf2bondHelp_eq32639.png" alt="$\theta(c)=\frac{1}{1-c\mu}$"></p><p>Let us initialize the dynamics at</p><pre class="codeinput">x0          = [0.03 0.02 0.05]';
 mu          = 0.05;
 jump        = @(c) 1./(1-c(2,:).*mu);
 kappa       = [0.85 0.85 1]';
@@ -132,7 +132,7 @@ ylabel(<span class="string">'compound annualized yield'</span>);
 % |N| is an optional argument that controls the number of time steps per
 % year and thus the accuracy of the result. The default value is |N=200|. 
 %
-% *Example 1: Vasicek interest rate*
+%% *Example 1: Vasicek interest rate*
 %
 % Assume the interest rate follows a univariate Vasicek process:
 % 
@@ -162,8 +162,7 @@ plot(tau,Y)
 title('Vasicek yield curve');
 xlabel('time to maturity');
 ylabel('annualized yield');
-%%
-% *Example 2: Credit risk with jumps*
+%% *Example 2: Credit risk with jumps*
 %
 % Here, we assume that the risk-free interest rate $r$ follows a Vasicek
 % process, whereas the credit risk process $\lambda$ is of the 

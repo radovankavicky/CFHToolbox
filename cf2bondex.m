@@ -1,4 +1,4 @@
-function [out A B a b] = cf2bondex(A,B,tau,x0,K0,K1,H0,H1,R0,R1,L0,L1,jump,gradJump,varargin)
+function [out A B a b] = cf2bondEx(A,B,tau,x0,K0,K1,H0,H1,R0,R1,L0,L1,jump,gradJump,varargin)
 %CF2BONDEX extended transform 
 %
 %   [P] = CF2BONDEX(A,B,TAU,X0,K0,K1,H0,H1,R0,R1,L0,L1,JUMP,GRADJUMP) 
@@ -25,39 +25,18 @@ function [out A B a b] = cf2bondex(A,B,tau,x0,K0,K1,H0,H1,R0,R1,L0,L1,jump,gradJ
 %   expecting an input |(NX)x(K)| and returning |(NX)x(K)|. If your model
 %   has a JUMP component, you also have to specificy GRADJUMP.
 %
-%   % Example: CDS pricing. Vasicek zero rate and CIR default intensity
-%   % can jump itself (exponentially) with constant intensity.What is the 
-%   % corresponding CDS spread for different times to maturity?
-%   r0          = 0.05;
-%   kappaR      = 0.07;
-%   thetaR      = 0.04;
-%   sigmaR      = 0.05;
-%   lambda0     = 0.08;
-%   kappaL      = 0.45;
-%   thetaL      = 0.05;
-%   sigmaL      = 0.20;
-%   intensity   = 0.20;
-%   muJ         = 0.10;
-%   jump        = @(c) 1./(1-c(2,:)*muJ);
-%   gradJump    = @(c) [zeros(1,size(c,2));muJ./(1-c(2,:)*muJ).^2 ];
-%   x0          = [r0 ; lambda0];
-%   K0          = [kappaR*thetaR kappaL*thetaL]';
-%   K1          = [-kappaR 0 ; 0 -kappaL];
-%   H0          = [sigmaR^2 0 ; 0 0];
-%   H1          = zeros(2,2,2);
-%   H1(2,2,2)   = sigmaL^2;
-%   R1          = [1 1]';
-%   L0          = intensity          
-%   recovery    = 0.4;
-%   dt          = 0.001;
-%   tau         = [0:dt:5];
-%   protection  = cumsum(cf2bondEx(0,[0;1],tau,x0,K0,K1,H0,H1,[],R1,L0,[],jump,gradJump))*dt;
-%   premium     = cumsum(cf2bond(tau,x0,K0,K1,H0,H1,[],R1,L0,[],jump))*dt;
-%   spread      = (1-recovery)*protection./premium;
-%   plot(tau,spread);title('risk-neutral CDS spread');
+%   % Example: undiscounted expected short rate level for CIR type model:
+%
+%   r0          = 0.08;
+%   kR          = 0.70;
+%   tR          = 0.04;
+%   sR          = 0.10;
+%   tau         = [0:0.5:20];
+%   rt          = cf2bondex(0,1,tau,r0,kR*tR,-kR,[],sR^2,[],[]);
+%   plot(tau,rt)
 
 %   Author: matthias.held@web.de 
-%   Date:   2014 05 05
+%   Date:   2014 06 06
 
 if ~exist('K0');K0=[];end
 if ~exist('K1');K1=[];end

@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>cf2bondex</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-27"><meta name="DC.source" content="cf2bondexHelp.m"><style type="text/css">
+      --><title>cf2bondEx</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-06"><meta name="DC.source" content="cf2bondExHelp.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -55,9 +55,9 @@ span.syscmd { color:#B28C00 }
 .footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
 .footer p { margin:0px; }
 
-  </style></head><body><div class="content"><h1>cf2bondex</h1><!--introduction--><p>Compute extended transform bond prices for an AJD process. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">[P A B] = cf2bondex(A,B,tau,x0,K0,K1,H0,H1,R0,R1,L0,L1,JUMP,GRADJUMP)
-</pre><p>Given an affine jump-diffusive process <img src="cf2bondexHelp_eq16929.png" alt="$dX=\mu(X)dt + \sigma(X)dW + JdZ$"> (see <a href="Main.html#theory">theory</a> for details), <tt>cf2bondex</tt> recovers the extended expectation <img src="cf2bondexHelp_eq85348.png" alt="$P=E(\exp(-\int_0^TR(X_s)ds)(A+BX_T))$"> together with the parameters <img src="cf2bondexHelp_eq31461.png" alt="$A$"> and <img src="cf2bondexHelp_eq73617.png" alt="$B$">.</p><pre class="language-matlab">[P A B alpha beta] = cf2bondex(A,B,tau,x0,K0,K1,H0,H1,R0,R1,L0,L1,JUMP,GRADJUMP)
-</pre><p>Recovers the additional values <img src="cf2bondexHelp_eq87919.png" alt="$\alpha$"> and <img src="cf2bondexHelp_eq42727.png" alt="$\beta$">, (see <a href="Main.html#theory">theory</a> for details)</p><p><b>Input Arguments</b></p><p><tt>tau</tt> is a <tt>(1 x T)</tt> vector of desired times to maturity. The other inputs must relate to <tt>x0</tt> or be empty <tt>[]</tt>. <tt>R0,R1</tt> are scalars, <tt>K0</tt>, <tt>R1</tt>, <tt>L1</tt> are of dimension <tt>(N x 1)</tt>, <tt>H0</tt>, <tt>K1</tt> are of dimension <tt>(N x N)</tt>, <tt>H1</tt> is a tensor <tt>(N x N x N)</tt>. The number of jump components <tt>NJ</tt> has to be no greater than <tt>1</tt> in the current version. <tt>JUMP</tt> is the moment generating function of the jump distribution(s), expecting <tt>(NX)x(K)</tt> and returning <tt>(1)x(K)</tt>. <tt>GRADJUMP</tt> returns the gradient of <tt>JUMP</tt>, expecting <tt>(NX)x(K)</tt> and returning <tt>(NX)x(K)</tt>.</p><p><tt>N</tt> is an optional argument that controls the number of time steps per year and thus the accuracy of the result. The default value is <tt>N=200</tt>.</p><!--/introduction--><p><b>Example 1: CDS pricing</b></p><p>The risk-neutral spread on a CSD contract is attained when equating the protection leg and the premium leg.</p><p><img src="cf2bondexHelp_eq75715.png" alt="$Protection Leg =(1-R)\int_0^T E( \lambda_t\exp(-\int_0^t(r_s+\lambda_s)ds))dt$"></p><p><img src="cf2bondexHelp_eq97240.png" alt="$Premium Leg =E(\exp(-\int_0^T(r_t+\lambda_t)dt))$"></p><p><img src="cf2bondexHelp_eq07394.png" alt="$s_0=(1-R)\frac{Protection Leg}{Premium Leg}$"></p><p>We can compute the protection leg via the extended transform, whereas the premium leg corresponds to the application of the simple bond pricing function.</p><p>Let us assume Vasicek interest rates and a CIR default intensity process <img src="cf2bondexHelp_eq49452.png" alt="$\lambda_t$"> which itself may jump exponentially with constant intensity <img src="cf2bondexHelp_eq26686.png" alt="$\Lambda$">:</p><p><img src="cf2bondexHelp_eq17028.png" alt="$dr=\kappa_r(\theta_r-r_t)dt + \sigma_r dW_1$"></p><p><img src="cf2bondexHelp_eq25222.png" alt="$d\lambda=\kappa_{\lambda}(\theta_{\lambda}-\lambda_t)dt + \sigma_{\lambda}\sqrt{\lambda} dW_2+JdZ$"></p><p>where <img src="cf2bondexHelp_eq44653.png" alt="$J\sim Exp(\mu)$"> and <img src="cf2bondexHelp_eq81664.png" alt="$dZ$"> jumps with constant intensity <img src="cf2bondexHelp_eq26686.png" alt="$\Lambda$">.</p><pre class="codeinput">r0          = 0.05;
+  </style></head><body><div class="content"><h1>cf2bondEx</h1><!--introduction--><p>Compute extended transform bond prices for an AJD process. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">[P A B] = cf2bondEx(A,B,tau,x0,K0,K1,H0,H1,R0,R1,L0,L1,JUMP,GRADJUMP)
+</pre><p>Given an affine jump-diffusive process <img src="cf2bondExHelp_eq16929.png" alt="$dX=\mu(X)dt + \sigma(X)dW + JdZ$"> (see <a href="Main.html#theory">theory</a> for details), <tt>cf2bondEx</tt> recovers the extended expectation <img src="cf2bondExHelp_eq85348.png" alt="$P=E(\exp(-\int_0^TR(X_s)ds)(A+BX_T))$"> together with the parameters <img src="cf2bondExHelp_eq31461.png" alt="$A$"> and <img src="cf2bondExHelp_eq73617.png" alt="$B$">.</p><pre class="language-matlab">[P A B alpha beta] = cf2bondEx(A,B,tau,x0,K0,K1,H0,H1,R0,R1,L0,L1,JUMP,GRADJUMP)
+</pre><p>Recovers the additional values <img src="cf2bondExHelp_eq87919.png" alt="$\alpha$"> and <img src="cf2bondExHelp_eq42727.png" alt="$\beta$">, (see <a href="Main.html#theory">theory</a> for details)</p><p><b>Input Arguments</b></p><p><tt>tau</tt> is a <tt>(1 x T)</tt> vector of desired times to maturity. The other inputs must relate to <tt>x0</tt> or be empty <tt>[]</tt>. <tt>R0,R1</tt> are scalars, <tt>K0</tt>, <tt>R1</tt>, <tt>L1</tt> are of dimension <tt>(N x 1)</tt>, <tt>H0</tt>, <tt>K1</tt> are of dimension <tt>(N x N)</tt>, <tt>H1</tt> is a tensor <tt>(N x N x N)</tt>. The number of jump components <tt>NJ</tt> has to be no greater than <tt>1</tt> in the current version. <tt>JUMP</tt> is the moment generating function of the jump distribution(s), expecting <tt>(NX)x(K)</tt> and returning <tt>(1)x(K)</tt>. <tt>GRADJUMP</tt> returns the gradient of <tt>JUMP</tt>, expecting <tt>(NX)x(K)</tt> and returning <tt>(NX)x(K)</tt>.</p><p><tt>N</tt> is an optional argument that controls the number of time steps per year and thus the accuracy of the result. The default value is <tt>N=200</tt>.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1"><b>Example 1: CDS pricing</b></a></li></ul></div><h2><b>Example 1: CDS pricing</b><a name="1"></a></h2><p>The risk-neutral spread on a CSD contract is attained when equating the protection leg and the premium leg.</p><p><img src="cf2bondExHelp_eq75715.png" alt="$Protection Leg =(1-R)\int_0^T E( \lambda_t\exp(-\int_0^t(r_s+\lambda_s)ds))dt$"></p><p><img src="cf2bondExHelp_eq97240.png" alt="$Premium Leg =E(\exp(-\int_0^T(r_t+\lambda_t)dt))$"></p><p><img src="cf2bondExHelp_eq07394.png" alt="$s_0=(1-R)\frac{Protection Leg}{Premium Leg}$"></p><p>We can compute the protection leg via the extended transform, whereas the premium leg corresponds to the application of the simple bond pricing function.</p><p>Let us assume Vasicek interest rates and a CIR default intensity process <img src="cf2bondExHelp_eq49452.png" alt="$\lambda_t$"> which itself may jump exponentially with constant intensity <img src="cf2bondExHelp_eq26686.png" alt="$\Lambda$">:</p><p><img src="cf2bondExHelp_eq17028.png" alt="$dr=\kappa_r(\theta_r-r_t)dt + \sigma_r dW_1$"></p><p><img src="cf2bondExHelp_eq25222.png" alt="$d\lambda=\kappa_{\lambda}(\theta_{\lambda}-\lambda_t)dt + \sigma_{\lambda}\sqrt{\lambda} dW_2+JdZ$"></p><p>where <img src="cf2bondExHelp_eq44653.png" alt="$J\sim Exp(\mu)$"> and <img src="cf2bondExHelp_eq81664.png" alt="$dZ$"> jumps with constant intensity <img src="cf2bondExHelp_eq26686.png" alt="$\Lambda$">.</p><pre class="codeinput">r0          = 0.05;
 kappaR      = 0.07;
 thetaR      = 0.04;
 sigmaR      = 0.05;
@@ -80,33 +80,33 @@ L0          = Lambda;
 </pre><p>We assume a recovery rate of 40 %. Further, we want to approximate the integrals above for different maturties.</p><pre class="codeinput">recovery    = 0.4;
 dt          = 0.001;
 tau1        = [0:dt:5];
-protection  = @(t) cf2bondex(0,[0;1],t,x0,K0,K1,H0,H1,[],R1,L0,[],jump,gradJump);
+protection  = @(t) cf2bondEx(0,[0;1],t,x0,K0,K1,H0,H1,[],R1,L0,[],jump,gradJump);
 premium     = @(t) cf2bond(t,x0,K0,K1,H0,H1,[],R1,L0,[],jump);
 spread1     = (1-recovery)*cumsum(protection(tau1))./cumsum(premium(tau1));
 plot(tau1,spread1);title(<span class="string">'risk neutral CDS spread'</span>);
-</pre><img vspace="5" hspace="5" src="cf2bondexHelp_01.png" alt=""> <p>Let us compare the result with a better integration method:</p><pre class="codeinput">tau2        = [0.25:0.55:5];
+</pre><img vspace="5" hspace="5" src="cf2bondExHelp_01.png" alt=""> <p>Let us compare the result with a better integration method:</p><pre class="codeinput">tau2        = [0.25:0.55:5];
 spread2     = (1-recovery)*arrayfun(@(t) quadgk(protection,0,t),tau2) <span class="keyword">...</span>
                          ./arrayfun(@(t) quadgk(premium,0,t),tau2);
 plot(tau2,spread2,<span class="string">'r'</span>,tau1,spread1,<span class="string">'k'</span>);
 title(<span class="string">'risk neutral CDS spreads - approximation vs. quadgk'</span>);
 legend(<span class="string">'numerical integration'</span>,<span class="string">'approximation'</span>);
-</pre><img vspace="5" hspace="5" src="cf2bondexHelp_02.png" alt=""> <p class="footer"><br>
+</pre><img vspace="5" hspace="5" src="cf2bondExHelp_02.png" alt=""> <p class="footer"><br>
       Published with MATLAB&reg; 7.14<br></p></div><!--
 ##### SOURCE BEGIN #####
-%% cf2bondex
+%% cf2bondEx
 % Compute extended transform bond prices for an AJD process. Part of the
 % <Main.html CFH Toolbox>.
 %
 % *Syntax*
 %
-%   [P A B] = cf2bondex(A,B,tau,x0,K0,K1,H0,H1,R0,R1,L0,L1,JUMP,GRADJUMP)
+%   [P A B] = cf2bondEx(A,B,tau,x0,K0,K1,H0,H1,R0,R1,L0,L1,JUMP,GRADJUMP)
 %
 % Given an affine jump-diffusive process $dX=\mu(X)dt + \sigma(X)dW + JdZ$
-% (see <Main.html#theory theory> for details), |cf2bondex| recovers the
+% (see <Main.html#theory theory> for details), |cf2bondEx| recovers the
 % extended expectation $P=E(\exp(-\int_0^TR(X_s)ds)(A+BX_T))$ together with
 % the parameters $A$ and $B$.
 %
-%   [P A B alpha beta] = cf2bondex(A,B,tau,x0,K0,K1,H0,H1,R0,R1,L0,L1,JUMP,GRADJUMP)
+%   [P A B alpha beta] = cf2bondEx(A,B,tau,x0,K0,K1,H0,H1,R0,R1,L0,L1,JUMP,GRADJUMP)
 %
 % Recovers the additional values $\alpha$ and $\beta$, (see <Main.html#theory theory> for details)
 %
@@ -124,8 +124,7 @@ legend(<span class="string">'numerical integration'</span>,<span class="string">
 % |N| is an optional argument that controls the number of time steps per
 % year and thus the accuracy of the result. The default value is |N=200|. 
 %
-%%
-% *Example 1: CDS pricing*
+%% *Example 1: CDS pricing*
 %
 % The risk-neutral spread on a CSD contract is attained when equating the
 % protection leg and the premium leg.
@@ -177,7 +176,7 @@ L0          = Lambda;
 recovery    = 0.4;
 dt          = 0.001;
 tau1        = [0:dt:5];
-protection  = @(t) cf2bondex(0,[0;1],t,x0,K0,K1,H0,H1,[],R1,L0,[],jump,gradJump);
+protection  = @(t) cf2bondEx(0,[0;1],t,x0,K0,K1,H0,H1,[],R1,L0,[],jump,gradJump);
 premium     = @(t) cf2bond(t,x0,K0,K1,H0,H1,[],R1,L0,[],jump);
 spread1     = (1-recovery)*cumsum(protection(tau1))./cumsum(premium(tau1));
 plot(tau1,spread1);title('risk neutral CDS spread');

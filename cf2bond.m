@@ -32,6 +32,7 @@ function [P Y alpha beta] = cf2bond(tau,x0,K0,K1,H0,H1,R0,R1,L0,L1,jump,varargin
 %   corresponds to one jump transform applied to the input array.
 %
 %   % Example: Vasicek interest rate model: dr=kappa*(theta-r)*dt+sigma*dW
+%
 %   kappa   = 2.00;
 %   theta   = 0.055;
 %   sigma   = 0.02;
@@ -39,7 +40,6 @@ function [P Y alpha beta] = cf2bond(tau,x0,K0,K1,H0,H1,R0,R1,L0,L1,jump,varargin
 %   tau     = [1/52:1/52:10]';
 %   [~,Y]   = cf2bond(tau,r0,kappa*theta,-kappa,sigma^2,[],[],1);
 %   plot(tau,Y);title('Vasicek annualized yields');
-%
 
 %   Author: matthias.held@web.de 
 %   Date:   2014 05 05

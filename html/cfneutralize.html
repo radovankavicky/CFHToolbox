@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>cfneutralize</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-27"><meta name="DC.source" content="cfneutralizeHelp.m"><style type="text/css">
+      --><title>cfneutralize</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-06"><meta name="DC.source" content="cfneutralizeHelp.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -55,8 +55,8 @@ span.syscmd { color:#B28C00 }
 .footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
 .footer p { margin:0px; }
 
-  </style></head><body><div class="content"><h1>cfneutralize</h1><p>Returns the no arbitrage drift coefficients of an AJD process. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">[K0Q K1Q] = CFNEUTRALIZE(K0,K1,H0,H1,R0,R1,Q0,Q1,L0,L1,jump)
-</pre><p>Out of <tt>(NX)</tt> processes specified by the AJD coefficients this function returns the no-arbitrage adjusted drift coefficients <tt>K0Q</tt> and <tt>K1Q</tt>, which equal to <tt>K0</tt> and <tt>K1</tt>, except for the first <tt>(NA)</tt> coefficients which are now risk-adjusted drift coefficients of the first <tt>(NA)</tt> asset processes. The number of asset processes <tt>(NA)</tt> is given by the length of <tt>Q0</tt>, the vector of dividend yield constants, or by the number of columns in <tt>Q1</tt>, the <tt>(NX)x(NA)</tt> matrix of dividend yield coefficients of each asset process. If both are left empty, it is implicitly assumed that <tt>(NA)=1</tt>, and only the first process is treated as a traded asset.</p><p><b>Input Arguments</b></p><p><tt>K0,K1</tt> are the unadjusted drift coefficients, <tt>Q0</tt> is an <tt>(1)x(NA)</tt> vector of constant dividend yields, <tt>Q1</tt> is a <tt>(NX)x(NA)</tt> array of linear dividend yield coefficients.</p><p><b>Example 1: Black Scholes Model</b></p><p>In the Black Scholes model, the physical dynamics of the logarithmic spot process are:</p><p><img src="cfneutralizeHelp_eq79796.png" alt="$dy=(\mu-q)dt + \sigma dW^P$"></p><p>where <img src="cfneutralizeHelp_eq50913.png" alt="$q$"> is a constant dividend yield. The risk neutral dynamics are</p><p><img src="cfneutralizeHelp_eq35595.png" alt="$dy=(r_f-q-\frac{1}{2}\sigma^2)dt + \sigma dW^Q$"></p><p>This feat can be achieved by <tt>cfneutralize</tt>:</p><pre class="codeinput">mu          = 0.15;
+  </style></head><body><div class="content"><h1>cfneutralize</h1><!--introduction--><p>Returns the no arbitrage drift coefficients of an AJD process. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">[K0Q K1Q] = CFNEUTRALIZE(K0,K1,H0,H1,R0,R1,Q0,Q1,L0,L1,jump)
+</pre><p>Out of <tt>(NX)</tt> processes specified by the AJD coefficients this function returns the no-arbitrage adjusted drift coefficients <tt>K0Q</tt> and <tt>K1Q</tt>, which equal to <tt>K0</tt> and <tt>K1</tt>, except for the first <tt>(NA)</tt> coefficients which are now risk-adjusted drift coefficients of the first <tt>(NA)</tt> asset processes. The number of asset processes <tt>(NA)</tt> is given by the length of <tt>Q0</tt>, the vector of dividend yield constants, or by the number of columns in <tt>Q1</tt>, the <tt>(NX)x(NA)</tt> matrix of dividend yield coefficients of each asset process. If both are left empty, it is implicitly assumed that <tt>(NA)=1</tt>, and only the first process is treated as a traded asset.</p><p><b>Input Arguments</b></p><p><tt>K0,K1</tt> are the unadjusted drift coefficients, <tt>Q0</tt> is an <tt>(1)x(NA)</tt> vector of constant dividend yields, <tt>Q1</tt> is a <tt>(NX)x(NA)</tt> array of linear dividend yield coefficients.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1"><b>Example 1: Black Scholes Model</b></a></li><li><a href="#4"><b>Example 2: Heston model with jumps</b></a></li><li><a href="#5"><b>Example 3: State dependent dividend yields</b></a></li></ul></div><h2><b>Example 1: Black Scholes Model</b><a name="1"></a></h2><p>In the Black Scholes model, the physical dynamics of the logarithmic spot process are:</p><p><img src="cfneutralizeHelp_eq79796.png" alt="$dy=(\mu-q)dt + \sigma dW^P$"></p><p>where <img src="cfneutralizeHelp_eq50913.png" alt="$q$"> is a constant dividend yield. The risk neutral dynamics are</p><p><img src="cfneutralizeHelp_eq35595.png" alt="$dy=(r_f-q-\frac{1}{2}\sigma^2)dt + \sigma dW^Q$"></p><p>This feat can be achieved by <tt>cfneutralize</tt>:</p><pre class="codeinput">mu          = 0.15;
 q           = 0.03;
 rf          = 0.05;
 sigma       = 0.25;
@@ -73,7 +73,7 @@ K1Q =
 
      0
 
-</pre><p><b>Example 2: Heston model with jumps</b></p><p>The underlying asset process is</p><p><img src="cfneutralizeHelp_eq69210.png" alt="$dy=(\mu-q)dt + \sqrt(v_t)dW_1^P + JdZ$"></p><p>and the underlying <b>risk neutral</b> variance dynamics and jump transforms are</p><p><img src="cfneutralizeHelp_eq15381.png" alt="$dv=\kappa_v^Q(\theta_v^Q - v_t)dt + \sigma_v\sqrt{v_t}dW_2^Q$"></p><p><img src="cfneutralizeHelp_eq71576.png" alt="$\theta(c)=E_Q(\exp(cJ))=\exp(\mu_Jc + \frac{1}{2}c^2\sigma_J^2)$"></p><p>Assuming that <img src="cfneutralizeHelp_eq81664.png" alt="$dZ$"> jumps with intensity <img src="cfneutralizeHelp_eq23351.png" alt="$\lambda$"> under the risk neutral measure, the drift adjusted asset process is</p><p><img src="cfneutralizeHelp_eq26370.png" alt="$dy=(r_f-q-\frac{1}{2}v_t-\lambda m)dt + \sqrt(v_t)dW_1^Q + JdZ$"></p><p>where <img src="cfneutralizeHelp_eq86413.png" alt="$m=E(\exp(J))-1=\theta(1)-1$">. Again, we can perform this transformation via <tt>cfneutralize</tt>:</p><pre class="codeinput">mu          = 0.15;
+</pre><h2><b>Example 2: Heston model with jumps</b><a name="4"></a></h2><p>The underlying asset process is</p><p><img src="cfneutralizeHelp_eq69210.png" alt="$dy=(\mu-q)dt + \sqrt(v_t)dW_1^P + JdZ$"></p><p>and the underlying <b>risk neutral</b> variance dynamics and jump transforms are</p><p><img src="cfneutralizeHelp_eq15381.png" alt="$dv=\kappa_v^Q(\theta_v^Q - v_t)dt + \sigma_v\sqrt{v_t}dW_2^Q$"></p><p><img src="cfneutralizeHelp_eq71576.png" alt="$\theta(c)=E_Q(\exp(cJ))=\exp(\mu_Jc + \frac{1}{2}c^2\sigma_J^2)$"></p><p>Assuming that <img src="cfneutralizeHelp_eq81664.png" alt="$dZ$"> jumps with intensity <img src="cfneutralizeHelp_eq23351.png" alt="$\lambda$"> under the risk neutral measure, the drift adjusted asset process is</p><p><img src="cfneutralizeHelp_eq26370.png" alt="$dy=(r_f-q-\frac{1}{2}v_t-\lambda m)dt + \sqrt(v_t)dW_1^Q + JdZ$"></p><p>where <img src="cfneutralizeHelp_eq86413.png" alt="$m=E(\exp(J))-1=\theta(1)-1$">. Again, we can perform this transformation via <tt>cfneutralize</tt>:</p><pre class="codeinput">mu          = 0.15;
 q           = 0.03;
 rf          = 0.05;
 kappa       = 0.85;
@@ -103,7 +103,7 @@ K1Q =
          0   -0.5000
          0   -0.8500
 
-</pre><p><b>Example 3: State dependent dividend yields</b></p><p>The underlying asset and dividend processes are</p><p><img src="cfneutralizeHelp_eq28032.png" alt="$dy=(\mu-q_t)dt + \sigma dW_1^P$"></p><p><img src="cfneutralizeHelp_eq06318.png" alt="$dq=\kappa(\theta-q_t)dt + \sigma_q\sqrt(q_t)dW_2^Q$"></p><p>with <img src="cfneutralizeHelp_eq45540.png" alt="$E(dW_1dW_2)=0$">.</p><p>The corresponding risk neutral log asset process is</p><p><img src="cfneutralizeHelp_eq73735.png" alt="$dy=(\mu-q_t-\frac{1}{2}\sigma^2)dt + \sigma dW_1^Q$"></p><p>The coefficients are:</p><pre class="codeinput">mu          = 0.15;
+</pre><h2><b>Example 3: State dependent dividend yields</b><a name="5"></a></h2><p>The underlying asset and dividend processes are</p><p><img src="cfneutralizeHelp_eq28032.png" alt="$dy=(\mu-q_t)dt + \sigma dW_1^P$"></p><p><img src="cfneutralizeHelp_eq06318.png" alt="$dq=\kappa(\theta-q_t)dt + \sigma_q\sqrt(q_t)dW_2^Q$"></p><p>with <img src="cfneutralizeHelp_eq45540.png" alt="$E(dW_1dW_2)=0$">.</p><p>The corresponding risk neutral log asset process is</p><p><img src="cfneutralizeHelp_eq73735.png" alt="$dy=(\mu-q_t-\frac{1}{2}\sigma^2)dt + \sigma dW_1^Q$"></p><p>The coefficients are:</p><pre class="codeinput">mu          = 0.15;
 rf          = 0.05;
 kappa       = 0.5;
 theta       = 0.03;
@@ -158,7 +158,7 @@ ans =
 % vector of constant dividend yields, |Q1| is a |(NX)x(NA)| array of
 % linear dividend yield coefficients.
 %
-% *Example 1: Black Scholes Model*
+%% *Example 1: Black Scholes Model*
 %
 % In the Black Scholes model, the physical dynamics of the logarithmic spot 
 % process are:
@@ -181,8 +181,7 @@ H0          = sigma^2;
 %% 
 % ...and transforming into risk-neutral coefficients:
 [K0Q K1Q]   = cfneutralize(K0,[],H0,[],rf,[],q)
-%%
-% *Example 2: Heston model with jumps*
+%% *Example 2: Heston model with jumps*
 %
 % The underlying asset process is
 %
@@ -220,8 +219,7 @@ H1          = zeros(2,2,2);
 H1(:,:,2)   = [1 sigma*rho ; sigma*rho sigma^2];
 jump        = @(c) cfjump(c,par,'Merton');
 [K0Q K1Q]   = cfneutralize(K0,K1,H0,H1,rf,[],q,[],lambda,[],jump)
-%%
-% *Example 3: State dependent dividend yields*
+%% *Example 3: State dependent dividend yields*
 %
 % The underlying asset and dividend processes are
 %

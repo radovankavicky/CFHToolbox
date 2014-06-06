@@ -26,29 +26,29 @@ function [out alpha beta] = cfaffine(u,x0,tau,K0,K1,H0,H1,R0,R1,L0,L1,jump,ND,va
 %   jump(c)     = E(exp(c*J)),  moment generating function of the 
 %                               multivariate jump distribution
 %
-%   The vector x0 contains the initial state, the first entry being the
-%   variable whose characteristic function is required.
+%   The |Nx1| vector x0 contains the initial state, the first entry being 
+%   the variable whose characteristic function is required. If ND is used, 
+%   the setup of x0 has to correspond with U.
 %
 %   The jump transform is a user supplied function that expects an array of
-%   dimension (dim(X)xK) and returns an array of dimension (1xK). The first
+%   dimension |NxK| and returns an array of dimension |1xK|. The first
 %   input corresponds to the first variable, the second input relates to 
 %   the second process variable, etc. 
 %
 %   Example: Black-Scholes world with constant interest rates:
+%
 %   x0      = log(1);
 %   tau     = 1;
 %   sigma   = 0.25;
 %   rf      = 0.05;
-%   u       = linspace(0,20,500)'*i;
 %   cf      = @(u) cfaffine(u,x0,tau,rf-1/2*sigma^2,[],sigma^2,[],rf)
 %   cf(0)   % the discount factor
 %   [f x]   = cf2pdf(cf);
 %   plot(x,f)
 
-%        Author : matthias.held@web.de 
-%          Date : 2014 02 17
+%   Author : matthias.held@web.de 
+%   Date : 2014 05 28
 
-% Preparing variables
 if ~exist('K0');K0=[];end
 if ~exist('K1');K1=[];end
 if ~exist('H0');H0=[];end

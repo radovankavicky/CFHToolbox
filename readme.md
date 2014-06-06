@@ -19,8 +19,12 @@ Next updates (or your contributions) will include:
 The toolbox contains a fleshed out help file. Simply clone and either run 
 the file _install.m_.
 
-## Version 
-* Version 1.1
+## Version history
+1.3 - added extended transform functions
+1.2 - added Kou's model
+1.1 - added FFT methods to the conditional expectation function
+1.0 - initial release
+
 
 ## Contact
 #### Developer/Company

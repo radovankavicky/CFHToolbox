@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>cfaffine</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-27"><meta name="DC.source" content="cfaffineHelp.m"><style type="text/css">
+      --><title>cfaffine</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-06"><meta name="DC.source" content="cfaffineHelp.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -55,11 +55,11 @@ span.syscmd { color:#B28C00 }
 .footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
 .footer p { margin:0px; }
 
-  </style></head><body><div class="content"><h1>cfaffine</h1><p>Returns the characteristic function evaluation of a parameterized Affine Jump-Diffusion (AJD) process. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">W = CFAFFINE(U,X0,TAU,K0,K1,H0,H1,R0,R1)
+  </style></head><body><div class="content"><h1>cfaffine</h1><!--introduction--><p>Returns the characteristic function evaluation of a parameterized Affine Jump-Diffusion (AJD) process. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">W = CFAFFINE(U,X0,TAU,K0,K1,H0,H1,R0,R1)
 W = CFAFFINE(U,X0,TAU,K0,K1,H0,H1,R0,R1,L0,L1,jump)
 W = CFAFFINE(U,X0,TAU,K0,K1,H0,H1,R0,R1,L0,L1,jump,ND)
 </pre><p>See <a href="Main.html#theory">theory</a> for a description of the coefficient matrices <tt>K0,K1,H0,H1,R0,R1,L0,L1</tt>. You may leave any unused coefficient empty <tt>[]</tt>, e.g. <tt>CFAFFINE(U,X0,TAU,K0,[],H0,[],R0)</tt> describes a system with constant interest rate, drift and variance, whereas <tt>CFAFFINE(U,X0,TAU,K0,K1,[],H1,[],R1,[],L1,jump)</tt> describes a system with state dependent drift, variance, interest rate and jump intensity.</p><p>For real argument <tt>U</tt>, <tt>cfaffine</tt> returns the characteristic function of the stochastic process. For complex arugment <tt>U=-v*i</tt>, <tt>cfaffine</tt> returns the moment generating function of the stochastic process.</p><pre class="language-matlab">[W alpha beta] = CFAFFINE(U,X0,TAU,K0,K1,H0,H1,R0,R1,L0,L1,jump,ND)
-</pre><p>Returns the <img src="cfaffineHelp_eq87919.png" alt="$\alpha$"> and <img src="cfaffineHelp_eq42727.png" alt="$\beta$"> values, see <a href="Main.html">Theory</a> for details.</p><p><b>Input Arguments</b></p><p><tt>U</tt> can either be a <tt>(K)x(1)</tt> or <tt>(1)x(K)</tt> array of characteristic function arguments, or if <tt>U</tt> is a <tt>(NX)x(K)</tt> array, set <tt>ND=1</tt> and if <tt>U</tt> is a <tt>(K)x(NX)</tt> array, set <tt>ND=2</tt>.</p><p><b>Example 1: Black Scholes Model</b></p><p>In the Black Scholes model, the dynamics of the logarithmic spot process are:</p><p><img src="cfaffineHelp_eq34838.png" alt="$dy=(r_f - \frac{1}{2}\sigma^2)dt + \sigma dW$"></p><p>resulting in the characteristic function</p><p><img src="cfaffineHelp_eq25620.png" alt="$\phi(u)=E(e^{uiX_T})=\exp(-r_f\tau +iux_t+ iu\tau(r_f-\frac{1}{2}\sigma^2)-\frac{1}{2}\tau u \sigma^2)$"></p><p>where <img src="cfaffineHelp_eq42994.png" alt="$\tau=T-t$">.</p><p>The characteristic function of the Black Scholes model is also included in <a href="cflib.html"><tt>cflib</tt></a>, using the argument <tt>type='BS'</tt>, which we will use as a yardstick.</p><pre class="codeinput">rf          = 0.05;
+</pre><p>Returns the <img src="cfaffineHelp_eq87919.png" alt="$\alpha$"> and <img src="cfaffineHelp_eq42727.png" alt="$\beta$"> values, see <a href="Main.html">Theory</a> for details.</p><p><b>Input Arguments</b></p><p>By default, <tt>cfaffine</tt> expects <tt>U</tt> to be an array of dimension <tt>(K)x(1)</tt> or <tt>(1)x(K)</tt>. If <tt>U</tt> is a <tt>(NX)x(K)</tt> array, set <tt>ND=1</tt>, if <tt>U</tt> is a <tt>(K)x(NX)</tt> array, set <tt>ND=2</tt>.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1"><b>Example 1: Black Scholes Model</b></a></li><li><a href="#6"><b>Example 2: Chooser option (from DPS2000)</b></a></li><li><a href="#13"><b>Example 3: Multiple jumps</b></a></li></ul></div><h2><b>Example 1: Black Scholes Model</b><a name="1"></a></h2><p>In the Black Scholes model, the dynamics of the logarithmic spot process are:</p><p><img src="cfaffineHelp_eq34838.png" alt="$dy=(r_f - \frac{1}{2}\sigma^2)dt + \sigma dW$"></p><p>resulting in the characteristic function</p><p><img src="cfaffineHelp_eq25620.png" alt="$\phi(u)=E(e^{uiX_T})=\exp(-r_f\tau +iux_t+ iu\tau(r_f-\frac{1}{2}\sigma^2)-\frac{1}{2}\tau u \sigma^2)$"></p><p>where <img src="cfaffineHelp_eq42994.png" alt="$\tau=T-t$">.</p><p>The characteristic function of the Black Scholes model is also included in <a href="cflib.html"><tt>cflib</tt></a>, using the argument <tt>type='BS'</tt>, which we will use as a yardstick.</p><pre class="codeinput">rf          = 0.05;
 tau         = 1;
 sigma       = 0.25;
 S0          = 100;
@@ -79,7 +79,7 @@ legend(<span class="string">'real part'</span>,<span class="string">'imaginary p
 title(<span class="string">'Errors from discrete approximation'</span>);
 xlabel(<span class="string">'argument u'</span>);
 ylabel(<span class="string">'error'</span>);
-</pre><img vspace="5" hspace="5" src="cfaffineHelp_01.png" alt=""> <p><b>Example 2: Chooser option (from DPS2000)</b></p><p>Assume that we want to price an option whose payoff is the maximum of two assets <img src="cfaffineHelp_eq77038.png" alt="$X_T$"> and <img src="cfaffineHelp_eq89373.png" alt="$Y_T$">, <img src="cfaffineHelp_eq84989.png" alt="$C_T=max(X_T,Y_T)$">. The log assets have the dynamics:</p><p><img src="cfaffineHelp_eq78019.png" alt="$dx = (r_f - \frac{1}{2}\sigma_x^2)dt + \sigma_x(\rho_xdW_1 + \sqrt{1-\rho_x^2}dW_2)$"></p><p><img src="cfaffineHelp_eq47865.png" alt="$dy = (r_f - \frac{1}{2}\sigma_y^2)dt + \sigma_y(\rho_ydW_1 + \sqrt{1-\rho_y^2}dW_2)$"></p><p>Assuming some parameters, we obtain the coefficients:</p><pre class="codeinput">tau         = 1;
+</pre><img vspace="5" hspace="5" src="cfaffineHelp_01.png" alt=""> <h2><b>Example 2: Chooser option (from DPS2000)</b><a name="6"></a></h2><p>Assume that we want to price an option whose payoff is the maximum of two assets <img src="cfaffineHelp_eq77038.png" alt="$X_T$"> and <img src="cfaffineHelp_eq89373.png" alt="$Y_T$">, <img src="cfaffineHelp_eq84989.png" alt="$C_T=max(X_T,Y_T)$">. The log assets have the dynamics:</p><p><img src="cfaffineHelp_eq78019.png" alt="$dx = (r_f - \frac{1}{2}\sigma_x^2)dt + \sigma_x(\rho_xdW_1 + \sqrt{1-\rho_x^2}dW_2)$"></p><p><img src="cfaffineHelp_eq47865.png" alt="$dy = (r_f - \frac{1}{2}\sigma_y^2)dt + \sigma_y(\rho_ydW_1 + \sqrt{1-\rho_y^2}dW_2)$"></p><p>Assuming some parameters, we obtain the coefficients:</p><pre class="codeinput">tau         = 1;
 X0          = 100;
 Y0          = 110;
 rf          = 0.05;
@@ -113,7 +113,7 @@ ans =
 
   111.3957
 
-</pre><p>which yields the same result.</p><p><b>Example 3: Multiple jumps</b></p><p><tt>cfaffine</tt> can also handle a process with multiple jumps. Let slightly change the last example and introduce two jump processes. For easy of exposition, we assume that the first asset <img src="cfaffineHelp_eq85018.png" alt="$X_t$"> is solely influenced by jumps in <img src="cfaffineHelp_eq33559.png" alt="$dZ_1$"> and <img src="cfaffineHelp_eq27410.png" alt="$Y_t$"> is driven by both jump components:</p><p><img src="cfaffineHelp_eq01690.png" alt="$dx = (r_f - \frac{1}{2}\sigma_x^2 - \Lambda_1m_{1,x})dt + \sigma_xdW_1 + J_{1,x}dZ_1$"></p><p><img src="cfaffineHelp_eq14641.png" alt="$dy = (r_f - \frac{1}{2}\sigma_y^2 -\Lambda_1m_{1,y}-\Lambda_2m_{2,y})dt + \sigma_ydW_2 + J_{1,y}dZ_1 + J_{2,y}dZ_2$"></p><p>where <img src="cfaffineHelp_eq79840.png" alt="$-\Lambda_im_{i,j}$"> denotes the risk neutral jump compensation of asset <img src="cfaffineHelp_eq31413.png" alt="$j$"> with respect to jump process <img src="cfaffineHelp_eq28128.png" alt="$i$">. We will assume no constant intensity offsets, i.e. <img src="cfaffineHelp_eq83677.png" alt="$\Lambda_i(X_t) = \lambda_{i,t}$"> with</p><p><img src="cfaffineHelp_eq59265.png" alt="$d\lambda_1 = \kappa_1(\theta_1 - \lambda_1)dt + \sigma_{11}\sqrt{\lambda_1}dW_3$"></p><p><img src="cfaffineHelp_eq77587.png" alt="$d\lambda_2 = \kappa_2(\theta_2 - \lambda_2)dt + \sigma_{21}\sqrt{\lambda_1}dW_3 + \sigma_{22}\sqrt{\lambda_2}dW_4$"></p><p>(Technically, we would have to make sure that the second intensity cannot drop below zero.)</p><p>Further, we let the first jump distribution be bivariate normally distributed and the second is assumed to be a non-negative exponential jump</p><p><img src="cfaffineHelp_eq93420.png" alt="$J_1 \sim N(\mu_1,\Sigma_1)$"></p><p><img src="cfaffineHelp_eq28566.png" alt="$J_{2,} \sim Exp(\mu_2)$"></p><p>Translate this model into the coefficients of <tt>cfaffine</tt>:</p><p>Raw specification</p><pre class="codeinput">rf          = 0.05;
+</pre><p>which yields the same result.</p><h2><b>Example 3: Multiple jumps</b><a name="13"></a></h2><p><tt>cfaffine</tt> can also handle a process with multiple jumps. Let slightly change the last example and introduce two jump processes. For easy of exposition, we assume that the first asset <img src="cfaffineHelp_eq85018.png" alt="$X_t$"> is solely influenced by jumps in <img src="cfaffineHelp_eq33559.png" alt="$dZ_1$"> and <img src="cfaffineHelp_eq27410.png" alt="$Y_t$"> is driven by both jump components:</p><p><img src="cfaffineHelp_eq01690.png" alt="$dx = (r_f - \frac{1}{2}\sigma_x^2 - \Lambda_1m_{1,x})dt + \sigma_xdW_1 + J_{1,x}dZ_1$"></p><p><img src="cfaffineHelp_eq14641.png" alt="$dy = (r_f - \frac{1}{2}\sigma_y^2 -\Lambda_1m_{1,y}-\Lambda_2m_{2,y})dt + \sigma_ydW_2 + J_{1,y}dZ_1 + J_{2,y}dZ_2$"></p><p>where <img src="cfaffineHelp_eq79840.png" alt="$-\Lambda_im_{i,j}$"> denotes the risk neutral jump compensation of asset <img src="cfaffineHelp_eq31413.png" alt="$j$"> with respect to jump process <img src="cfaffineHelp_eq28128.png" alt="$i$">. We will assume no constant intensity offsets, i.e. <img src="cfaffineHelp_eq83677.png" alt="$\Lambda_i(X_t) = \lambda_{i,t}$"> with</p><p><img src="cfaffineHelp_eq59265.png" alt="$d\lambda_1 = \kappa_1(\theta_1 - \lambda_1)dt + \sigma_{11}\sqrt{\lambda_1}dW_3$"></p><p><img src="cfaffineHelp_eq77587.png" alt="$d\lambda_2 = \kappa_2(\theta_2 - \lambda_2)dt + \sigma_{21}\sqrt{\lambda_1}dW_3 + \sigma_{22}\sqrt{\lambda_2}dW_4$"></p><p>(Technically, we would have to make sure that the second intensity cannot drop below zero.)</p><p>Further, we let the first jump distribution be bivariate normally distributed and the second is assumed to be a non-negative exponential jump</p><p><img src="cfaffineHelp_eq93420.png" alt="$J_1 \sim N(\mu_1,\Sigma_1)$"></p><p><img src="cfaffineHelp_eq28566.png" alt="$J_{2,} \sim Exp(\mu_2)$"></p><p>Translate this model into the coefficients of <tt>cfaffine</tt>:</p><p>Raw specification</p><pre class="codeinput">rf          = 0.05;
 tau         = 1;
 X0          = 100;
 sigmaX      = 0.25;
@@ -211,11 +211,11 @@ ans =
 %
 % *Input Arguments*
 %
-% |U| can either be a |(K)x(1)| or |(1)x(K)| array of characteristic
-% function arguments, or if |U| is a |(NX)x(K)| array, set |ND=1| and if 
-% |U| is a |(K)x(NX)| array, set |ND=2|.
+% By default, |cfaffine| expects |U| to be an array of dimension |(K)x(1)| 
+% or |(1)x(K)|. If |U| is a |(NX)x(K)| array, set |ND=1|, if |U| is a 
+% |(K)x(NX)| array, set |ND=2|.
 %
-% *Example 1: Black Scholes Model*
+%% *Example 1: Black Scholes Model*
 %
 % In the Black Scholes model, the dynamics of the logarithmic spot process are:
 %
@@ -264,8 +264,7 @@ legend('real part','imaginary part')
 title('Errors from discrete approximation');
 xlabel('argument u');
 ylabel('error');
-%%
-% *Example 2: Chooser option (from DPS2000)*
+%% *Example 2: Chooser option (from DPS2000)*
 %
 % Assume that we want to price an option whose payoff is the maximum of two assets 
 % $X_T$ and $Y_T$, $C_T=max(X_T,Y_T)$. The log assets have the dynamics:
@@ -330,8 +329,7 @@ cf(-i*[1;0]) + cf2gaby(cf,[0;1],[1;-1],0) - cf2gaby(cf,[1;0],[1;-1],0)
 cf(-i*[0;1]) + cf2gaby(cf,[1;0],[-1;1],0) - cf2gaby(cf,[0;1],[-1;1],0)
 %%
 % which yields the same result.
-%%
-% *Example 3: Multiple jumps*
+%% *Example 3: Multiple jumps*
 %
 % |cfaffine| can also handle a process with multiple jumps. Let slightly 
 % change the last example and introduce two jump processes. For easy of

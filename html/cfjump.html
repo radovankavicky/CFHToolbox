@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>cfjump</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-27"><meta name="DC.source" content="cfjumpHelp.m"><style type="text/css">
+      --><title>cfjump</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-06"><meta name="DC.source" content="cfjumpHelp.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -55,8 +55,8 @@ span.syscmd { color:#B28C00 }
 .footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
 .footer p { margin:0px; }
 
-  </style></head><body><div class="content"><h1>cfjump</h1><p>Library of transforms (moment generating functions) of commonly ecountered jump distributions in finance. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">T = cfjump(C,PAR,TYPE)
-</pre><p>Returns evaluations of the moment generating function of a certain jump distribution.</p><p><b>Input Arguments</b></p><p><tt>C</tt> is a <tt>(NX)x(K)</tt> array of evaluation points. The parameter structure <tt>PAR</tt> should correspond to the dimension <tt>(NX)|of the state vector. The argument |TYPE</tt> specifies the jump distribution:</p><div><ul><li><tt>TYPE='Merton'</tt> returns normally distributed jumps. The corresponding parameters are <tt>PAR.MuJ</tt>, a <tt>(NX)</tt> vector of expected jump sizes and <tt>PAR.SigmaJ</tt>, the jump size covariance matrix. Set all elements that do not jump to zero. The number of jump components <tt>NJ</tt> is driven by the third dimension of <tt>PAR.SigmaJ</tt>. If <tt>NJ&gt;1</tt>, <tt>PAR.MuJ</tt> is a <tt>(NX)x(NJ)</tt> matrix where each column <tt>k</tt> corresponds to the covariance matrix <tt>PAR.SigmaJ(:,:,k)</tt>.</li></ul></div><div><ul><li><tt>TYPE='Exponential'</tt> returns exponentially distributed jumps. The corresponding parameter structure is <tt>PAR.MuJ</tt>, which is a <tt>(NX)x(1)</tt> vector of expected jump sizes. Set all elements that do not correspond to a jump to zero.</li></ul></div><p><b>Example 1: Merton Jumps</b></p><p>Assume that we are interested in the ratio of two asset prices which follow a bivariate process with correlated jumps of constant intensity:</p><pre class="codeinput">tau         = 1;
+  </style></head><body><div class="content"><h1>cfjump</h1><!--introduction--><p>Library of transforms (moment generating functions) of commonly ecountered jump distributions in finance. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">T = cfjump(C,PAR,TYPE)
+</pre><p>Returns evaluations of the moment generating function of a certain jump distribution.</p><p><b>Input Arguments</b></p><p><tt>C</tt> is a <tt>(NX)x(K)</tt> array of evaluation points. The parameter structure <tt>PAR</tt> should correspond to the dimension <tt>(NX)|of the state vector. The argument |TYPE</tt> specifies the jump distribution:</p><div><ul><li><tt>TYPE='Merton'</tt> returns normally distributed jumps. The corresponding parameters are <tt>PAR.MuJ</tt>, a <tt>(NX)</tt> vector of expected jump sizes and <tt>PAR.SigmaJ</tt>, the jump size covariance matrix. Set all elements that do not jump to zero. The number of jump components <tt>NJ</tt> is driven by the third dimension of <tt>PAR.SigmaJ</tt>. If <tt>NJ&gt;1</tt>, <tt>PAR.MuJ</tt> is a <tt>(NX)x(NJ)</tt> matrix where each column <tt>k</tt> corresponds to the covariance matrix <tt>PAR.SigmaJ(:,:,k)</tt>.</li></ul></div><div><ul><li><tt>TYPE='Exponential'</tt> returns exponentially distributed jumps. The corresponding parameter structure is <tt>PAR.MuJ</tt>, which is a <tt>(NX)x(1)</tt> vector of expected jump sizes. Set all elements that do not correspond to a jump to zero.</li></ul></div><div><ul><li><tt>TYPE='DoubleExponential'</tt> returns double exponentially distributed jumps. The corresponding parameters are <tt>PAR.pUp</tt>, which contains the <tt>(NX)x(1)</tt> vector of probabilities of positive jumps. <tt>PAR.mUp</tt> stores the expected positive jump sizes, <tt>PAR.mDown</tt> stores the expected negative jump sizes (absolute values).</li></ul></div><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1"><b>Example 1: Merton Jumps</b></a></li><li><a href="#5"><b>Example 2: Two sided and one sided exponential jumps</b></a></li><li><a href="#11"><b>Example 3: Multiple jumps</b></a></li><li><a href="#13"><b>Example 4: Extended transforms and jumps</b></a></li></ul></div><h2><b>Example 1: Merton Jumps</b><a name="1"></a></h2><p>Assume that we are interested in the ratio of two asset prices which follow a bivariate process with correlated jumps of constant intensity:</p><pre class="codeinput">tau         = 1;
 X0          = 110;
 Y0          = 100;
 rf          = 0.05;
@@ -83,7 +83,58 @@ cf =
 
     @(u)cfaffine([1;-1]*u,x0,tau,K0,[],H0,[],R0,[],L0,[],jump,1)
 
-</pre><img vspace="5" hspace="5" src="cfjumpHelp_01.png" alt=""> <p><b>Example 2: Multiple jumps</b></p><p>If you want to introduce multiple jumps, potentially of different types, you can use <tt>cfjump</tt> multiple times. Let's assume you want to employ multivariate normally distributed jumps in variables 1 and 2 and add an additional jump component, itself controlling jumps in process 3. You could write:</p><pre class="codeinput">par.MuJ     = [];
+</pre><img vspace="5" hspace="5" src="cfjumpHelp_01.png" alt=""> <h2><b>Example 2: Two sided and one sided exponential jumps</b><a name="5"></a></h2><p>In this example, we discuss a model featuring stochastic volatility, double exponential jumps in the underlying, exponential jumps in volatility and a stochastic jump intensity. The entries of the three dimensional state variable are:</p><p><img src="cfjumpHelp_eq00433.png" alt="$dy=(r_f-\frac{1}{2}v_t-\lambda_t m)dt+\sqrt{v_t}dW_1+J_ydZ$"></p><p><img src="cfjumpHelp_eq26832.png" alt="$dv=\kappa_v(\theta_v-v_t)dt+\sqrt{v_t}dW_2+J_vdZ$"></p><p><img src="cfjumpHelp_eq68676.png" alt="$d\lambda=\kappa_{\lambda}(\theta_{\lambda}-\lambda_t)dt+\sqrt{\lambda_t}dW_3$"></p><p>where <img src="cfjumpHelp_eq48385.png" alt="$m=E(J_y)-1$">.</p><p>We will model jumps in the asset price as a double exponential distribution, whereas the variance process jumps according to an exponential distribution on the positive half axis. Thus, when the counting variable <img src="cfjumpHelp_eq14833.png" alt="$Z$"> jumps, both <img src="cfjumpHelp_eq13352.png" alt="$y_t$"> and <img src="cfjumpHelp_eq09410.png" alt="$v_t$"> jump, but their jump sizes are independent.</p><p>The double exponential distribution of <img src="cfjumpHelp_eq44020.png" alt="$y$"> will draw from an exponential distribution on the positive reals with probability <img src="cfjumpHelp_eq79674.png" alt="$p_y$">. In this case, the random variable <img src="cfjumpHelp_eq44020.png" alt="$y$"> will follow an exponential distribution with mean <img src="cfjumpHelp_eq15942.png" alt="$\mu_y^{+}$">. With complementary probability <img src="cfjumpHelp_eq69798.png" alt="$1-p_y$">, the random variable <img src="cfjumpHelp_eq44020.png" alt="$y$"> will be drawn from an exponential distribution over the negative reals, with corresponding mean jump size <img src="cfjumpHelp_eq40980.png" alt="$-\mu_y^{-}$">. The corresponding probability density function is:</p><p><img src="cfjumpHelp_eq81479.png" alt="$f_y(x)=p_y\frac{1}{\mu_y^{+}}\exp(-\frac{x}{\mu_y^{+}})+(1-p_y)\frac{1}{\mu_y^{-}}\exp(\frac{x}{\mu_x^{-}})$"></p><p>When setting <img src="cfjumpHelp_eq73206.png" alt="$p_y=1$">, the standard exponential distribution with expected value <img src="cfjumpHelp_eq15942.png" alt="$\mu_y^{+}$"> is recovered, when letting <img src="cfjumpHelp_eq73251.png" alt="$p_y=0$">, we obtain the exponential distribution over the negative reals with expected value <img src="cfjumpHelp_eq40980.png" alt="$-\mu_y^{-}$">.</p><p>For the first <img src="cfjumpHelp_eq86607.png" alt="$k$"> moments to exist, we require that <img src="cfjumpHelp_eq59938.png" alt="$\mu_y^{+}<\frac{1}{k}$">.</p><p>Let us translate this model into AJD coefficients and the correct jump transform specification. We assume that positive jumps in the log asset price occur in 40% of all cases whereas we naturally require that all variance jumps are positive. As we do not model jumps in the intensity process itself, we set the mean upward and downward jump sizes to zero:</p><pre class="codeinput">par.pUp     = [0.40  1  0.5]';
+par.mUp     = [0.05 0.04 0]';
+par.mDown   = [0.12 0 0]';
+</pre><p>The corresponding jump transform is</p><pre class="codeinput">jump        = @(u) cfjump(u,par,<span class="string">'DoubleExponential'</span>);
+</pre><p>The jump compensation in the log asset price is</p><pre class="codeinput">m           = jump([1 0 0]')-1;
+</pre><p>Writing the remaining AJD parameters:</p><pre class="codeinput">rf          = 0.05;
+tau         = 1;
+
+S0          = 120;
+s0          = log(S0);
+
+kV          = 1.2;
+tV          = 0.20^2;
+sV          = 0.10;
+rho         = -0.7;
+v0          = 0.25^2;
+
+kL          = 0.85;
+tL          = 0.10;
+sL          = 0.05;
+l0          = 0.07;
+
+x0          = [s0 v0 l0]';
+
+K0          = [rf kV*tV kL*tL]';
+K1          = [0 -1/2 -m ; 0 -kV 0 ; 0 0 -kL];
+H0          = zeros(3);
+H1          = zeros(3,3,3);
+H1(:,:,2)   = [1 sV*rho 0 ; sV*rho sV^2 0 ; 0 0 0];
+H1(3,3,3)   = sL^2;
+R0          = rf;
+R1          = [0 0 0]';
+L0          = 0;
+L1          = [0 0 1]';
+</pre><p>Finally, we may state the characteristic function and, as usual, test it:</p><pre class="codeinput">cf          = @(u) cfaffine(u,x0,tau,K0,K1,H0,H1,R0,R1,L0,L1,jump)
+cf([0 -i])
+</pre><pre class="codeoutput">
+cf = 
+
+    @(u)cfaffine(u,x0,tau,K0,K1,H0,H1,R0,R1,L0,L1,jump)
+
+
+ans =
+
+    0.9512  120.0000
+
+</pre><p>Let us find the implied volatilies and plot them against the strikes</p><pre class="codeinput">K           = S0*[0.65:0.05:1.35]';
+C           = cf2call(cf,struct(<span class="string">'x0'</span>,s0,<span class="string">'K'</span>,K));
+plot(K,blsimpv(S0,K,0.05,tau,C),<span class="string">'ro'</span>)
+title(<span class="string">'Strikes vs. implied volatility of our AJD model'</span>);
+xlabel(<span class="string">'strike'</span>),ylabel(<span class="string">'implied volatility'</span>)
+</pre><img vspace="5" hspace="5" src="cfjumpHelp_02.png" alt=""> <h2><b>Example 3: Multiple jumps</b><a name="11"></a></h2><p>If you want to introduce multiple jumps, potentially of different types, you can use <tt>cfjump</tt> multiple times. Let's assume you want to employ multivariate normally distributed jumps in variables 1 and 2 and add an additional jump component, itself controlling jumps in process 3. You could write:</p><pre class="codeinput">par.MuJ     = [];
 par.SigmaJ  = [];
 par.MuJ(:,1)= [-0.25 -0.10 0]';
 par.MuJ(:,2)= [0 0 0.15]';
@@ -91,12 +142,72 @@ par.SigmaJ  = [0.2*0.2 0.2*0.5*0.3 0 ; 0.2*0.5*0.3 0.3*0.3 0 ; 0 0 0];
 jump1       = @(c) cfjump(c,par,<span class="string">'Merton'</span>);
 jump2       = @(c) cfjump(c,struct(<span class="string">'MuJ'</span>,par.MuJ(:,2)),<span class="string">'Exponential'</span>);
 jump        = @(c) [jump1(c) ; jump2(c)];
-</pre><p>The resulting transform expects an input <tt>(NX)x(K)</tt> and returns the output of size <tt>(NJ)x(K)</tt>. Let us find the expected jump size induced from each process:</p><pre class="codeinput">jump(eye)-1
+</pre><p>The resulting transform expects an input <tt>(NX)x(K)</tt> and returns the output of size <tt>(NJ)x(K)</tt>. Let us find the expected jump size induced from each process:</p><pre class="codeinput">jump(eye(3))-1
 </pre><pre class="codeoutput">
 ans =
 
    -0.2055   -0.0535         0
          0         0    0.1765
+
+</pre><h2><b>Example 4: Extended transforms and jumps</b><a name="13"></a></h2><p>In this example, we compute the price of an Asian option on a short rate process modelled as CIR + Exponential jumps. Please see &lt;cfaffineEx.html <tt>cfaffineEx</tt> for some insights into the pricing of Asian options and the required augmentation of the state space.</p><p>Let us assume the following initial values and parameters:</p><pre class="codeinput">tau         = 2;
+r0          = 0.05;
+sR          = 0.10;
+kR          = 0.9;
+tR          = 0.08;
+lambda      = 0.15;
+MuJ         = 0.03;
+</pre><p>The option will pay the positive difference between the average short rate over the next two years and the strike level of 4%:</p><pre class="codeinput">X           = 0.04;
+</pre><p>The required AJD coefficients, jump transform and jump gradients are:</p><pre class="codeinput">K0          = [kR*tR 0]';
+K1          = [-kR 0 ; 1 0];
+H0          = zeros(2);
+H1          = zeros(2,2,2);
+H1(1,1,1)   = sR^2;
+R0          = 0;
+R1          = [1 0]';
+L0          = lambda;
+L1          = [];
+par.MuJ     = [MuJ 0]';
+jump        = @(c) cfjump(c,par,<span class="string">'Exponential'</span>);
+jumpGrad    = @(c) cfjump(c,par,<span class="string">'ExponentialGrad'</span>);
+cf          = @(u) cfaffine([0 1]'*u,[r0 0]',tau,K0,K1,H0,H1,R0,R1,L0,L1,jump,1)
+cfEx        = @(u) cfaffineEx([0 1]'*u,[0 1]',[r0 0]',tau,K0,K1,H0,H1,R0,R1,L0,L1,jump,jumpGrad,1)
+</pre><pre class="codeoutput">
+cf = 
+
+    @(u)cfaffine([0,1]'*u,[r0,0]',tau,K0,K1,H0,H1,R0,R1,L0,L1,jump,1)
+
+
+cfEx = 
+
+    @(u)cfaffineEx([0,1]'*u,[0,1]',[r0,0]',tau,K0,K1,H0,H1,R0,R1,L0,L1,jump,jumpGrad,1)
+
+</pre><p>The function <a href="cf2gaby.html"><tt>cf2gaby</tt></a> recovers the expectation and the extended expectation as:</p><pre class="codeinput">e1          = 1/tau*cf2gaby(cfEx,0,-1,-X*tau);
+e2          = X*cf2gaby(cf,0,-1,-X*tau);
+price       = e1-e2;
+</pre><p>Let us compare the result with a simulation study</p><pre class="codeinput">nSim        = 100000;
+nStep       = 5000;
+dt          = tau/nStep;
+x0          = r0;
+y0          = 0;
+
+x           = x0*ones(nSim,1);
+y           = y0*ones(nSim,1);
+<span class="keyword">for</span> k = 1:nStep
+    x           = x  <span class="keyword">...</span>
+                + kR*(tR-x)*dt <span class="keyword">...</span>
+                + sR*sqrt(x).*randn(nSim,1)*sqrt(dt) <span class="keyword">...</span>
+                + (rand(nSim,1)&lt;=lambda*dt).*exprnd(MuJ,nSim,1);
+   y            = y + x*dt;
+<span class="keyword">end</span>
+df          = exp(-y);
+e1Sim       = mean(y/tau.*(y/tau&gt;X).*df);
+e2Sim       = mean(X.*(y/tau&gt;X).*df);
+priceSim    = e1Sim-e2Sim;
+[price priceSim]
+</pre><pre class="codeoutput">
+ans =
+
+    0.0248    0.0248
 
 </pre><p class="footer"><br>
       Published with MATLAB&reg; 7.14<br></p></div><!--
@@ -132,7 +243,13 @@ ans =
 % vector of expected jump sizes. Set all elements that do not correspond to
 % a jump to zero.
 %
-% *Example 1: Merton Jumps*
+% * |TYPE='DoubleExponential'| returns double exponentially distributed 
+% jumps. The corresponding parameters are |PAR.pUp|, which contains the 
+% |(NX)x(1)| vector of probabilities of positive jumps. |PAR.mUp| stores
+% the expected positive jump sizes, |PAR.mDown| stores the expected
+% negative jump sizes (absolute values).
+%
+%% *Example 1: Merton Jumps*
 %
 % Assume that we are interested in the ratio of two asset prices which 
 % follow a bivariate process with correlated jumps of constant intensity:
@@ -165,8 +282,103 @@ L0          = lambda;
 cf          = @(u) cfaffine([1;-1]*u,x0,tau,K0,[],H0,[],R0,[],L0,[],jump,1)
 [f x]       = cf2pdf(cf);
 plot(x,f)
+%% *Example 2: Two sided and one sided exponential jumps*
+%
+% In this example, we discuss a model featuring stochastic volatility,
+% double exponential jumps in the underlying, exponential jumps in
+% volatility and a stochastic jump intensity. The entries of the three 
+% dimensional state variable are:
+% 
+% $dy=(r_f-\frac{1}{2}v_t-\lambda_t m)dt+\sqrt{v_t}dW_1+J_ydZ$
+%
+% $dv=\kappa_v(\theta_v-v_t)dt+\sqrt{v_t}dW_2+J_vdZ$
+%
+% $d\lambda=\kappa_{\lambda}(\theta_{\lambda}-\lambda_t)dt+\sqrt{\lambda_t}dW_3$
+%
+% where $m=E(J_y)-1$.
+%
+% We will model jumps in the asset price as a double exponential
+% distribution, whereas the variance process jumps according to an
+% exponential distribution on the positive half axis. Thus, when the
+% counting variable $Z$ jumps, both $y_t$ and $v_t$ jump, but their jump
+% sizes are independent.
+%
+% The double exponential distribution of $y$ will draw from an exponential 
+% distribution on the positive reals with probability $p_y$. In this case,
+% the random variable $y$ will follow an exponential distribution with mean
+% $\mu_y^{+}$. With complementary probability $1-p_y$, the random variable
+% $y$ will be drawn from an exponential distribution over the negative
+% reals, with corresponding mean jump size $-\mu_y^{-}$. The corresponding
+% probability density function is:
+%
+% $f_y(x)=p_y\frac{1}{\mu_y^{+}}\exp(-\frac{x}{\mu_y^{+}})+(1-p_y)\frac{1}{\mu_y^{-}}\exp(\frac{x}{\mu_x^{-}})$
+%
+% When setting $p_y=1$, the standard exponential distribution with expected
+% value $\mu_y^{+}$ is recovered, when letting $p_y=0$, we obtain the
+% exponential distribution over the negative reals with expected value
+% $-\mu_y^{-}$.
+%
+% For the first $k$ moments to exist, we require that
+% $\mu_y^{+}<\frac{1}{k}$.
+%
+% Let us translate this model into AJD coefficients and the correct jump
+% transform specification. We assume that positive jumps in the log asset
+% price occur in 40% of all cases whereas we naturally require that all
+% variance jumps are positive. As we do not model jumps in the intensity
+% process itself, we set the mean upward and downward jump sizes to zero:
+par.pUp     = [0.40  1  0.5]';
+par.mUp     = [0.05 0.04 0]';
+par.mDown   = [0.12 0 0]';
 %%
-% *Example 2: Multiple jumps*
+% The corresponding jump transform is
+jump        = @(u) cfjump(u,par,'DoubleExponential');
+%%
+% The jump compensation in the log asset price is
+m           = jump([1 0 0]')-1;
+%%
+% Writing the remaining AJD parameters:
+rf          = 0.05;
+tau         = 1;
+
+S0          = 120;
+s0          = log(S0);
+
+kV          = 1.2;
+tV          = 0.20^2;
+sV          = 0.10;
+rho         = -0.7;
+v0          = 0.25^2;
+
+kL          = 0.85;
+tL          = 0.10;
+sL          = 0.05;
+l0          = 0.07;
+
+x0          = [s0 v0 l0]';
+
+K0          = [rf kV*tV kL*tL]';
+K1          = [0 -1/2 -m ; 0 -kV 0 ; 0 0 -kL];
+H0          = zeros(3);
+H1          = zeros(3,3,3);
+H1(:,:,2)   = [1 sV*rho 0 ; sV*rho sV^2 0 ; 0 0 0];
+H1(3,3,3)   = sL^2;
+R0          = rf;
+R1          = [0 0 0]';
+L0          = 0;
+L1          = [0 0 1]';
+
+%%
+% Finally, we may state the characteristic function and, as usual, test it:
+cf          = @(u) cfaffine(u,x0,tau,K0,K1,H0,H1,R0,R1,L0,L1,jump)
+cf([0 -i])
+%%
+% Let us find the implied volatilies and plot them against the strikes
+K           = S0*[0.65:0.05:1.35]';
+C           = cf2call(cf,struct('x0',s0,'K',K));
+plot(K,blsimpv(S0,K,0.05,tau,C),'ro')
+title('Strikes vs. implied volatility of our AJD model');
+xlabel('strike'),ylabel('implied volatility')
+%% *Example 3: Multiple jumps*
 %
 % If you want to introduce multiple jumps, potentially of different types,
 % you can use |cfjump| multiple times. Let's assume you want to employ
@@ -185,6 +397,72 @@ jump        = @(c) [jump1(c) ; jump2(c)];
 % The resulting transform expects an input |(NX)x(K)| and returns the
 % output of size |(NJ)x(K)|. Let us find the expected jump size induced
 % from each process:
-jump(eye)-1
+jump(eye(3))-1
+%% *Example 4: Extended transforms and jumps*
+%
+% In this example, we compute the price of an Asian option on a short rate
+% process modelled as CIR + Exponential jumps. Please see <cfaffineEx.html
+% |cfaffineEx| for some insights into the pricing of Asian options and the
+% required augmentation of the state space.
+%
+% Let us assume the following initial values and parameters:
+tau         = 2;
+r0          = 0.05;
+sR          = 0.10;
+kR          = 0.9;
+tR          = 0.08;
+lambda      = 0.15;
+MuJ         = 0.03;
+%%
+% The option will pay the positive difference between the average short
+% rate over the next two years and the strike level of 4%:
+%
+X           = 0.04;
+%%
+% 
+% The required AJD coefficients, jump transform and jump gradients are:
+K0          = [kR*tR 0]';
+K1          = [-kR 0 ; 1 0];
+H0          = zeros(2);
+H1          = zeros(2,2,2);
+H1(1,1,1)   = sR^2;
+R0          = 0;
+R1          = [1 0]';
+L0          = lambda;
+L1          = [];
+par.MuJ     = [MuJ 0]';
+jump        = @(c) cfjump(c,par,'Exponential');
+jumpGrad    = @(c) cfjump(c,par,'ExponentialGrad');
+cf          = @(u) cfaffine([0 1]'*u,[r0 0]',tau,K0,K1,H0,H1,R0,R1,L0,L1,jump,1)
+cfEx        = @(u) cfaffineEx([0 1]'*u,[0 1]',[r0 0]',tau,K0,K1,H0,H1,R0,R1,L0,L1,jump,jumpGrad,1)
+%%
+% The function <cf2gaby.html |cf2gaby|> recovers the expectation and the
+% extended expectation as:
+e1          = 1/tau*cf2gaby(cfEx,0,-1,-X*tau);
+e2          = X*cf2gaby(cf,0,-1,-X*tau);
+price       = e1-e2;
+%%
+% Let us compare the result with a simulation study
+
+nSim        = 100000;
+nStep       = 5000;
+dt          = tau/nStep;
+x0          = r0;
+y0          = 0;
+
+x           = x0*ones(nSim,1);
+y           = y0*ones(nSim,1);
+for k = 1:nStep
+    x           = x  ...
+                + kR*(tR-x)*dt ...
+                + sR*sqrt(x).*randn(nSim,1)*sqrt(dt) ...
+                + (rand(nSim,1)<=lambda*dt).*exprnd(MuJ,nSim,1);
+   y            = y + x*dt;
+end
+df          = exp(-y);
+e1Sim       = mean(y/tau.*(y/tau>X).*df);
+e2Sim       = mean(X.*(y/tau>X).*df);
+priceSim    = e1Sim-e2Sim;
+[price priceSim]
 ##### SOURCE END #####
 --></body></html>

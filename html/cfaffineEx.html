@@ -1,0 +1,285 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>cfaffineEx</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-06"><meta name="DC.source" content="cfaffineExHelp.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>cfaffineEx</h1><!--introduction--><p>Returns the extended characteristic function evaluation of a parameterized Affine Jump-Diffusion (AJD) process. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">W = CFAFFINEEX(U,V,X0,TAU,K0,K1,H0,H1,R0,R1)
+W = CFAFFINEEX(U,V,X0,TAU,K0,K1,H0,H1,R0,R1,L0,L1,jump,gradJump)
+W = CFAFFINEEX(U,V,X0,TAU,K0,K1,H0,H1,R0,R1,L0,L1,jump,gradJump,ND)
+</pre><p>See <a href="Main.html#theory">theory</a> for a description of the coefficient matrices <tt>K0,K1,H0,H1,R0,R1,L0,L1</tt>. You may leave any unused coefficient empty <tt>[]</tt>, e.g. <tt>CFAFFINEEX(U,V,X0,TAU,K0,[],H0,[],R0)</tt> describes a system with constant interest rate, drift and variance, whereas <tt>CFAFFINEEX(U,V,X0,TAU,K0,K1,[],H1,[],R1,[],L1,jump)</tt> describes a system with state dependent drift, variance, interest rate and jump intensity.</p><p>For real argument <tt>U</tt>, <tt>cfaffineEx</tt> returns the characteristic function of the stochastic process. For complex arugment <tt>U=-v*i</tt>, <tt>cfaffineEx</tt> returns the moment generating function of the stochastic process.</p><pre class="language-matlab">[W alpha beta A B] = CFAFFINEEX(U,V,X0,TAU,K0,K1,H0,H1,R0,R1,L0,L1,jump,ND)
+</pre><p>Returns the parameters <img src="cfaffineExHelp_eq94572.png" alt="$\alpha,\beta$"> as well as <img src="cfaffineExHelp_eq31461.png" alt="$A$"> and <img src="cfaffineExHelp_eq73617.png" alt="$B$"> that solve the Ricatti equations. See <a href="Main.html">Theory</a> for details.</p><p><b>Input Arguments</b></p><p>By default, <tt>cfaffineEx</tt> expects <tt>U</tt> to be an array of dimension <tt>(K)x(1)</tt> or <tt>(1)x(K)</tt>. If <tt>U</tt> is a <tt>(NX)x(K)</tt> array, set <tt>ND=1</tt>, if <tt>U</tt> is a <tt>(K)x(NX)</tt> array, set <tt>ND=2</tt>.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1"><b>Example 1: Expected interest rate level</b></a></li><li><a href="#5"><b>Example 2: Asian options</b></a></li></ul></div><h2><b>Example 1: Expected interest rate level</b><a name="1"></a></h2><p>If we set <img src="cfaffineExHelp_eq45348.png" alt="$u=0$">, we can obtain arbitrary (discounted) expectations of linear combinations of <img src="cfaffineExHelp_eq77038.png" alt="$X_T$"> by appropriate choice of <img src="cfaffineExHelp_eq77996.png" alt="$v$">. For example, say we want to compute the average short rate over a future time period. The short rate <img src="cfaffineExHelp_eq39850.png" alt="$r_t$"> is assumed to follow a CIR process. Further, we introduce</p><p><img src="cfaffineExHelp_eq74071.png" alt="$y_t=\int_0^{t}r_sds$"></p><p>The augmented state space is then</p><p><img src="cfaffineExHelp_eq98117.png" alt="$dr=\kappa(\theta-r)dt + \sigma\sqrt{r}dW$"></p><p><img src="cfaffineExHelp_eq20455.png" alt="$dy=rdt$"></p><p>We are interested in</p><p><img src="cfaffineExHelp_eq82686.png" alt="$AVG = \frac{1}{T-t}E(\int_t^Tr_sds)=\frac{1}{T-t}E(\int_0^Tr_sds-\int_0^tr_sds)=\frac{1}{T-t}E(\int_0^Tr_sds)-\frac{1}{T-t}E(\int_0^tr_sds) =\frac{1}{T-t}E(y_T)-\frac{1}{T-t}E(y_t)$"></p><p>This expectation corresponds to</p><p><img src="cfaffineExHelp_eq81821.png" alt="$AVG = \frac{1}{T-t}E((0x_T+1y_T)\exp(0x_T+0y_T))-\frac{1}{T-t}E((0x_t+1y_t)\exp(0x_t+0y_t))$"></p><p>The last two expectations are evaluations of the  extended transform of an augmented state space, setting <img src="cfaffineExHelp_eq45348.png" alt="$u=0$">.</p><p>Let us compute the average expectation</p><pre class="codeinput">kR          = 2.2;
+tR          = 0.08;
+sR          = 0.10;
+r0          = 0.04;
+y0          = 0;
+x0          = [r0 y0]';
+</pre><p>Translating our problem into extended AJD coefficients, we obtain</p><pre class="codeinput">K0          = [kR*tR 0]';
+K1          = [-kR 0 ; 1 0];
+H0          = zeros(2);
+H1          = zeros(2,2,2);
+H1(1,1,1)   = sR^2;
+v           = [0 1]';
+T           = 2;
+t           = 0.5;
+E1          = 1/(T-t)*cfaffineEx([0 0]',v,x0,T,K0,K1,H0,H1,[],[],[],[],[],[],1);
+E2          = 1/(T-t)*cfaffineEx([0 0]',v,x0,t,K0,K1,H0,H1,[],[],[],[],[],[],1);
+AVG1        = E1-E2;
+</pre><p>Let us compare this result against a simulation of the same process:</p><pre class="codeinput">nSim        = 100000;
+nSteps      = 5000;
+dt          = T/nSteps;
+xx          = r0*ones(nSim,1);
+yy          = y0*ones(nSim,1);
+<span class="keyword">for</span> k = 1:nSteps;
+    xx          = xx + kR*(tR-xx)*dt + sR*sqrt(dt)*xx.*randn(nSim,1);
+    <span class="keyword">if</span> k*dt&gt;t
+        yy          = yy + xx*dt;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+AVG2        = mean(yy/(T-t));
+</pre><p>We find that the results are nearly identical:</p><pre class="codeinput">[AVG1 AVG2]
+</pre><pre class="codeoutput">
+ans =
+
+    0.0761    0.0761
+
+</pre><h2><b>Example 2: Asian options</b><a name="5"></a></h2><p>Using the extended transform and its inverse, we can price Asian options as well. Say that we want to price an option that pays</p><p><img src="cfaffineExHelp_eq12222.png" alt="$max(\frac{1}{T}\int_0^T r_sds-X,0)=max(\frac{1}{T}Y_T-X,0)$"></p><p>in the future. The (discounted) risk neutral expectation of the payoff is</p><p><img src="cfaffineExHelp_eq25505.png" alt="$P=E(max(\frac{1}{T}Y_T-X,0)\exp(-Y_T))$"></p><p>by the definition of the discount factor. This expectation can be further split into</p><p><img src="cfaffineExHelp_eq40985.png" alt="$P=\frac{1}{T}E(Y_T 1_{-Y_T\leq -XT}\exp(-Y_T))-XE(1_{-Y_T\leq -XT}\exp(-Y_T))$"></p><p>At a closer inspection we find that the first conditional expectation is</p><p><img src="cfaffineExHelp_eq84824.png" alt="$\frac{1}{T}\tilde{G}(0,[0, -1],[0, 1],-XT)$"></p><p>whereas the second integral is</p><p><img src="cfaffineExHelp_eq49417.png" alt="$XG(0,[0, -1],-XT)$"></p><p>From the <a href="Main.html#theory">theory</a> we know that both expectations can be recovered via their corresponding inverse Fourier transforms. All that is needed are the characteristic function and the extended characteristic function. Let us set them up now:</p><pre class="codeinput">cf          = @(u) cfaffine([0 1]'*u,x0,T,K0,K1,H0,H1,[],[1 0]',[],[],[],1);
+cfEx        = @(u) cfaffineEx([0 1]'*u,[0 1]',x0,T,K0,K1,H0,H1,[],[1 0]',[],[],[],[],1);
+</pre><p>Here we have done the following: The first argument of <a href="cfaffine.html"><tt>cfaffine</tt></a> results in an <tt>(NX)x(NU)</tt> array of inputs. By setting <tt>ND=1</tt>, we tell the function that it should operate on <tt>U</tt> column-wise. We do the same for <tt>cfaffineEx</tt>. This setting directly implements the choice <img src="cfaffineExHelp_eq27167.png" alt="$a=[0,1]$"> in <img src="cfaffineExHelp_eq38700.png" alt="$G(a,b,y)$">. The same holds for <img src="cfaffineExHelp_eq90634.png" alt="$b=[0,-1]$">. The choice of <img src="cfaffineExHelp_eq98076.png" alt="$v=[0 1]$"> in <tt>cfaffineEx</tt> sets the coefficient <img src="cfaffineExHelp_eq08588.png" alt="$d=[0,1]$"> in the extended expectation <img src="cfaffineExHelp_eq71619.png" alt="$\tilde{G}(a,b,d,y)$">.</p><p>We set the strike to 3.5%, the option pays the positive difference between the average interest rate over the next two years and 3.5%.</p><pre class="codeinput">X           = 0.035;
+</pre><p>Finally, we can combine the corresponding expectations and obtain a price</p><pre class="codeinput">e1          = 1/T*cf2gaby(cfEx,0,-1,-X*T,struct(<span class="string">'uMax'</span>,500));
+e2          = X*cf2gaby(cf,0,-1,-X*T,struct(<span class="string">'uMax'</span>,500));
+price       = e1-e2;
+</pre><p>Let us compare this result against a simulation of the same option:</p><pre class="codeinput">xx          = r0*ones(nSim,1);
+yy          = y0*ones(nSim,1);
+<span class="keyword">for</span> k = 1:nSteps;
+    xx          = xx + kR*(tR-xx)*dt + sR*sqrt(dt)*xx.*randn(nSim,1);
+    yy          = yy + xx*dt;
+<span class="keyword">end</span>
+df          = exp(-yy);
+e1sim       = mean(yy/T.*(yy/T&gt;X).*df);
+e2sim       = X*mean((yy/T&gt;X).*df);
+priceSim    = e1sim-e2sim;
+</pre><p>Again, we find that the results are nearly identical:</p><pre class="codeinput">[price priceSim]
+</pre><pre class="codeoutput">
+ans =
+
+    0.0312    0.0313
+
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% cfaffineEx
+% Returns the extended characteristic function evaluation of a 
+% parameterized Affine Jump-Diffusion (AJD) process. Part of the 
+% <Main.html CFH Toolbox>.
+%
+% *Syntax*
+%
+%   W = CFAFFINEEX(U,V,X0,TAU,K0,K1,H0,H1,R0,R1)
+%   W = CFAFFINEEX(U,V,X0,TAU,K0,K1,H0,H1,R0,R1,L0,L1,jump,gradJump)
+%   W = CFAFFINEEX(U,V,X0,TAU,K0,K1,H0,H1,R0,R1,L0,L1,jump,gradJump,ND)
+%
+% See <Main.html#theory theory> for a description of the coefficient
+% matrices |K0,K1,H0,H1,R0,R1,L0,L1|. You may leave any unused coefficient
+% empty |[]|, e.g. |CFAFFINEEX(U,V,X0,TAU,K0,[],H0,[],R0)| describes a 
+% system with constant interest rate, drift and variance, whereas 
+% |CFAFFINEEX(U,V,X0,TAU,K0,K1,[],H1,[],R1,[],L1,jump)| describes a system
+% with state dependent drift, variance, interest rate and jump intensity.
+%
+% For real argument |U|, |cfaffineEx| returns the characteristic function 
+% of the stochastic process. For complex arugment |U=-v*i|, |cfaffineEx|
+% returns the moment generating function of the stochastic process.
+%
+%   [W alpha beta A B] = CFAFFINEEX(U,V,X0,TAU,K0,K1,H0,H1,R0,R1,L0,L1,jump,ND)
+% 
+% Returns the parameters $\alpha,\beta$ as well as $A$ and $B$ that solve 
+% the Ricatti equations. See <Main.html Theory> for details. 
+%
+% *Input Arguments*
+%
+% By default, |cfaffineEx| expects |U| to be an array of dimension 
+% |(K)x(1)| or |(1)x(K)|. If |U| is a |(NX)x(K)| array, set |ND=1|, if |U| 
+% is a |(K)x(NX)| array, set |ND=2|.
+%
+%% *Example 1: Expected interest rate level*
+% 
+% If we set $u=0$, we can obtain arbitrary (discounted) expectations of 
+% linear combinations of $X_T$ by appropriate choice of $v$. For example,
+% say we want to compute the average short rate over a future time period.
+% The short rate $r_t$ is assumed to follow a CIR process. Further, we
+% introduce
+% 
+% $y_t=\int_0^{t}r_sds$
+%
+% The augmented state space is then
+%
+% $dr=\kappa(\theta-r)dt + \sigma\sqrt{r}dW$
+%
+% $dy=rdt$
+%
+% We are interested in 
+% 
+% $AVG = \frac{1}{T-t}E(\int_t^Tr_sds)=\frac{1}{T-t}E(\int_0^Tr_sds-\int_0^tr_sds)=\frac{1}{T-t}E(\int_0^Tr_sds)-\frac{1}{T-t}E(\int_0^tr_sds)
+% =\frac{1}{T-t}E(y_T)-\frac{1}{T-t}E(y_t)$
+%
+% This expectation corresponds to 
+% 
+% $AVG = \frac{1}{T-t}E((0x_T+1y_T)\exp(0x_T+0y_T))-\frac{1}{T-t}E((0x_t+1y_t)\exp(0x_t+0y_t))$
+%
+% The last two expectations are evaluations of the  extended transform of
+% an augmented state space, setting $u=0$.
+%
+% Let us compute the average expectation
+kR          = 2.2;
+tR          = 0.08;
+sR          = 0.10;
+r0          = 0.04;
+y0          = 0;
+x0          = [r0 y0]';
+%%
+% Translating our problem into extended AJD coefficients, we obtain
+K0          = [kR*tR 0]';
+K1          = [-kR 0 ; 1 0];
+H0          = zeros(2);
+H1          = zeros(2,2,2);
+H1(1,1,1)   = sR^2;
+v           = [0 1]';
+T           = 2;
+t           = 0.5;
+E1          = 1/(T-t)*cfaffineEx([0 0]',v,x0,T,K0,K1,H0,H1,[],[],[],[],[],[],1);
+E2          = 1/(T-t)*cfaffineEx([0 0]',v,x0,t,K0,K1,H0,H1,[],[],[],[],[],[],1);
+AVG1        = E1-E2;
+%%
+% Let us compare this result against a simulation of the same process:
+nSim        = 100000;
+nSteps      = 5000;
+dt          = T/nSteps;
+xx          = r0*ones(nSim,1);
+yy          = y0*ones(nSim,1);
+for k = 1:nSteps;
+    xx          = xx + kR*(tR-xx)*dt + sR*sqrt(dt)*xx.*randn(nSim,1);
+    if k*dt>t
+        yy          = yy + xx*dt;
+    end
+end
+AVG2        = mean(yy/(T-t));
+%%
+% We find that the results are nearly identical:
+[AVG1 AVG2]
+%% *Example 2: Asian options*
+% 
+% Using the extended transform and its inverse, we can price Asian options
+% as well. Say that we want to price an option that pays
+%
+% $max(\frac{1}{T}\int_0^T r_sds-X,0)=max(\frac{1}{T}Y_T-X,0)$ 
+%
+% in the future. The (discounted) risk neutral expectation of the payoff is
+%
+% $P=E(max(\frac{1}{T}Y_T-X,0)\exp(-Y_T))$ 
+%
+% by the definition of the discount factor. This expectation can be further
+% split into
+%
+% $P=\frac{1}{T}E(Y_T 1_{-Y_T\leq -XT}\exp(-Y_T))-XE(1_{-Y_T\leq -XT}\exp(-Y_T))$ 
+%
+% At a closer inspection we find that the first conditional expectation is
+%
+% $\frac{1}{T}\tilde{G}(0,[0, -1],[0, 1],-XT)$
+%
+% whereas the second integral is
+%
+% $XG(0,[0, -1],-XT)$
+%
+% From the <Main.html#theory theory> we know that both expectations can be
+% recovered via their corresponding inverse Fourier transforms. All that is
+% needed are the characteristic function and the extended characteristic 
+% function. Let us set them up now:
+%
+% 
+cf          = @(u) cfaffine([0 1]'*u,x0,T,K0,K1,H0,H1,[],[1 0]',[],[],[],1);
+cfEx        = @(u) cfaffineEx([0 1]'*u,[0 1]',x0,T,K0,K1,H0,H1,[],[1 0]',[],[],[],[],1);
+%%
+% Here we have done the following:
+% The first argument of <cfaffine.html |cfaffine|> results in an |(NX)x(NU)|
+% array of inputs. By setting |ND=1|, we tell the function that it should
+% operate on |U| column-wise. We do the same for |cfaffineEx|. This setting
+% directly implements the choice $a=[0,1]$ in $G(a,b,y)$. The same holds
+% for $b=[0,-1]$. The choice of $v=[0 1]$ in |cfaffineEx| sets the
+% coefficient $d=[0,1]$ in the extended expectation $\tilde{G}(a,b,d,y)$.
+%
+% We set the strike to 3.5%, the option pays the positive difference between 
+% the average interest rate over the next two years and 3.5%.
+X           = 0.035;
+%%
+% Finally, we can combine the corresponding expectations and obtain a price
+e1          = 1/T*cf2gaby(cfEx,0,-1,-X*T,struct('uMax',500));
+e2          = X*cf2gaby(cf,0,-1,-X*T,struct('uMax',500));
+price       = e1-e2;
+%%
+% Let us compare this result against a simulation of the same option:
+xx          = r0*ones(nSim,1);
+yy          = y0*ones(nSim,1);
+for k = 1:nSteps;
+    xx          = xx + kR*(tR-xx)*dt + sR*sqrt(dt)*xx.*randn(nSim,1);
+    yy          = yy + xx*dt;
+end
+df          = exp(-yy);
+e1sim       = mean(yy/T.*(yy/T>X).*df);
+e2sim       = X*mean((yy/T>X).*df);
+priceSim    = e1sim-e2sim;
+%%
+% Again, we find that the results are nearly identical:
+[price priceSim]
+##### SOURCE END #####
+--></body></html>
