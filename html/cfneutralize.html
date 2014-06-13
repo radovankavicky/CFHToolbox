@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>cfneutralize</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-07"><meta name="DC.source" content="cfneutralizeHelp.m"><style type="text/css">
+      --><title>cfneutralize</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-13"><meta name="DC.source" content="cfneutralizeHelp.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,7 +66,7 @@ H0          = sigma^2;
 </pre><pre class="codeoutput">
 K0Q =
 
-   -0.0112
+     -0.01125
 
 
 K1Q =
@@ -94,14 +94,14 @@ jump        = @(c) cfjump(c,par,<span class="string">'Merton'</span>);
 </pre><pre class="codeoutput">
 K0Q =
 
-    0.0409
-    0.0531
+     0.040894
+     0.053125
 
 
 K1Q =
 
-         0   -0.5000
-         0   -0.8500
+            0         -0.5
+            0        -0.85
 
 </pre><h2><b>Example 3: State dependent dividend yields</b><a name="5"></a></h2><p>The underlying asset and dividend processes are</p><p><img src="cfneutralizeHelp_eq28032.png" alt="$dy=(\mu-q_t)dt + \sigma dW_1^P$"></p><p><img src="cfneutralizeHelp_eq06318.png" alt="$dq=\kappa(\theta-q_t)dt + \sigma_q\sqrt(q_t)dW_2^Q$"></p><p>with <img src="cfneutralizeHelp_eq45540.png" alt="$E(dW_1dW_2)=0$">.</p><p>The corresponding risk neutral log asset process is</p><p><img src="cfneutralizeHelp_eq73735.png" alt="$dy=(\mu-q_t-\frac{1}{2}\sigma^2)dt + \sigma dW_1^Q$"></p><p>The coefficients are:</p><pre class="codeinput">mu          = 0.15;
 rf          = 0.05;
@@ -121,14 +121,14 @@ Q1          = [0 1]';
 </pre><pre class="codeoutput">
 ans =
 
-    0.1500    0.0188
-    0.0150    0.0150
+         0.15      0.01875
+        0.015        0.015
 
 
 ans =
 
-         0   -1.0000         0   -1.0000
-         0   -0.5000         0   -0.5000
+            0           -1            0           -1
+            0         -0.5            0         -0.5
 
 </pre><p class="footer"><br>
       Published with MATLAB&reg; 7.14<br></p></div><!--

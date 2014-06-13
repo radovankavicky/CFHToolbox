@@ -16,11 +16,13 @@ function [out lOut] = cflib(u,tau,par,type)
 %
 %   'BS': Black-Scholes  option pricing
 %   rf      constant annualized risk free rate
+%   q       constant annualized dividend yield
 %   x0      log of spot asset price
 %   sigma   spot volatility
 %
 %   'BSJump': Black Scholes with lognormal jumps in the spot process
 %   rf      constant annualized risk free rate
+%   q       constant annualized dividend yield
 %   x0      log of spot asset price
 %   sigma   diffusive volatility of spot process
 %   muJ     expected jump size
@@ -29,11 +31,12 @@ function [out lOut] = cflib(u,tau,par,type)
 %
 % 'Heston':	Heston's stochastic volatility model
 %   rf      constant annualized risk free rate
+%   q       constant annualized dividend yield
 %   x0      log of spot asset price
 %   v0      spot variance level
 %   kappa   mean reversion speed
 %   theta   mean interest rate level
-%   sigma   volatility of interest rate
+%   sigma   volatility of variance 
 %   rho     correlation between innovations in variance and spot process
 %
 %   'HestonJump': Heston with jumps. Requires 'Heston' and the following:
@@ -43,6 +46,7 @@ function [out lOut] = cflib(u,tau,par,type)
 %
 %   'Kou': Kou's model with asymmetric double exponential jump distribution
 %   rf      constant annualized risk free rate
+%   q       constant annualized dividend yield
 %   x0      log of spot asset price
 %   sigma   diffusive volatility of spot process
 %   lambda  jump intensity
@@ -50,10 +54,9 @@ function [out lOut] = cflib(u,tau,par,type)
 %   mUp     mean upward jump (set 0 < mUp < 1 for finite expectation)
 %   mDown   mean downward jump
 %
-%
 %   Example: Black Scholes
 %
-%   par     = struct('x0', log(100), 'rf', 0.05, 'sigma', 0.25);
+%   par     = struct('x0', log(100), 'rf', 0.05, 'q', 0, 'sigma', 0.25);
 %   cflib(0,1,par,'BS') % the 1-year discount factor 
 %   cflib(-i,1,par,'BS') % the 1-year risk neutral expectation of spot
 
@@ -66,19 +69,23 @@ nu = length(u);
 if isrow(u);u = u.';end
 Tau = tau;
 
+
+
 lOut            = zeros(nu,nt);
 
 if strcmp(type,'BS')
     rf          = par.rf;
+    q           = par.q;
     sigma       = par.sigma;
     x0          = par.x0;
     for t = 1:nt
     tau = Tau(t);
-    lOut(:,t)       = -rf*tau + u.*i.*x0 + u.*i.*tau.*(rf-1/2*sigma^2) ...
+    lOut(:,t)       = -rf*tau + u.*i.*x0 + u.*i.*tau.*(rf-q-1/2*sigma^2) ...
                         - 1/2*u.^2.*sigma.^2*tau;
     end
 elseif strcmp(type,'BSJump')
     rf              = par.rf;
+    q               = par.q;
     sigma           = par.sigma;
     muJ             = par.muJ;
     sigmaJ          = par.sigmaJ;
@@ -87,7 +94,7 @@ elseif strcmp(type,'BSJump')
     m               = exp(muJ+1/2*sigmaJ^2)-1;
     for t = 1:nt
     tau = Tau(t);
-    alpha           = -rf*tau + u.*i.*tau.*(rf-1/2*sigma^2-lambda*m) ...
+    alpha           = -rf*tau + u.*i.*tau.*(rf-q-1/2*sigma^2-lambda*m) ...
                       - 1/2*u.^2*sigma^2*tau ...
                       + lambda*tau*(exp(muJ.*u.*i-1/2*u.^2*sigmaJ^2)-1);
     lOut(:,t)       = alpha + u.*i.*x0;
@@ -99,6 +106,7 @@ elseif strcmp(type,'Heston') || strcmp(type,'HestonJump')
     sigma           = par.sigma;
     rho             = par.rho;
     rf              = par.rf;
+    q               = par.q;
     x0              = par.x0;
     v0              = par.v0;
     lambda          = 0;
@@ -118,7 +126,7 @@ elseif strcmp(type,'Heston') || strcmp(type,'HestonJump')
     emt             = exp(m.*tau);
     beta2           = (m-b)./sigma^2 .* (1-emt)./(1-(b-m)./(b+m).*emt);
     alpha           = -rf*tau ...
-                    + (rf-lambda*(exp(muJ+1/2*sigmaJ^2)-1)).*u.*i.*tau ...
+                    + (rf-q-lambda*(exp(muJ+1/2*sigmaJ^2)-1)).*u.*i.*tau ...
                     + kappa.*theta.*(m-b)./sigma.^2.*tau ...
                     + kappa.*theta./c.*log( (2.*m) ./ ((m-b).*emt+b+m));
     alpha           = alpha+tau*lambda*(exp(u.*i.*muJ - 1/2.*u.^2.*sigmaJ^2)-1);
@@ -127,6 +135,7 @@ elseif strcmp(type,'Heston') || strcmp(type,'HestonJump')
     
 elseif strcmp(type,'Kou')
     rf              = par.rf;
+    q               = par.q;
     sigma           = par.sigma;
     x0              = par.x0;
     lambda          = par.lambda;
@@ -136,8 +145,8 @@ elseif strcmp(type,'Kou')
     comp            = @(x) pUp*mUp./(mUp-x) + (1-pUp)*mDown./(mDown+x)-1;
     for t = 1:nt
     tau = Tau(t);
-    alpha           = -rf*tau + u*i*(rf-1/2*sigma^2-lambda*comp(1)) ...
-                        -1/2*u.^2*sigma^2 + lambda*comp(u*i);
+    alpha           = -rf*tau + u*i*(rf-q-1/2*sigma^2-lambda*comp(1))*tau ...
+                        -1/2*u.^2*sigma^2*tau + tau*lambda*comp(u*i);
 	lOut(:,t)       = alpha + u*i*x0;
     end
 end 

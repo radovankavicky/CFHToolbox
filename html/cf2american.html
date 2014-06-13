@@ -1,0 +1,174 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>cf2american</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-13"><meta name="DC.source" content="cf2americanHelp.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>cf2american</h1><!--introduction--><p>Compute American option prices from characteristic function of asset return distribution. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">V = CF2AMERICAN(CF,K,TAU,TYPE)
+[V D] = CF2AMERICAN(CF,K,TAU,TYPE)
+[V D] = CF2AMERICAN(CF,K,TAU,TYPE,AUX)
+</pre><p>Given a characteristic function <tt>CF</tt> of an asset's return distribution, <tt>cf2american</tt> returns <tt>V</tt>, the prices of American options of the <tt>type='put'</tt> or <tt>'type'=call'</tt> for the strike specified in the scalar <tt>K</tt> for a maturity <tt>TAU</tt>. <tt>D</tt> is the option delta.</p><p><b>Input Arguments</b></p><p>The characteristic function <tt>CF</tt> should expect the real arguments <tt>u</tt>, and return function values of the same size. The function must correspond to the return distribution of an i.i.d. return process, i.e. it must be from the class of L&eacute;vy models. Models such as the Heston model, or models with stochastic factor dynamics can not be solved via <tt>cf2american</tt>.</p><p><tt>AUX</tt> is a structure containing optional parameters for the Fourier transform</p><div><ul><li><tt>aux.NFFT</tt> denotes the number of points for FRFT evaluation, default 8192</li><li><tt>aux.NSTEP</tt> number of time steps until maturity, default 500</li><li><tt>aux.damp</tt> damping coefficient of the transform, default 2</li><li><tt>aux.xLimit</tt> the span of the log return range is <tt>0+/-0.5*xLimit</tt>, default <tt>max(3,3*TAU)</tt></li></ul></div><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1"><b>Example 1: Kou's model</b></a></li></ul></div><h2><b>Example 1: Kou's model</b><a name="1"></a></h2><p>Kou's model assumes asymmetric double exponential jumps in addition to the diffusive risk <img src="cf2americanHelp_eq24873.png" alt="$\sigma$">. We will compare American put and call option prices for different strikes and maturity of nine months. As we have to hand the CF of a return distribution to <tt>cf2american</tt>, we initialize the spot asset with 1, i.e. log spot to 0.</p><pre class="codeinput">S0          = 100;
+K           = [45:5:155]';
+k           = K/S0;
+par.rf      = 0.05;
+par.q       = 0.04;
+par.x0      = 0;
+par.sigma   = 0.20;
+par.lambda  = 0.20;
+par.pUp     = 0.40;
+par.mUp     = 0.10;
+par.mDown   = -0.15;
+tau         = 0.75;
+cf          = @(u,tau) cflib(u,tau,par,<span class="string">'Kou'</span>);
+</pre><p>As usual, we make sure that the characteristic function returns the zero bond price and the discounted forward value of the underlying:</p><pre class="codeinput">[cf([0 -i],tau).' ; exp(-par.rf*tau) exp(-par.q*tau)];
+</pre><p>We will now recover the American put and call options for the strikes in <tt>K</tt>:</p><pre class="codeinput"><span class="keyword">for</span> n = 1:length(K)
+PAmerican(n,:)= S0*cf2american(cf,k(n),tau,<span class="string">'Put'</span>);
+CAmerican(n,:)= S0*cf2american(cf,k(n),tau,<span class="string">'Call'</span>);
+<span class="keyword">end</span>
+</pre><p>In order to assess the early exercise premium, we also compute the European call option prices and recover the puts via put-call-parity:</p><pre class="codeinput">CEuropean   = S0*cf2call(@(u) cf(u,tau),struct(<span class="string">'K'</span>,k));
+PEuropean   = CEuropean + K*cf(0,tau) - S0*cf(-i,tau);
+</pre><p>Let us inspect the early exercise premium visually:</p><pre class="codeinput">subplot(2,1,1);
+plot(K,[CEuropean,CAmerican],K,max(S0-K,0));
+legend(<span class="string">'European'</span>,<span class="string">'American'</span>,<span class="string">'American no-arb bound'</span>);
+title(<span class="string">'American vs. European call options'</span>);
+xlabel(<span class="string">'strike'</span>),ylabel(<span class="string">'option price'</span>);
+subplot(2,1,2);
+plot(K,[PEuropean,PAmerican],K,max(K-S0,0));
+legend(<span class="string">'European'</span>,<span class="string">'American'</span>,<span class="string">'American no-arb bound'</span>,<span class="string">'location'</span>,<span class="string">'NorthWest'</span>);
+title(<span class="string">'American vs. European put options'</span>);
+xlabel(<span class="string">'strike'</span>),ylabel(<span class="string">'option price'</span>);
+</pre><img vspace="5" hspace="5" src="cf2americanHelp_01.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% cf2american
+% Compute American option prices from characteristic function of asset 
+% return distribution. Part of the <Main.html CFH Toolbox>.
+%
+% *Syntax*
+%
+%   V = CF2AMERICAN(CF,K,TAU,TYPE)
+%   [V D] = CF2AMERICAN(CF,K,TAU,TYPE)
+%   [V D] = CF2AMERICAN(CF,K,TAU,TYPE,AUX)
+%
+% Given a characteristic function |CF| of an asset's return distribution,
+% |cf2american| returns |V|, the prices of American options of the 
+% |type='put'| or |'type'=call'| for the strike specified in the scalar |K|
+% for a maturity |TAU|. |D| is the option delta.
+%
+% *Input Arguments*
+%
+% The characteristic function |CF| should expect the real arguments |u|,
+% and return function values of the same size. The function must correspond 
+% to the return distribution of an i.i.d. return process, i.e. it must be 
+% from the class of Lévy models. Models such as the Heston model, or models 
+% with stochastic factor dynamics can not be solved via |cf2american|.
+%
+% |AUX| is a structure containing optional parameters for the Fourier transform
+% 
+% * |aux.NFFT| denotes the number of points for FRFT evaluation, default 8192
+% * |aux.NSTEP| number of time steps until maturity, default 500
+% * |aux.damp| damping coefficient of the transform, default 2
+% * |aux.xLimit| the span of the log return range is |0+/-0.5*xLimit|,
+% default |max(3,3*TAU)|
+%
+%% *Example 1: Kou's model*
+%
+% Kou's model assumes asymmetric double exponential jumps in addition to
+% the diffusive risk $\sigma$. We will compare American put and call option 
+% prices for different strikes and maturity of nine months. As we have to 
+% hand the CF of a return distribution to |cf2american|, we initialize the 
+% spot asset with 1, i.e. log spot to 0.
+S0          = 100;
+K           = [45:5:155]';
+k           = K/S0;
+par.rf      = 0.05;
+par.q       = 0.04;
+par.x0      = 0;
+par.sigma   = 0.20;
+par.lambda  = 0.20;
+par.pUp     = 0.40;
+par.mUp     = 0.10;
+par.mDown   = -0.15;
+tau         = 0.75;
+cf          = @(u,tau) cflib(u,tau,par,'Kou');
+%%
+% As usual, we make sure that the characteristic function returns the zero
+% bond price and the discounted forward value of the underlying:
+[cf([0 -i],tau).' ; exp(-par.rf*tau) exp(-par.q*tau)];
+%%
+% We will now recover the American put and call options for the strikes in 
+% |K|:
+for n = 1:length(K)
+PAmerican(n,:)= S0*cf2american(cf,k(n),tau,'Put');
+CAmerican(n,:)= S0*cf2american(cf,k(n),tau,'Call');
+end
+%%
+% In order to assess the early exercise premium, we also compute the
+% European call option prices and recover the puts via put-call-parity:
+CEuropean   = S0*cf2call(@(u) cf(u,tau),struct('K',k));
+PEuropean   = CEuropean + K*cf(0,tau) - S0*cf(-i,tau);
+%%
+% Let us inspect the early exercise premium visually:
+subplot(2,1,1);
+plot(K,[CEuropean,CAmerican],K,max(S0-K,0));
+legend('European','American','American no-arb bound');
+title('American vs. European call options');
+xlabel('strike'),ylabel('option price');
+subplot(2,1,2);
+plot(K,[PEuropean,PAmerican],K,max(K-S0,0));
+legend('European','American','American no-arb bound','location','NorthWest');
+title('American vs. European put options');
+xlabel('strike'),ylabel('option price');
+##### SOURCE END #####
+--></body></html>

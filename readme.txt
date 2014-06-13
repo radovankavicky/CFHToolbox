@@ -1,4 +1,4 @@
-CFH Toolbox v. 1.2
+CFH Toolbox
 Matthias Held (matthias.held@whu.edu)
 
 A collection of characteristic function transform methods in finance. It 
@@ -19,7 +19,7 @@ instructions, type
 at the Matlab prompt.
 
 Version history:
-
+1.4 - added American options for Lévy processes; spread option pricing
 1.3 - added extended transform functions
 1.2 - added Kou's model
 1.1 - added FFT methods to the conditional expectation function.

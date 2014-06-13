@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>cf2call</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-07"><meta name="DC.source" content="cf2callHelp.m"><style type="text/css">
+      --><title>cf2call</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-13"><meta name="DC.source" content="cf2callHelp.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -82,6 +82,7 @@ rho         = -0.7;
 </pre><p>Translating this into the fields of the <tt>par</tt> structure required by <a href="cflib.html"><tt>cflib</tt></a>, we obtain</p><pre class="codeinput">par.x0      = x0;
 par.v0      = v0;
 par.rf      = rf;
+par.q       = 0;
 par.kappa   = kappaV;
 par.theta   = thetaV;
 par.sigma   = sigmaV;
@@ -120,17 +121,12 @@ legend(<span class="string">'Arbitrage bounds'</span>,<span class="string">'Blac
 xlim([80 120]);
 xlabel(<span class="string">'Strike'</span>);
 ylabel(<span class="string">'Option Price'</span>);
-</pre><img vspace="5" hspace="5" src="cf2callHelp_03.png" alt=""> <h2><b>Example 4 Option Greeks</b><a name="8"></a></h2><p>In this example, we will compute the <i>greeks</i> of options, i.e. change in the option price for a small change in an underlying variable. Let us begin with the <img src="cf2callHelp_eq07716.png" alt="$\Delta$"> of an option, which is given by</p><p><img src="cf2callHelp_eq97925.png" alt="$\Delta = \frac{\partial C}{\partial S}$"></p><p>A close look at the Carr/Madan option pricing formula from example 1 reveals that the derivative of the option price with respect to the underlying is</p><p><img src="cf2callHelp_eq97925.png" alt="$\Delta = \frac{\partial C}{\partial S}$"></p><p>$ = \frac{\exp(-\alpha k)}{S\pi}\int_0^{\infty}\exp(-ivk) \frac{i*(v-(\alpha+1)i)*\phi(v-(\alpha+1)i)}{\alpha^2+\alpha-v^2+i(2\alpha+1)v}dv$</p><p>thus we can employ the call option pricing function <tt>cf2call</tt> to evaluate the option delta by simply handing a different characteristic function</p><p><img src="cf2callHelp_eq58370.png" alt="$\phi_{\Delta}(u)=i*u*\phi(u)$">:</p><pre class="codeinput">cfDelta     = @(u) exp(-x0)*i*u.*cfBS(u)
-</pre><pre class="codeoutput">
-cfDelta = 
-
-    @(u)exp(-x0)*i*u.*cfBS(u)
-
+</pre><img vspace="5" hspace="5" src="cf2callHelp_03.png" alt=""> <h2><b>Example 4 Option Greeks</b><a name="8"></a></h2><p>In this example, we will compute the <i>greeks</i> of options, i.e. change in the option price for a small change in an underlying variable. Let us begin with the <img src="cf2callHelp_eq07716.png" alt="$\Delta$"> of an option, which is given by</p><p><img src="cf2callHelp_eq97925.png" alt="$\Delta = \frac{\partial C}{\partial S}$"></p><p>A close look at the Carr/Madan option pricing formula from example 1 reveals that the derivative of the option price with respect to the underlying is</p><p><img src="cf2callHelp_eq97925.png" alt="$\Delta = \frac{\partial C}{\partial S}$"></p><p>$ = \frac{\exp(-\alpha k)}{S\pi}\int_0^{\infty}\exp(-ivk) \frac{i*(v-(\alpha+1)i)*\phi(v-(\alpha+1)i)}{\alpha^2+\alpha-v^2+i(2\alpha+1)v}dv$</p><p>thus we can employ the call option pricing function <tt>cf2call</tt> to evaluate the option delta by simply handing a different characteristic function</p><p><img src="cf2callHelp_eq58370.png" alt="$\phi_{\Delta}(u)=i*u*\phi(u)$">:</p><pre class="codeinput">cfDelta     = @(u) exp(-x0)*i*u.*cfBS(u);
 </pre><p>Within the discretely spaced strike range <tt>K=[40:160]</tt>, we obtain</p><pre class="codeinput">Delta       = cf2call(cfDelta,aux);
-</pre><p>Just to make sure, compare the result with the theoretical <img src="cf2callHelp_eq07716.png" alt="$\Delta$"></p><pre class="codeinput">plot(K,Delta,<span class="string">'ro'</span>,K,blsdelta(S0,K,rf,tau,sigma,0),<span class="string">'b'</span>)
+</pre><p>Just to make sure, compare the result with the theoretical <img src="cf2callHelp_eq07716.png" alt="$\Delta$"></p><pre class="codeinput">plot(K,Delta,<span class="string">'ro'</span>,K,blsdelta(S0,K,rf,tau,sigma,0),<span class="string">'b'</span>);
 </pre><img vspace="5" hspace="5" src="cf2callHelp_04.png" alt=""> <p>In the same way, we can compute the option's <img src="cf2callHelp_eq08278.png" alt="$\Gamma$">, which is</p><p><img src="cf2callHelp_eq92990.png" alt="$\Gamma=\frac{\partial^2C}{\partial S^2}$"></p><p>using the corresponding characteristic function:</p><p><img src="cf2callHelp_eq34890.png" alt="$\phi_{\Gamma}= -\frac{1}{S^2}(iu+u^2)\phi(u)$"></p><pre class="codeinput">cfGamma     = @(u) -exp(-2*x0)*(i*u+u.^2).*cfBS(u);
 Gamma       = cf2call(cfGamma,aux);
-</pre><p>Just to make sure, compare the result with the theoretical <img src="cf2callHelp_eq08278.png" alt="$\Gamma$"></p><pre class="codeinput">plot(K,Gamma,<span class="string">'ro'</span>,K,blsgamma(S0,K,rf,tau,sigma,0),<span class="string">'b'</span>)
+</pre><p>Just to make sure, compare the result with the theoretical <img src="cf2callHelp_eq08278.png" alt="$\Gamma$"></p><pre class="codeinput">plot(K,Gamma,<span class="string">'ro'</span>,K,blsgamma(S0,K,rf,tau,sigma,0),<span class="string">'b'</span>);
 </pre><img vspace="5" hspace="5" src="cf2callHelp_05.png" alt=""> <h2><b>Example 5: Greeks of Bates Model with stochastic intensity</b><a name="13"></a></h2><p>Let us come back to example 3 above, where we assumed stochastic volatility and normally distributed return jumps with stochastic jump intensity. We are interested in the derivative of the option price with respect to</p><div><ul><li>the spot price <img src="cf2callHelp_eq68961.png" alt="$S$"></li><li>the spot variance level <img src="cf2callHelp_eq77996.png" alt="$v$"></li><li>the spot intensity <img src="cf2callHelp_eq23351.png" alt="$\lambda$"></li></ul></div><p>In the spirit of example 4, we note that all we have to do is to pre-multiply the characteristic function <img src="cf2callHelp_eq73866.png" alt="$\phi(u)$"> with that component <img src="cf2callHelp_eq57784.png" alt="$\beta(u)$"> that corresponds to our variable of interest. If we are interested in <img src="cf2callHelp_eq07716.png" alt="$\Delta$">, we have to divide by <img src="cf2callHelp_eq68961.png" alt="$S$"> to obtain the final greek.</p><p>Here we require a simple function that returns the first derivatives of our characteristic function with respect to the spot levels:</p><pre class="language-matlab"><span class="keyword">function</span> out = cfTemp(cf,u,k)
 [out1, ~, out2]  = cf(u);
 out = out1.*out2(k,:);
@@ -138,15 +134,15 @@ out = out1.*out2(k,:);
 </pre><p><tt>cfTemp</tt> <i>knows</i> that <tt>cf</tt> returns three outputs: the characterstic function <tt>cf(u)</tt> and the corresponding exponential constant  <img src="cf2callHelp_eq32073.png" alt="$\alpha(u)$"> the vector <img src="cf2callHelp_eq57784.png" alt="$\beta(u)$">. See <a href="Main.html">Theory</a> for details.</p><p>Let us now evaluate the resulting greeks:</p><pre class="codeinput">DeltaSBates     = cf2call(@(u) cfTemp(cfBates,u,1),aux)/S0;
 DeltaVBates     = cf2call(@(u) cfTemp(cfBates,u,2),aux);
 DeltaLBates     = cf2call(@(u) cfTemp(cfBates,u,3),aux);
-subplot(3,1,1)
-plot(K,DeltaSBates)
-title(<span class="string">'Bates Model \Delta'</span>)
-subplot(3,1,2)
-plot(K,DeltaVBates)
-title(<span class="string">'Bates Model Derivative with respect to the spot variance level'</span>)
-subplot(3,1,3)
-plot(K,DeltaLBates)
-title(<span class="string">'Bates Model Derivative with respect to the spot intensity level'</span>)
+subplot(3,1,1);
+plot(K,DeltaSBates);
+title(<span class="string">'Bates Model \Delta'</span>);
+subplot(3,1,2);
+plot(K,DeltaVBates);
+title(<span class="string">'Bates Model Derivative with respect to the spot variance level'</span>);
+subplot(3,1,3);
+plot(K,DeltaLBates);
+title(<span class="string">'Bates Model Derivative with respect to the spot intensity level'</span>);
 </pre><img vspace="5" hspace="5" src="cf2callHelp_06.png" alt=""> <h2><b>Example 6: Multiple strikes / maturities</b><a name="14"></a></h2><p>In this example, we show how to compute option prices for different strike-maturity combinations in one go. Assume that the underlying security is valued at 100 USD today, and we are interested in call option prices for the following strike-maturity set:</p><p>
 <table border=1 width=350>
 <tr>
@@ -191,9 +187,9 @@ K           = [95 94 93 92 90 ;
 </pre><pre class="codeoutput">
 C =
 
-    6.3311    9.3630   12.6840   17.5476   25.3953
-    3.1068    5.7038    8.5326   12.9880   20.0154
-    1.1938    2.4975    4.3447    8.5270   17.6624
+       6.3311        9.363       12.684       17.548       25.395
+       3.1068       5.7038       8.5326       12.988       20.015
+       1.1938       2.4975       4.3447        8.527       17.662
 
 </pre><p class="footer"><br>
       Published with MATLAB&reg; 7.14<br></p></div><!--
@@ -300,6 +296,7 @@ rho         = -0.7;
 par.x0      = x0;
 par.v0      = v0;
 par.rf      = rf;
+par.q       = 0;
 par.kappa   = kappaV;
 par.theta   = thetaV;
 par.sigma   = sigmaV;
@@ -386,13 +383,13 @@ ylabel('Option Price');
 % the option delta by simply handing a different characteristic function
 %
 % $\phi_{\Delta}(u)=i*u*\phi(u)$:
-cfDelta     = @(u) exp(-x0)*i*u.*cfBS(u)
+cfDelta     = @(u) exp(-x0)*i*u.*cfBS(u);
 %%
 % Within the discretely spaced strike range |K=[40:160]|, we obtain 
 Delta       = cf2call(cfDelta,aux);
 %%
 % Just to make sure, compare the result with the theoretical $\Delta$
-plot(K,Delta,'ro',K,blsdelta(S0,K,rf,tau,sigma,0),'b')
+plot(K,Delta,'ro',K,blsdelta(S0,K,rf,tau,sigma,0),'b');
 %%
 % In the same way, we can compute the option's $\Gamma$, which is
 %
@@ -405,7 +402,7 @@ cfGamma     = @(u) -exp(-2*x0)*(i*u+u.^2).*cfBS(u);
 Gamma       = cf2call(cfGamma,aux);
 %%
 % Just to make sure, compare the result with the theoretical $\Gamma$
-plot(K,Gamma,'ro',K,blsgamma(S0,K,rf,tau,sigma,0),'b')
+plot(K,Gamma,'ro',K,blsgamma(S0,K,rf,tau,sigma,0),'b');
 %% *Example 5: Greeks of Bates Model with stochastic intensity*
 % 
 % Let us come back to example 3 above, where we assumed stochastic
@@ -439,15 +436,15 @@ plot(K,Gamma,'ro',K,blsgamma(S0,K,rf,tau,sigma,0),'b')
 DeltaSBates     = cf2call(@(u) cfTemp(cfBates,u,1),aux)/S0;
 DeltaVBates     = cf2call(@(u) cfTemp(cfBates,u,2),aux);
 DeltaLBates     = cf2call(@(u) cfTemp(cfBates,u,3),aux);
-subplot(3,1,1)
-plot(K,DeltaSBates)
-title('Bates Model \Delta')
-subplot(3,1,2)
-plot(K,DeltaVBates)
-title('Bates Model Derivative with respect to the spot variance level')
-subplot(3,1,3)
-plot(K,DeltaLBates)
-title('Bates Model Derivative with respect to the spot intensity level')
+subplot(3,1,1);
+plot(K,DeltaSBates);
+title('Bates Model \Delta');
+subplot(3,1,2);
+plot(K,DeltaVBates);
+title('Bates Model Derivative with respect to the spot variance level');
+subplot(3,1,3);
+plot(K,DeltaLBates);
+title('Bates Model Derivative with respect to the spot intensity level');
 %% *Example 6: Multiple strikes / maturities*
 % 
 % In this example, we show how to compute option prices for different

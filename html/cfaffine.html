@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>cfaffine</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-07"><meta name="DC.source" content="cfaffineHelp.m"><style type="text/css">
+      --><title>cfaffine</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-13"><meta name="DC.source" content="cfaffineHelp.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -69,6 +69,7 @@ H0          = sigma^2;
 R0          = rf;
 </pre><p>we obtain the characteristic function</p><pre class="codeinput">cfNumerical = @(u) cfaffine(u,x0,tau,K0,[],H0,[],R0);
 </pre><p>We will compare the numerically obtained characteristic function to its analytical counterpart:</p><pre class="codeinput">par.rf      = rf;
+par.q       = 0;
 par.sigma   = sigma;
 par.x0      = x0;
 cfTheory    = @(u) cflib(u,tau,par,<span class="string">'BS'</span>);
@@ -99,19 +100,19 @@ cf(-i*u0)
 </pre><pre class="codeoutput">
 ans =
 
-    0.9512  100.0000  110.0000
+      0.95123          100          110
 
 </pre><p>We will now write the payoff in a more comprehensible form and price its components. Let <img src="cfaffineHelp_eq63904.png" alt="$x=\log(X),y=log(Y)$">:</p><p><img src="cfaffineHelp_eq07369.png" alt="$P_0 = E(e^{-r_f\tau}\max(X_T,Y_T))$"></p><p><img src="cfaffineHelp_eq52102.png" alt="$=E(e^{-r_f\tau}X_T) + E(e^{-r_f\tau}\max(Y_T-X_T,0))$"></p><p><img src="cfaffineHelp_eq08712.png" alt="$=E(e^{-r_f\tau}X_T) + E(e^{-r_f\tau}Y_T1_{Y_T\geq X_T}) - E(e^{-r_f\tau}X_T1_{Y_T\geq X_T})$"></p><p>We can compute each component using the function <a href="cf2gaby.html"><tt>cf2gaby</tt></a> which takes the discounted characteristic function as an input and computes expectations of the type</p><p><img src="cfaffineHelp_eq17314.png" alt="$G(a,b,y)=E(\exp(-\int_{0}^{T}R(X_t)dt)\exp(a^Tx_T)1_{bx_T\leq y})$"></p><p>where the vector <img src="cfaffineHelp_eq54336.png" alt="$x_T$"> denotes the state variables. We find that the first summand is just the risk-neutral expectation of <img src="cfaffineHelp_eq77038.png" alt="$X_T$">. If there are no dividends present, this is <img src="cfaffineHelp_eq05032.png" alt="$X_0$">, else we would have to compute <tt>cf(-i*[1;0])</tt>. The second summand is <img src="cfaffineHelp_eq97142.png" alt="$G([0,1]^T,[1,-1]^T,0)$">. The last part is <img src="cfaffineHelp_eq63254.png" alt="$-G([1,0]^T,[1,-1]^T,0)$">.</p><p>Combining these, we obtain</p><pre class="codeinput">cf(-i*[1;0]) + cf2gaby(cf,[0;1],[1;-1],0) - cf2gaby(cf,[1;0],[1;-1],0)
 </pre><pre class="codeoutput">
 ans =
 
-  111.3957
+        111.4
 
 </pre><p>As a check, we perform the exact same analysis, starting at asset <img src="cfaffineHelp_eq89373.png" alt="$Y_T$">:</p><pre class="codeinput">cf(-i*[0;1]) + cf2gaby(cf,[1;0],[-1;1],0) - cf2gaby(cf,[0;1],[-1;1],0)
 </pre><pre class="codeoutput">
 ans =
 
-  111.3957
+        111.4
 
 </pre><p>which yields the same result.</p><h2><b>Example 3: Multiple jumps</b><a name="13"></a></h2><p><tt>cfaffine</tt> can also handle a process with multiple jumps. Let slightly change the last example and introduce two jump processes. For easy of exposition, we assume that the first asset <img src="cfaffineHelp_eq85018.png" alt="$X_t$"> is solely influenced by jumps in <img src="cfaffineHelp_eq33559.png" alt="$dZ_1$"> and <img src="cfaffineHelp_eq27410.png" alt="$Y_t$"> is driven by both jump components:</p><p><img src="cfaffineHelp_eq01690.png" alt="$dx = (r_f - \frac{1}{2}\sigma_x^2 - \Lambda_1m_{1,x})dt + \sigma_xdW_1 + J_{1,x}dZ_1$"></p><p><img src="cfaffineHelp_eq14641.png" alt="$dy = (r_f - \frac{1}{2}\sigma_y^2 -\Lambda_1m_{1,y}-\Lambda_2m_{2,y})dt + \sigma_ydW_2 + J_{1,y}dZ_1 + J_{2,y}dZ_2$"></p><p>where <img src="cfaffineHelp_eq79840.png" alt="$-\Lambda_im_{i,j}$"> denotes the risk neutral jump compensation of asset <img src="cfaffineHelp_eq31413.png" alt="$j$"> with respect to jump process <img src="cfaffineHelp_eq28128.png" alt="$i$">. We will assume no constant intensity offsets, i.e. <img src="cfaffineHelp_eq83677.png" alt="$\Lambda_i(X_t) = \lambda_{i,t}$"> with</p><p><img src="cfaffineHelp_eq59265.png" alt="$d\lambda_1 = \kappa_1(\theta_1 - \lambda_1)dt + \sigma_{11}\sqrt{\lambda_1}dW_3$"></p><p><img src="cfaffineHelp_eq77587.png" alt="$d\lambda_2 = \kappa_2(\theta_2 - \lambda_2)dt + \sigma_{21}\sqrt{\lambda_1}dW_3 + \sigma_{22}\sqrt{\lambda_2}dW_4$"></p><p>(Technically, we would have to make sure that the second intensity cannot drop below zero.)</p><p>Further, we let the first jump distribution be bivariate normally distributed and the second is assumed to be a non-negative exponential jump</p><p><img src="cfaffineHelp_eq93420.png" alt="$J_1 \sim N(\mu_1,\Sigma_1)$"></p><p><img src="cfaffineHelp_eq28566.png" alt="$J_{2,} \sim Exp(\mu_2)$"></p><p>Translate this model into the coefficients of <tt>cfaffine</tt>:</p><p>Raw specification</p><pre class="codeinput">rf          = 0.05;
 tau         = 1;
@@ -166,19 +167,19 @@ cf(u0)./[exp(-rf*tau) X0 Y0]
 </pre><pre class="codeoutput">
 ans =
 
-    1.0000    1.0000    1.0000
+            1            1            1
 
 </pre><p>As above, we will use the function <a href="cf2gaby.html"><tt>cf2gaby</tt></a> to price the maximum option:</p><pre class="codeinput">cf(-i*[1;0;0;0]) + cf2gaby(cf,[0;1;0;0],[1;-1;0;0],0) - cf2gaby(cf,[1;0;0;0],[1;-1;0;0],0)
 </pre><pre class="codeoutput">
 ans =
 
-  120.6305
+       120.63
 
 </pre><p>As a check, we perform the exact same analysis, starting at asset <img src="cfaffineHelp_eq89373.png" alt="$Y_T$">:</p><pre class="codeinput">cf(-i*[0;1;0;0]) + cf2gaby(cf,[1;0;0;0],[-1;1;0;0],0) - cf2gaby(cf,[0;1;0;0],[-1;1;0;0],0)
 </pre><pre class="codeoutput">
 ans =
 
-  120.6305
+       120.63
 
 </pre><p>which yields the same result.</p><p class="footer"><br>
       Published with MATLAB&reg; 7.14<br></p></div><!--
@@ -250,6 +251,7 @@ cfNumerical = @(u) cfaffine(u,x0,tau,K0,[],H0,[],R0);
 % We will compare the numerically obtained characteristic function to its
 % analytical counterpart:
 par.rf      = rf;
+par.q       = 0;
 par.sigma   = sigma;
 par.x0      = x0;
 cfTheory    = @(u) cflib(u,tau,par,'BS');

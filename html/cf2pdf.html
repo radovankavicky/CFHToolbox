@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>cf2pdf</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-07"><meta name="DC.source" content="cf2pdfHelp.m"><style type="text/css">
+      --><title>cf2pdf</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-13"><meta name="DC.source" content="cf2pdfHelp.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,6 +66,7 @@ cfB= @(u) exp(-rf*tau + u*i*x0 + i*u*(rf-1/2*sigma^2)*tau - 1/2*u.^2*sigma^2*tau
 [fB xB] = cf2pdf(cfB);
 plot(xB,fB)
 </pre><img vspace="5" hspace="5" src="cf2pdfHelp_01.png" alt=""> <h2><b>Example 2: Heston's Stochastic volatility model with Merton style jumps</b><a name="2"></a></h2><p>In this framework, the process dynamics are:</p><p><img src="cf2pdfHelp_eq29589.png" alt="$dy = (r_f - \frac{1}{2}v_t-\lambda m)dt + \sqrt{v_t}dW_1 + JdZ$"></p><p><img src="cf2pdfHelp_eq40386.png" alt="$dv = \kappa(\theta-v_t)dt + \sigma\sqrt{v_t}dW_2$"></p><p><img src="cf2pdfHelp_eq42180.png" alt="$E(dW1dW2)=\rho dt$"></p><p>and <img src="cf2pdfHelp_eq81664.png" alt="$dZ$"> is a Poisson jump process with constant intensity <img src="cf2pdfHelp_eq23351.png" alt="$\lambda$">.</p><p>The drift adjustment is <img src="cf2pdfHelp_eq17709.png" alt="$m = E(e^J-1)$">, where the jump distribution is normal <img src="cf2pdfHelp_eq75241.png" alt="$N(\mu_J,\sigma_J)$"></p><p>The corresponding characteristic function is part of the <a href="cflib.html"><tt>cflib</tt></a> toolbox:</p><pre class="codeinput">par.rf      = 0.05;
+par.q       = 0;
 par.kappa   = 0.85;
 par.theta   = 0.25^2;
 par.sigma   = 0.10;
@@ -181,6 +182,7 @@ plot(xB,fB)
 % The corresponding characteristic function is part of the <cflib.html
 % |cflib|> toolbox:
 par.rf      = 0.05;
+par.q       = 0;
 par.kappa   = 0.85;
 par.theta   = 0.25^2;
 par.sigma   = 0.10;

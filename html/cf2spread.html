@@ -1,0 +1,213 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>cf2spread</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-13"><meta name="DC.source" content="cf2spreadHelp.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>cf2spread</h1><!--introduction--><p>Compute spread option prices on the difference between to assets' price levels. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">C = CF2SPREAD(CF,K)
+[C P] = CF2SPREAD(CF,K)
+[C P] = CF2SPREAD(CF,K,AUX)
+</pre><p>Given a bivariate characteristic function <tt>CF</tt> of two assets' future levels, <tt>cf2spread</tt> returns <tt>C</tt>, the price of spread call options written on the difference between the future asset prices <tt>S1</tt> and <tt>S2</tt> with strikes in the vector <tt>K</tt>. <tt>P</tt> is the array of corresponding spread put option prices. The spread call pays <img src="cf2spreadHelp_eq93828.png" alt="$C_T=max(S_1-S_2-K,0)$">, the put pays <img src="cf2spreadHelp_eq09431.png" alt="$P_T=max(K-(S_1-S_2),0)$">.</p><p><b>Input Arguments</b></p><p>The characteristic function <tt>CF</tt> should expect the real arguments <tt>u,v</tt>, both of dimension <tt>NxN</tt>, and return function values of the same size.</p><p><tt>aux</tt> is a structure containing optional parameters for the Fourier transform</p><div><ul><li><tt>aux.N</tt> number of FFT evaluation points in each dimension, default 1024</li><li><tt>aux.uMax</tt> upper and lower limit of integration in the image space, default 200</li><li><tt>aux.x1Limit</tt> log price range around the discounted forward level of <tt>S1</tt>, default <tt>3</tt></li><li><tt>aux.x2Limit</tt> log price range around the discounted forward level of <tt>S2</tt>, default <tt>3</tt></li></ul></div><p>If aux.N exceeds the available memory, the function <tt>cf2spread</tt> throws an error and quits. For longer maturities, set <tt>aux.x1Limit</tt> and <tt>aux.x1Limit</tt> to higher values in order to sample from the whole space of future asset prices, say <tt>aux.x1Limit=3*MATURITY/N</tt>.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1"><b>Example: Spread option on assets with stochastic volatility</b></a></li></ul></div><h2><b>Example: Spread option on assets with stochastic volatility</b><a name="1"></a></h2><p>We assume two stocks <img src="cf2spreadHelp_eq11580.png" alt="$S_1,S_2$"> whose log returns <img src="cf2spreadHelp_eq47076.png" alt="$s_1,s_2$"> follow a multivariate Heston model:</p><p><img src="cf2spreadHelp_eq61903.png" alt="$ds_1 = (r_f - \frac{1}{2}v_t)dt + \sqrt{v_t}(\rho_1dW_1+\sqrt{1-\rho_1^2}dW_2)$"></p><p><img src="cf2spreadHelp_eq43058.png" alt="$ds_2 = (r_f - \frac{1}{2}w_t)dt + \sqrt{w_t}(\rho_2dW_3+\sqrt{1-\rho_2^2}dW_4)$"></p><p><img src="cf2spreadHelp_eq07153.png" alt="$dv = \kappa_v(\theta_v-v_t)dt + \sigma_v\sqrt{v_t}dW_1$"></p><p><img src="cf2spreadHelp_eq32230.png" alt="$dw = \kappa_w(\theta_w-w_t)dt + \sigma_w\sqrt{w_t}dW_3$"></p><p>Let us assume the following parameters:</p><pre class="codeinput">rf          = 0.05;
+tau         = 1;
+S1          = 100;
+S2          = 105;
+s1          = log(S1);
+s2          = log(S2);
+rho1        = 0.45;
+rho2        = 0.65;
+kV          = 1.4;
+tV          = 0.20^2;
+sV          = 0.10;
+v0          = 0.22^2;
+kW          = 0.9;
+tW          = 0.30^2;
+sW          = 0.07;
+w0          = 0.27^2;
+</pre><p>Translate these parameters into AJD coefficients (see <a href="main.html">Theory</a> for details):</p><pre class="codeinput">x0          = [s1 s2 v0 w0]';
+K0          = [rf ; rf ; kV*tV ; kW*tW];
+K1          = [0 0 -1/2 0 ; 0 0 0 -1/2; 0 0 -kV 0 ; 0 0 0 -kW];
+H0          = zeros(4);
+H1          = zeros(4,4,4);
+H1(:,:,3)   = [1 0 rho1*sV 0 ; 0 0 0 0 ; rho1*sV 0 sV^2 0 ; 0 0 0 0];
+H1(:,:,4)   = [0 0 0 0 ; 0 1 0 rho2*sW ; 0 0 0 0 ; 0 rho2*sW 0 sW^2];
+R0          = rf;
+</pre><p>The corresponding bivariate characteristic function can be recovered via the function <a href="cfaffine.html"><tt>cfaffine</tt></a> and some minor tweaking. We will employ a little 'hack' in <a href="cfaffine.html"><tt>cfaffine</tt></a>: As we know that it cannot handle multidimensional inputs too well (vectors are a maximum), we improve its speed a bit by setting the number of time steps per maturity to a lower value than its standard value of 200. The resulting error is comparably small.</p><pre class="codeinput">cf          = @(u,v) cfaffine([1 0 0 0]'*u+[0 1 0 0]'*v,x0,tau,K0,K1,H0,H1,R0,[],[],[],[],1,15);
+</pre><p>As we know from above, <a href="cfaffine.html"><tt>cfaffine</tt></a> cannot handle two-dimensional inputs too well, unfortunately. Thus, we have to invent a temporary function that evaluates the <tt>UxV</tt> array of arguments row-wise and returns an array of function evaluations of the same size:</p><pre class="language-matlab"><span class="keyword">function</span> out = cfTemp2(cf,u,v)
+<span class="keyword">for</span> k = 1:length(u);
+    out(k,:) = cf(u(k,:),v(k,:));
+<span class="keyword">end</span>
+</pre><p>We will employ <tt>cf2spread</tt> with a slightly reduced number of evaluation points in order to cope with the fact that cfTemp2 is rather slow.</p><pre class="codeinput">K           = [-40:1:40]';
+[C P ]      = cf2spread(@(u,v) cfTemp2(cf,u,v),K,struct(<span class="string">'N'</span>,2^9));
+plot(K,[C P]);
+legend(<span class="string">'spread calls'</span>,<span class="string">'spread puts'</span>);
+xlabel(<span class="string">'strike'</span>);
+ylabel(<span class="string">'option prices'</span>);
+title(<span class="string">'Spread option prices in a multivariate Heston framework'</span>);
+</pre><img vspace="5" hspace="5" src="cf2spreadHelp_01.png" alt=""> <p>Note that we could easily accomodate for additional factors, stochastic interest rates, etc. in this framework.</p><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% cf2spread
+% Compute spread option prices on the difference between to assets' price
+% levels. Part of the <Main.html CFH Toolbox>.
+%
+% *Syntax*
+%
+%   C = CF2SPREAD(CF,K)
+%   [C P] = CF2SPREAD(CF,K)
+%   [C P] = CF2SPREAD(CF,K,AUX)
+%
+% Given a bivariate characteristic function |CF| of two assets' future 
+% levels, |cf2spread| returns |C|, the price of spread call options written
+% on the difference between the future asset prices |S1| and |S2| with
+% strikes in the vector |K|. |P| is the array of corresponding spread put
+% option prices. The spread call pays $C_T=max(S_1-S_2-K,0)$, the put pays
+% $P_T=max(K-(S_1-S_2),0)$.
+%
+% *Input Arguments*
+%
+% The characteristic function |CF| should expect the real arguments |u,v|,
+% both of dimension |NxN|, and return function values of the same size.
+%
+% |aux| is a structure containing optional parameters for the Fourier transform
+% 
+% * |aux.N| number of FFT evaluation points in each dimension, default 1024
+% * |aux.uMax| upper and lower limit of integration in the image space,
+% default 200
+% * |aux.x1Limit| log price range around the discounted forward level of |S1|,
+% default |3|
+% * |aux.x2Limit| log price range around the discounted forward level of |S2|,
+% default |3|
+%
+% If aux.N exceeds the available memory, the function |cf2spread| throws an 
+% error and quits. For longer maturities, set |aux.x1Limit| and |aux.x1Limit|
+% to higher values in order to sample from the whole space of future asset
+% prices, say |aux.x1Limit=3*MATURITY/N|.
+%
+%% *Example: Spread option on assets with stochastic volatility*
+%
+%
+% We assume two stocks $S_1,S_2$ whose log returns $s_1,s_2$ follow a
+% multivariate Heston model:
+%
+% $ds_1 = (r_f - \frac{1}{2}v_t)dt + \sqrt{v_t}(\rho_1dW_1+\sqrt{1-\rho_1^2}dW_2)$
+%
+% $ds_2 = (r_f - \frac{1}{2}w_t)dt + \sqrt{w_t}(\rho_2dW_3+\sqrt{1-\rho_2^2}dW_4)$
+%
+% $dv = \kappa_v(\theta_v-v_t)dt + \sigma_v\sqrt{v_t}dW_1$
+%
+% $dw = \kappa_w(\theta_w-w_t)dt + \sigma_w\sqrt{w_t}dW_3$
+% 
+% Let us assume the following parameters:
+rf          = 0.05;
+tau         = 1;
+S1          = 100;
+S2          = 105;
+s1          = log(S1);
+s2          = log(S2);
+rho1        = 0.45;
+rho2        = 0.65;
+kV          = 1.4;
+tV          = 0.20^2;
+sV          = 0.10;
+v0          = 0.22^2;
+kW          = 0.9;
+tW          = 0.30^2;
+sW          = 0.07;
+w0          = 0.27^2;
+%%
+% Translate these parameters into AJD coefficients (see <main.html
+% Theory> for details):
+x0          = [s1 s2 v0 w0]';
+K0          = [rf ; rf ; kV*tV ; kW*tW];
+K1          = [0 0 -1/2 0 ; 0 0 0 -1/2; 0 0 -kV 0 ; 0 0 0 -kW];
+H0          = zeros(4);
+H1          = zeros(4,4,4);
+H1(:,:,3)   = [1 0 rho1*sV 0 ; 0 0 0 0 ; rho1*sV 0 sV^2 0 ; 0 0 0 0];
+H1(:,:,4)   = [0 0 0 0 ; 0 1 0 rho2*sW ; 0 0 0 0 ; 0 rho2*sW 0 sW^2];
+R0          = rf;
+%%
+% The corresponding bivariate characteristic function can be recovered via 
+% the function <cfaffine.html |cfaffine|> and some minor tweaking. We will
+% employ a little 'hack' in <cfaffine.html |cfaffine|>: As we know that it 
+% cannot handle multidimensional inputs too well (vectors are a maximum), 
+% we improve its speed a bit by setting the number of time steps per 
+% maturity to a lower value than its standard value of 200. The resulting
+% error is comparably small.
+cf          = @(u,v) cfaffine([1 0 0 0]'*u+[0 1 0 0]'*v,x0,tau,K0,K1,H0,H1,R0,[],[],[],[],1,15);
+%%
+% As we know from above, <cfaffine.html |cfaffine|> cannot handle 
+% two-dimensional inputs too well, unfortunately. Thus, we have to invent a 
+% temporary function that evaluates the |UxV| array of arguments row-wise 
+% and returns an array of function evaluations of the same size:
+%
+%   function out = cfTemp2(cf,u,v)
+%   for k = 1:length(u);
+%       out(k,:) = cf(u(k,:),v(k,:));
+%   end
+%
+%%
+% We will employ |cf2spread| with a slightly reduced number of evaluation
+% points in order to cope with the fact that cfTemp2 is rather slow.
+K           = [-40:1:40]';
+[C P ]      = cf2spread(@(u,v) cfTemp2(cf,u,v),K,struct('N',2^9));
+plot(K,[C P]);
+legend('spread calls','spread puts');
+xlabel('strike');
+ylabel('option prices');
+title('Spread option prices in a multivariate Heston framework');
+%%
+% Note that we could easily accomodate for additional factors, stochastic
+% interest rates, etc. in this framework.
+##### SOURCE END #####
+--></body></html>

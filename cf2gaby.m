@@ -32,7 +32,7 @@ function [out Y] = cf2gaby(cf,a,b,y,varargin)
 %   C       = cf2gaby(cf,1,-1,-log(K)) - K*cf2gaby(cf,0,-1,-log(K))
 
 %   Author:     matthias.held@web.de
-%   Date:       2015-05-27
+%   Date:       2015-06-11
 
 if ~exist('y');y=[];end
 uMax            = 200;
@@ -110,8 +110,9 @@ if useFFT == 1;
     out             = cf(-i*a(:,1))/2-1/pi*z;
     out             = out(1:nY,:);
 else
+    
     aFun            = @(u) repmat(a,1,size(u,2));
-    cf              = @(u) reshape(cf(u),1,length(u));
+    cf              = @(u) reshape(cf(u),1,size(u,2));
     out             = cf(-i*a)/2;
     out             = out -1/pi*quadgk(@(u) ...
                         imag(cf(-i*aFun(u)+b*u).*exp(-i.*u.*y))./u,0,uMax);    

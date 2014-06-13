@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>cf2gaby</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-07"><meta name="DC.source" content="cf2gabyHelp.m"><style type="text/css">
+      --><title>cf2gaby</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-13"><meta name="DC.source" content="cf2gabyHelp.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -72,13 +72,13 @@ cf2gaby(cf,1,-1,-log(K)) - K*cf2gaby(cf,0,-1,-log(K))
 </pre><pre class="codeoutput">
 ans =
 
-   10.0022
+       10.002
 
 </pre><p>Compare the result using this function with a direct application of the Fast Fourier Transform:</p><pre class="codeinput">cf2call(cf,struct(<span class="string">'x0'</span>,x0,<span class="string">'K'</span>,K))
 </pre><pre class="codeoutput">
 ans =
 
-   10.0022
+       10.002
 
 </pre><h2><b>Example 2: Chooser option (from DPS2000)</b><a name="3"></a></h2><p>Assume that we want to price an option whose payoff is the maximum of two assets <img src="cf2gabyHelp_eq77038.png" alt="$X_T$"> and <img src="cf2gabyHelp_eq89373.png" alt="$Y_T$">, <img src="cf2gabyHelp_eq84989.png" alt="$C_T=max(X_T,Y_T)$">. The log assets have the dynamics:</p><p><img src="cf2gabyHelp_eq78019.png" alt="$dx = (r_f - \frac{1}{2}\sigma_x^2)dt + \sigma_x(\rho_xdW_1 + \sqrt{1-\rho_x^2}dW_2)$"></p><p><img src="cf2gabyHelp_eq47865.png" alt="$dy = (r_f - \frac{1}{2}\sigma_y^2)dt + \sigma_y(\rho_ydW_1 + \sqrt{1-\rho_y^2}dW_2)$"></p><p>Assuming some parameters, we obtain the coefficients:</p><pre class="codeinput">tau         = 1;
 X0          = 100;
@@ -100,19 +100,19 @@ cf(-i*u0)
 </pre><pre class="codeoutput">
 ans =
 
-    0.9512  100.0000  110.0000
+      0.95123          100          110
 
 </pre><p>We will now write the payoff in a more comprehensible form and price its components. Let <img src="cf2gabyHelp_eq63904.png" alt="$x=\log(X),y=log(Y)$">:</p><p><img src="cf2gabyHelp_eq07369.png" alt="$P_0 = E(e^{-r_f\tau}\max(X_T,Y_T))$"></p><p><img src="cf2gabyHelp_eq52102.png" alt="$=E(e^{-r_f\tau}X_T) + E(e^{-r_f\tau}\max(Y_T-X_T,0))$"></p><p><img src="cf2gabyHelp_eq08712.png" alt="$=E(e^{-r_f\tau}X_T) + E(e^{-r_f\tau}Y_T1_{Y_T\geq X_T}) - E(e^{-r_f\tau}X_T1_{Y_T\geq X_T})$"></p><p>We can compute each component using the function <a href="cf2gaby.html"><tt>cf2gaby</tt></a> which takes the discounted characteristic function as an input and computes expectations of the type</p><p><img src="cf2gabyHelp_eq17314.png" alt="$G(a,b,y)=E(\exp(-\int_{0}^{T}R(X_t)dt)\exp(a^Tx_T)1_{bx_T\leq y})$"></p><p>where the vector <img src="cf2gabyHelp_eq54336.png" alt="$x_T$"> denotes the state variables. We find that the first summand is just the risk-neutral expectation of <img src="cf2gabyHelp_eq77038.png" alt="$X_T$">. If there are no dividends present, this is <img src="cf2gabyHelp_eq05032.png" alt="$X_0$">, else we would have to compute <tt>cf(-i*[1;0])</tt>. The second summand is <img src="cf2gabyHelp_eq97142.png" alt="$G([0,1]^T,[1,-1]^T,0)$">. The last part is <img src="cf2gabyHelp_eq63254.png" alt="$-G([1,0]^T,[1,-1]^T,0)$">.</p><p>Combining these, we obtain</p><pre class="codeinput">cf(-i*[1;0]) + cf2gaby(cf,[0;1],[1;-1],0) - cf2gaby(cf,[1;0],[1;-1],0)
 </pre><pre class="codeoutput">
 ans =
 
-  111.3957
+        111.4
 
 </pre><p>As a check, we perform the exact same analysis, starting at asset <img src="cf2gabyHelp_eq89373.png" alt="$Y_T$">:</p><pre class="codeinput">cf(-i*[0;1]) + cf2gaby(cf,[1;0],[-1;1],0) - cf2gaby(cf,[0;1],[-1;1],0)
 </pre><pre class="codeoutput">
 ans =
 
-  111.3957
+        111.4
 
 </pre><p>which yields the same result.</p><h2><b>Example 3: Bond option pricing</b><a name="10"></a></h2><p>In this example, we will follow the approach of (DPS2000) to bond option pricing.</p><p>Assume a call option with maturity <img src="cf2gabyHelp_eq59989.png" alt="$\tau_1=S-t$"> written on a zero coupon bond with maturity at time <img src="cf2gabyHelp_eq57769.png" alt="$T&gt;S$">. Thus, at point in time <img src="cf2gabyHelp_eq57315.png" alt="$T$">, the bond has remaining life <img src="cf2gabyHelp_eq96892.png" alt="$\tau_2=T-S$">.</p><p>At this point in time, depending upon the value(s) of the state variable(s), the bond will have the risk-neutral price</p><p><img src="cf2gabyHelp_eq75778.png" alt="$\Lambda(S,T) = \exp(\alpha(S,T) + \beta(S,T)X_S)$"></p><p>(See <a href="cf2bond.html"><tt>cf2bond</tt></a> for more examples on bond pricing)</p><p>A call option with strike <img src="cf2gabyHelp_eq14888.png" alt="$K$"> written on the zero bond pays</p><p><img src="cf2gabyHelp_eq86183.png" alt="$\max(\Lambda(S,T)-K,0)$"></p><p><img src="cf2gabyHelp_eq09691.png" alt="$=\max(\exp(\alpha(S,T) + \beta(S,T)X_S)-K,0)$"></p><p><img src="cf2gabyHelp_eq24296.png" alt="$=\exp(\alpha(S,T))\max(\exp(\beta(S,T)X_S)-\exp(-\alpha(S,T))K,0)$"></p><p>We can thus apply the function <img src="cf2gabyHelp_eq38700.png" alt="$G(a,b,y)$"> to bond option pricing:</p><p><img src="cf2gabyHelp_eq15399.png" alt="$P=E\left(\exp(-\int_0^SR(X_t)dt)\exp(\alpha(S,T))\max(\exp(\beta(S,T)X_S)-\exp(-\alpha(S,T))K,0)\right)$"></p><p><img src="cf2gabyHelp_eq31011.png" alt="$P=\exp(\alpha(S,T))\left(E\left(df(X)\exp(\beta(S,T)X_S)1_{B<k}\right)-kE\left(df(X)1_{B<k}\right)\right)$"></p><p>where we have have abbreviated the state dependent discount factor integral as <img src="cf2gabyHelp_eq65885.png" alt="$df(X)$">, and where <img src="cf2gabyHelp_eq64407.png" alt="$B=\exp(\beta(S,T)X_S)$"> and <img src="cf2gabyHelp_eq91133.png" alt="$k=K\exp(-\alpha(S,T))$">. We can thus rewrite the expression once more and obtain:</p><p><img src="cf2gabyHelp_eq64946.png" alt="$P=\exp(\alpha(S,T))E\left(df(X)\exp(\beta(S,T)X_S)1_{B<k}\right)-KE\left(df(X)1_{B<k}\right)$"></p><p>Using the function <img src="cf2gabyHelp_eq38700.png" alt="$G(a,b,y)$">, these expressions can be evaluated as:</p><p><img src="cf2gabyHelp_eq80625.png" alt="$P=\exp(\alpha(S,T))G(\beta(S,T),-\beta(S,T),-log(k))-KG(0,-\beta(S,T),-log(k))$"></p><p>Let us apply this framework to price bond options written on two different underlying processes, the Vasicek short rate model and the Cox-Ingersoll-Ross short rate model.</p><div><ul><li>Vasicek <img src="cf2gabyHelp_eq56440.png" alt="$dr=\kappa(\theta-r_t)dt + \sigma dW$"></li><li>Cox-Ingersoll-Ross <img src="cf2gabyHelp_eq39436.png" alt="$dr=\kappa(\theta-r_t)dt + \sigma\sqrt{r_t}dW$"></li></ul></div><p>We will set the model variances such that their long run variances equal.</p><pre class="codeinput">r0          = 0.01;
 kR          = 0.45;
@@ -122,7 +122,7 @@ tR          = 0.05;
 </pre><pre class="codeoutput">
 lvV =
 
-    0.0018
+    0.0017778
 
 </pre><p>we match the CIR variance so that it meets Vasicek's long run variance:</p><pre class="codeinput">sC          = sqrt(lvV*2*kR/tR);
 lvC         = tR*sC^2/(2*kR);
@@ -130,13 +130,13 @@ lvC         = tR*sC^2/(2*kR);
 </pre><pre class="codeoutput">
 ans =
 
-    0.0018    0.0018
+    0.0017778    0.0017778
 
 </pre><p>Just to make sure, we test the Feller condition on the CIR process (implying <img src="cf2gabyHelp_eq44491.png" alt="$r&gt;0$">)</p><pre class="codeinput">[2*kR*tR sC^2]
 </pre><pre class="codeoutput">
 ans =
 
-    0.0450    0.0320
+        0.045        0.032
 
 </pre><p>We assume that the call option matures in <img src="cf2gabyHelp_eq36543.png" alt="$S-t=2$"> years, whereas the bond matures in <img src="cf2gabyHelp_eq09112.png" alt="$T-t$">=5 years. Thus, the remaining life at maturity is <img src="cf2gabyHelp_eq56280.png" alt="$\tau2=T-S=3$"> years.</p><pre class="codeinput">tau1            = 2;
 tau2            = 3;
@@ -147,22 +147,22 @@ cfCIR           = @(u,tau) cfaffine(u,r0,tau,kR*tR,-kR,[],sC^2,[],1);
 </pre><pre class="codeoutput">
 aV =
 
-   -0.0648
+    -0.064753
 
 
 bV =
 
-   -1.6461
+      -1.6461
 
 
 aC =
 
-   -0.0668
+    -0.066817
 
 
 bC =
 
-   -1.6066
+      -1.6066
 
 </pre><p>Let us quickly compare hypothetical 3-year zero bond prices that start starting 2 years from now for several levels of possible future shor trates:</p><pre class="codeinput">rr          = [0:0.01:0.15];
 bondV       = exp(aV+bV*rr);

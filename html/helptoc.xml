@@ -1,12 +1,13 @@
 <?xml version='1.0' encoding="utf-8"?>
 <toc version="2.0">
-
-    <tocitem target="Main.html">CFH
+    <tocitem target="Main.html">CFH Toolbox
+            <tocitem target="cf2american.html">cf2american</tocitem>
             <tocitem target="cf2bond.html">cf2bond</tocitem>
             <tocitem target="cf2bondEx.html">cf2bondEx</tocitem>
             <tocitem target="cf2call.html">cf2call</tocitem>
             <tocitem target="cf2gaby.html">cf2gaby</tocitem>
             <tocitem target="cf2pdf.html">cf2pdf</tocitem>
+            <tocitem target="cf2spread.html">cf2spread</tocitem>
             <tocitem target="cfaffine.html">cfaffine</tocitem>
             <tocitem target="cfaffineEx.html">cfaffineEx</tocitem>
             <tocitem target="cfjump.html">cfjump</tocitem>

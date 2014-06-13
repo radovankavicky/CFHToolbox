@@ -3,7 +3,7 @@
     <?xml-stylesheet type="text/xsl"href="optional"?>
      
     <matlabrelease>2012b</matlabrelease>
-    <name>CFH</name>
+    <name>CFH Toolbox</name>
     <type>toolbox</type>
     <icon></icon>
     <help_location>html</help_location>

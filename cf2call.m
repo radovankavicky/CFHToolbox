@@ -1,5 +1,5 @@
 function [C K] = cf2call(cf,varargin)
-%CF2CALL compute call option prices from characteristic function
+%CF2CALL European call option prices from characteristic function
 %
 %   [C K] = CF2CALL(CF) 
 %   returns call option prices C on a grid of corresponding strikes K given 
@@ -19,7 +19,7 @@ function [C K] = cf2call(cf,varargin)
 %
 %   Example: Black Scholes
 %
-%   par         = struct('x0', log(100), 'rf', 0.05, 'sigma', 0.25)
+%   par         = struct('x0', log(100), 'rf', 0.05, 'q',0, 'sigma', 0.25)
 %   tau         = 0.5
 %   aux.K       = [50:1:150]'
 %   aux.x0      = par.x0
@@ -29,7 +29,7 @@ function [C K] = cf2call(cf,varargin)
 %   plot(aux.K,[C arbBound])
 
 %   Author:     matthias.held@web.de
-%   Date:       2014-05-01
+%   Date:       2014-06-13
 
 damp            = 1.5;
 uMax            = 200;

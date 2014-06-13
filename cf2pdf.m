@@ -22,14 +22,14 @@ function [f x] = cf2pdf(cf,varargin)
 %
 %   Example: pdf corresponding to Heston's SV model, with N = 512
 %
-%   tau         = 0.5
-%   par         = struct(   'rf', 0.05, 'x0', log(1), 'v0', 0.2*0.2, ...
+%   tau         = 0.5;
+%   par         = struct(   'rf', 0.05, 'q', 0, 'x0', 0, 'v0', 0.2*0.2, ...
 %                           'kappa', 0.85, 'theta', 0.25*0.25, ...
-%                           'sigma', 0.10, 'rho', -0.7)
-%   aux.x       = linspace(-0.75,0.75,512);
-%   cf          = @(u) exp(-par.rf*tau)*cflib(u,tau,par,'Heston')
+%                           'sigma', 0.10, 'rho', -0.7);
+%   aux.x       = linspace(-0.75,0.75,4096);
+%   cf          = @(u) exp(-par.rf*tau)*cflib(u,tau,par,'Heston');
 %   [f x]       = cf2pdf(cf,aux);
-%   plot(x,f),title('Heston''s implied return density')
+%   plot(x,f),title('Heston''s implied return density');
 
 %   Author: matthias.held@web.de
 %   Date:   2014-05-27

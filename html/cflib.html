@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>cflib</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-07"><meta name="DC.source" content="cflibHelp.m"><style type="text/css">
+      --><title>cflib</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-13"><meta name="DC.source" content="cflibHelp.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -58,6 +58,7 @@ span.syscmd { color:#B28C00 }
   </style></head><body><div class="content"><h1>cflib</h1><!--introduction--><p>Returns the characteristic function evaluation of commonly encountered models in finance. Part of the <a href="Main.html">CFH Toolbox</a>.</p><p><b>Syntax</b></p><pre class="language-matlab">W = CFLIB(U,TAU,PAR,TYPE)
 </pre><p>For model choice <tt>TYPE='BS','BSJump','Heston','HestonJump','Kou'</tt>, this function returns the characteristic function at real argument <tt>U</tt> for a maturity <tt>TAU</tt> and a parameter structure <tt>PAR</tt>.</p><p><b>Input Arguments</b> <tt>U</tt> can either be a <tt>(K)x(1)</tt> or <tt>(1)x(K)</tt> array of characteristic function arguments. <tt>TAU</tt> denotes the time to maturity under consideration. <tt>PAR</tt> is a structure that corresponds to the required parameters of the model choice in <tt>TYPE</tt>.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1"><b>Example 1: Black Scholes Model</b></a></li><li><a href="#2"><b>Example 2: Heston's stochastic volatility model with Merton type jumps</b></a></li><li><a href="#4"><b>Example 3: Kou's model</b></a></li></ul></div><h2><b>Example 1: Black Scholes Model</b><a name="1"></a></h2><p>In the Black Scholes model, the dynamics of the logarithmic spot process are:</p><p><img src="cflibHelp_eq34838.png" alt="$dy=(r_f - \frac{1}{2}\sigma^2)dt + \sigma dW$"></p><p>resulting in the characteristic function</p><p><img src="cflibHelp_eq25620.png" alt="$\phi(u)=E(e^{uiX_T})=\exp(-r_f\tau +iux_t+ iu\tau(r_f-\frac{1}{2}\sigma^2)-\frac{1}{2}\tau u \sigma^2)$"></p><p>where <img src="cflibHelp_eq42994.png" alt="$\tau=T-t$">.</p><p>The characteristic function of the Black Scholes model is also included in <tt>cflib</tt>, using the argument <tt>type='BS'</tt>.</p><pre class="codeinput">S0          = 1;
 par.rf      = 0.05;
+par.q       = 0;
 tau         = 1;
 par.sigma   = 0.25;
 par.x0      = log(S0);
@@ -76,7 +77,7 @@ par.sigma   = sigmaV;
 par.rho     = rho;
 cf          = @(u) cflib(u,tau,par,<span class="string">'Heston'</span>);
 [fH xH]     = cf2pdf(cf);
-plot(xH,fH,<span class="string">'r'</span>,xB,fB,<span class="string">'k'</span>)
+plot(xH,fH,<span class="string">'r'</span>,xB,fB,<span class="string">'k'</span>);
 title(<span class="string">'Comparison of implied densities of HestonJump and Black Scholes model'</span>);
 legend(<span class="string">'Heston Model with Jumps'</span>,<span class="string">'Black Scholes'</span>);
 </pre><img vspace="5" hspace="5" src="cflibHelp_02.png" alt=""> <h2><b>Example 3: Kou's model</b><a name="4"></a></h2><p>In Kou's model, we assume that the asset follows a geometric Brownian motion with double exponentially distributed jumps of constant intensity. With probability <img src="cflibHelp_eq74632.png" alt="$p^+$">, a given jump will be exponentially distributed over positive the reals with expected jump size <img src="cflibHelp_eq97193.png" alt="$\mu^+$">, whereas with probability <img src="cflibHelp_eq19382.png" alt="$1-p^+$">, the jump will be exponentially distributed over the negative reals with mean jump size <img src="cflibHelp_eq18558.png" alt="$-\mu^-$">.</p><p>Let us assume in addition to Example 1 above</p><p><img src="cflibHelp_eq68504.png" alt="$p^+=0.4, \mu^+=0.03,\mu^-=0.10,\lambda=0.1$"></p><pre class="codeinput">par.lambda  = 0.15;
@@ -86,7 +87,7 @@ par.mDown   = 0.15;
 par.sigma   = 0.25;
 cf          = @(u) cflib(u,tau,par,<span class="string">'Kou'</span>);
 [fK xK]     = cf2pdf(cf);
-plot(xK,fK,<span class="string">'r'</span>,xB,fB,<span class="string">'k'</span>)
+plot(xK,fK,<span class="string">'r'</span>,xB,fB,<span class="string">'k'</span>);
 title(<span class="string">'Comparison of implied densities of Kou and Black Scholes model'</span>);
 legend(<span class="string">'Kou'</span>,<span class="string">'Black Scholes'</span>);
 </pre><img vspace="5" hspace="5" src="cflibHelp_03.png" alt=""> <p class="footer"><br>
@@ -126,6 +127,7 @@ legend(<span class="string">'Kou'</span>,<span class="string">'Black Scholes'</s
 % |cflib|, using the argument |type='BS'|.
 S0          = 1;
 par.rf      = 0.05;
+par.q       = 0;
 tau         = 1;
 par.sigma   = 0.25;
 par.x0      = log(S0);
@@ -175,7 +177,7 @@ par.sigma   = sigmaV;
 par.rho     = rho;
 cf          = @(u) cflib(u,tau,par,'Heston');
 [fH xH]     = cf2pdf(cf);
-plot(xH,fH,'r',xB,fB,'k')
+plot(xH,fH,'r',xB,fB,'k');
 title('Comparison of implied densities of HestonJump and Black Scholes model');
 legend('Heston Model with Jumps','Black Scholes');
 %% *Example 3: Kou's model*
@@ -196,7 +198,7 @@ par.mDown   = 0.15;
 par.sigma   = 0.25;
 cf          = @(u) cflib(u,tau,par,'Kou');
 [fK xK]     = cf2pdf(cf);
-plot(xK,fK,'r',xB,fB,'k')
+plot(xK,fK,'r',xB,fB,'k');
 title('Comparison of implied densities of Kou and Black Scholes model');
 legend('Kou','Black Scholes');
 ##### SOURCE END #####
